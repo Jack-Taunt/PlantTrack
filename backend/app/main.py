@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from .routers import users
 from fastapi.middleware.cors import CORSMiddleware
+from app import models
+from app.database import engine
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
