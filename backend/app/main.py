@@ -1,12 +1,12 @@
 from fastapi import FastAPI
-from .routers import users
 from fastapi.middleware.cors import CORSMiddleware
-from app import models
+from app.models import Base
 from app.database import engine
-
-models.Base.metadata.create_all(bind=engine)
+from .routers import users
 
 app = FastAPI()
+
+Base.metadata.create_all(bind=engine)
 
 origins = [
     "http://localhost:5173"

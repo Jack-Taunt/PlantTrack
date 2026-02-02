@@ -64,7 +64,7 @@ async def logout():
 @router.post("/register", response_model=User)
 async def register(user: User, db: Annotated[Session, Depends(get_db)]):
     hashed_password = hash_password(user.password)
-    new_user = create_user(user.username, hashed_password)
+    new_user = create_user(user.username, hashed_password, db)
 
     return new_user
 
