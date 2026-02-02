@@ -1,3 +1,4 @@
+import { Card, CardContent, Grid, Stack, TextField, Typography } from "@mui/material";
 import api from "../../client/client"
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -29,24 +30,46 @@ const Login = () => {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 }
-            });
-        console.log("TEST")
+            }
+        );
         
         navigate("/")
-
     };
 
     return (
         <>
-            <h1>Login</h1>
-                
-            <form onSubmit={handleSubmit(onSubmit)}>
-                
-                <input defaultValue="test" {...register("username")} />
-                <input defaultValue="test" {...register("password")} />
-                <input type="submit" />
+            <Grid 
+                container 
+                justifyContent="center"
+                alignItems="center"
+                style={{ height: "100vh" }}
+            >
+                <Card
+                    sx={{
+                        maxWidth: 500,
+                        maxHeight: 600,
+                        width: '100%',
+                        height: '100%',
+                        margin: '16px'
+                    }}
+                >
+                    <CardContent>
+                        <Stack spacing={5} alignItems="center">
+                            <Typography>Login</Typography>
+                            
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <Stack spacing={2} alignItems="center">
+                                    <TextField label="Username" variant="filled" {...register("username")} />
+                                    <TextField label="password" variant="filled" {...register("password")} />
+                                    <input type="submit" />
+                                </Stack>
 
-            </form>
+                            </form>
+                        </Stack>
+                    </CardContent>
+
+                </Card>
+            </Grid>
         </>
     )
 }
