@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { User } from '../../types/user';
+import api from "../../client/client"
+import { Button } from '@mui/material';
 
 function Home() {
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/users/me")
-            .then((response) => response.json())
-            .then(setUser);
+
+        const fetchUser = async () => {
+            const response = await api.get("/users/me");
+            setUser(response.data)
+        }
+        fetchUser()
     }, []);
+
+    const logout = async() => {
+        await api.post("users/logout");
+        setUser(null);
+    }
 
     return (
         <>
@@ -17,6 +27,9 @@ function Home() {
             
 
             <Link to="/register">Register</Link>
+            <Link to="/login">Login</Link>
+
+            <Button onClick={logout}>Logout</Button>
 
             <p>
                 {user ? `Logged in as ${user.username}` : "Not logged in"}
