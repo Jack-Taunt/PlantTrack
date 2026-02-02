@@ -1,16 +1,33 @@
-import { useState } from "react"
 import api from "../../client/client"
+import { useNavigate } from "react-router-dom";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 const Register = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
 
-    const create_user = async () => {
-        const { data } = await api.post("/users/register", {
-            username,
-            password
-        });
+    const {
+        register, 
+        handleSubmit, 
+        formState: { errors },
+    } = useForm<RegisterFormInputs>();
 
+    type RegisterFormInputs = {
+        username: string;
+        password: string;
+    }
+
+    const navigate = useNavigate()
+
+    const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
+
+        const response = await api.post("/users/register", 
+            {
+                username: data.username,
+                password: data.password,
+            }
+        );
+
+        navigate("/")
     }
 
 
@@ -18,22 +35,14 @@ const Register = () => {
         <>
             <h1>Register</h1>
             
-            <input
-                type="text"
-                placeholder="enter username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
+            <form onSubmit={handleSubmit(onSubmit)}>
 
-            <button onClick={create_user}>
-                Create User
-            </button>
+                <input defaultValue="test" {...register("username")} />
+                <input defaultValue="test" {...register("password")} />
+                <input type="submit" />
+
+            </form>
+
         </>
     )
 }
