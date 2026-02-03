@@ -3,7 +3,7 @@ import jwt, os
 from pwdlib import PasswordHash
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
-from app.crud.user import get_user_by_username
+from app.crud.user import get_user_by_email
 
 load_dotenv()
 
@@ -28,8 +28,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-def authenticate_user(username: str, password: str, db: Session):
-    user_dict = get_user_by_username(username, db)
+def authenticate_user(email: str, password: str, db: Session):
+    user_dict = get_user_by_email(email, db)
     if not user_dict:
         return False
     if not verify_password(password, user_dict.password):

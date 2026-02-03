@@ -34,7 +34,7 @@ async def login(
         )
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     json_response = JSONResponse(content={"message": "login successful"})
     json_response.set_cookie(
         key="access_token",
@@ -64,7 +64,7 @@ async def logout():
 @router.post("/register", response_model=User)
 async def register(user: User, db: Annotated[Session, Depends(get_db)]):
     hashed_password = hash_password(user.password)
-    new_user = create_user(user.username, hashed_password, db)
+    new_user = create_user(user.email, user.username, hashed_password, db)
 
     return new_user
 

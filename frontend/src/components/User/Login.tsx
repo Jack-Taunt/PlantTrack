@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Card, CardContent, Grid, Stack, TextField, Typography, Box, Button, Link } from "@mui/material";
 import api from "../../client/client"
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -47,27 +47,35 @@ const Login = () => {
                 <Card
                     sx={{
                         maxWidth: 500,
-                        maxHeight: 600,
+                        maxHeight: 500,
                         width: '100%',
                         height: '100%',
                         margin: '16px'
                     }}
                 >
-                    <CardContent>
-                        <Stack spacing={5} alignItems="center">
-                            <Typography>Login</Typography>
+                    <CardContent sx={{
+                        height: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>
+                        <Stack spacing={5} alignItems="stretch" width="100%">
+                            <Box sx={{paddingTop:3}}>
+                                <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center'}} fontWeight={400}>
+                                    Sign In
+                                </Typography>
+                            </Box>
                             
                             <form onSubmit={handleSubmit(onSubmit)}>
-                                <Stack spacing={2} alignItems="center">
-                                    <TextField label="Username" variant="filled" {...register("username")} />
-                                    <TextField label="password" variant="filled" {...register("password")} />
-                                    <input type="submit" />
+                                <Stack sx={{ gap: 2 }} alignItems="center">
+                                    <TextField label="Email" variant="filled" required={true} {...register("username")} sx={{width: '80%'}} />
+                                    <TextField label="password" variant="filled" required={true} type="password" {...register("password")} sx={{width: '80%'}} />
+                                    <Link href="/forgot-password" variant="body2">Forgot Password?</Link>
+                                    <Button type="submit" variant="contained" sx={{width: "80%", marginTop: 3}}>Sign In</Button>
+                                    <Link href="/register" variant="body2">Don't have an Account? Register Here!</Link>
                                 </Stack>
-
                             </form>
                         </Stack>
                     </CardContent>
-
                 </Card>
             </Grid>
         </>

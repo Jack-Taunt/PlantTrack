@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status, Cookie
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.auth.utils import get_user_by_username
+from app.auth.utils import get_user_by_email
 import jwt, os
 from jwt.exceptions import InvalidTokenError
 from typing import Annotated
@@ -24,13 +24,13 @@ async def get_current_user(token: Annotated[str, Depends(get_token_from_cookie)]
     )
     try:
         payload = jwt.decode(token, os.getenv("SECRET_KEY"), algorithms=[os.getenv("ALGORITHM")])
-        username = payload.get("sub")
-        if username is None:
+        email = payload.get("sub")
+        if email is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = TokenData(email=email)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user_by_username(username, db)
+    user = get_user_by_email(email, db)
     if user is None:
         raise credentials_exception
     return user

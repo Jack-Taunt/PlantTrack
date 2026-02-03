@@ -1,15 +1,23 @@
 import { Route, Routes } from "react-router-dom"
-import Home from "./pages/Home/Home"
-import Register from "./pages/User/Register";
-import Login from "./pages/User/Login";
+import Home from "./components/Home/Home"
+import Register from "./components/User/Register";
+import Login from "./components/User/Login";
+import { ThemeProvider } from "@mui/material";
+import { PlantTrackTheme } from "./components/common/Theme";
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 function App() {
     return (
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-        </Routes>
+        <ThemeProvider theme={PlantTrackTheme}>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+            </Routes>
+        </ThemeProvider>
     );
 }
 
