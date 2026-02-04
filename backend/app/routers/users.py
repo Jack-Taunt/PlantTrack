@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from app.auth.utils import authenticate_user, create_access_token, hash_password
 from app.auth.dependencies import get_current_user
-from app.schemas.User import User
+from app.schemas.User import User, UserOut
 from app.crud.user import create_user
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -69,6 +69,6 @@ async def register(user: User, db: Annotated[Session, Depends(get_db)]):
     return new_user
 
 
-@router.get("/me", response_model=User)
+@router.get("/me", response_model=UserOut)
 async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
     return current_user
