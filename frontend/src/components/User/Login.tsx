@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Stack, TextField, Typography, Box, Button, Link } from "@mui/material";
+import { Card, CardContent, Grid, Stack, TextField, Typography, Box, Button, Link, Alert } from "@mui/material";
 import api from "../../client/client"
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -8,7 +8,8 @@ const Login = () => {
 
     const {
         register, 
-        handleSubmit, 
+        handleSubmit,
+        setError,
         formState: { errors },
     } = useForm<LoginFormInputs>();
 
@@ -23,17 +24,29 @@ const Login = () => {
         const formData = new URLSearchParams();
         formData.append("username", data.username);
         formData.append("password", data.password);
-
-        const response = await api.post("/users/token", 
-            formData, 
-            {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+        try{
+            await api.post("/users/token", 
+                formData, 
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    }
                 }
+            );
+            navigate("/")
+        } catch (err: any) {
+            if (err.response?.status === 401) {
+                setError("root", {
+                    type: "server",
+                    message: "Incorrect email or password",
+                })
+            } else {
+                setError("root", {
+                    type: "server",
+                    message: "Something went wrong. Try again later",
+                })
             }
-        );
-        
-        navigate("/")
+        }
     };
 
     return (
@@ -70,6 +83,11 @@ const Login = () => {
                                     <TextField label="Email" variant="filled" required={true} {...register("username")} sx={{width: '80%'}} />
                                     <TextField label="password" variant="filled" required={true} type="password" {...register("password")} sx={{width: '80%'}} />
                                     <Link href="/forgot-password" variant="body2">Forgot Password?</Link>
+                                    {errors.root && (
+                                        <Alert severity="error" sx={{width: "73%"}}>
+                                            {errors.root.message}
+                                        </Alert>
+                                    )}
                                     <Button type="submit" variant="contained" sx={{width: "80%", marginTop: 3}}>Sign In</Button>
                                     <Link href="/register" variant="body2">Don't have an Account? Register Here!</Link>
                                 </Stack>
