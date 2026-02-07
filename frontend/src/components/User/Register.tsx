@@ -2,15 +2,18 @@ import api from "../../client/client"
 import { useNavigate } from "react-router-dom";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { Card, CardContent, Grid, Stack, TextField, Typography, Box, Button, Link } from "@mui/material";
+import { Card, CardContent, Grid, Stack, TextField, Typography, Box, Button, Link, Alert } from "@mui/material";
 
 const Register = () => {
 
     const {
         register, 
-        handleSubmit, 
+        handleSubmit,
+        setError,
         formState: { errors },
-    } = useForm<RegisterFormInputs>();
+    } = useForm<RegisterFormInputs>({
+        reValidateMode: "onSubmit"
+    });
 
     type RegisterFormInputs = {
         email: string;
@@ -22,15 +25,40 @@ const Register = () => {
 
     const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
 
-        const response = await api.post("/users/register", 
-            {
-                email: data.email,
-                username: data.username,
-                password: data.password,
-            }
-        );
+        try {
+            await api.post("/users/register", 
+                {
+                    email: data.email,
+                    username: data.username,
+                    password: data.password,
+                }
+            );
 
-        navigate("/")
+            navigate("/")
+        } catch (err: any) {
+            if (err.response?.status === 409) {
+                setError("root", {
+                    type: "server",
+                    message: "Email Already in use",
+                })
+            } else if (err.response?.status === 500) {
+                setError("root", {
+                    type: "server",
+                    message: "Something went wrong. Try again later",
+                })
+            } else {
+                for (let val of err.response.data.detail) {
+                    let input_field = val.loc[1]
+                    let error_message = val.msg
+
+                    setError(input_field, {
+                    type: "server",
+                    message: error_message,
+                })
+                }
+            }
+        }
+        
     }
 
 
@@ -45,9 +73,10 @@ const Register = () => {
                 <Card
                     sx={{
                         maxWidth: 500,
-                        maxHeight: 500,
+                        minHeight: 500,
+                        maxHeight: 700,
                         width: '100%',
-                        height: '100%',
+                        height: 'auto',
                         margin: '16px'
                     }}
                 >
@@ -66,8 +95,28 @@ const Register = () => {
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <Stack sx={{ gap: 2 }} alignItems="center">
                                     <TextField label="Email" variant="filled" required={true} {...register("email")} sx={{width: '80%'}} />
+                                    {errors.email && (
+                                        <Alert severity="error" sx={{width: "73%"}}>
+                                            {errors.email.message}
+                                        </Alert>
+                                    )}
                                     <TextField label="Username" variant="filled" required={true} {...register("username")} sx={{width: '80%'}} />
+                                    {errors.username && (
+                                        <Alert severity="error" sx={{width: "73%"}}>
+                                            {errors.username.message}
+                                        </Alert>
+                                    )}
                                     <TextField label="password" variant="filled" required={true} type="password" {...register("password")} sx={{width: '80%'}} />
+                                    {errors.password && (
+                                        <Alert severity="error" sx={{width: "73%"}}>
+                                            {errors.password.message}
+                                        </Alert>
+                                    )}
+                                    {errors.root && (
+                                        <Alert severity="error" sx={{width: "73%"}}>
+                                            {errors.root.message}
+                                        </Alert>
+                                    )}
                                     <Button type="submit" variant="contained" sx={{width: "80%", marginTop: 3}}>Register</Button>
                                     <Link href="/login" variant="body2">Already have an Account? Sign in Here!</Link>
                                 </Stack>

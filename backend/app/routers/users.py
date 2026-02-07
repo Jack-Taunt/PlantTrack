@@ -8,7 +8,7 @@ from datetime import timedelta
 from app.auth.utils import authenticate_user, create_access_token, hash_password
 from app.auth.dependencies import get_current_user
 from app.schemas.User import User, UserOut
-from app.crud.user import create_user
+from app.crud.user import create_user, get_user_by_email
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -61,12 +61,21 @@ async def logout():
     return json_response
 
 
-@router.post("/register", response_model=User)
+@router.post("/register", response_model=UserOut)
 async def register(user: User, db: Annotated[Session, Depends(get_db)]):
-    hashed_password = hash_password(user.password)
-    new_user = create_user(user.email, user.username, hashed_password, db)
 
-    return new_user
+    if get_user_by_email(user.email, db):
+
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, 
+            detail="Email Already in use",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    else:
+        hashed_password = hash_password(user.password)
+        new_user = create_user(user.email, user.username, hashed_password, db)
+        return new_user
 
 
 @router.get("/me", response_model=UserOut)
