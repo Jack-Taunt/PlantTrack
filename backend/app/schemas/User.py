@@ -23,3 +23,7 @@ class User(BaseModel):
 class UserOut(BaseModel):
     email: str
     username: str
+
+    model_config = {
+        "from_attributes": True
+    }

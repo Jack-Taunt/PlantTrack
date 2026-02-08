@@ -3,6 +3,7 @@ import api from "../../client/client"
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../common/AuthProvider";
 
 const Login = () => {
 
@@ -18,6 +19,8 @@ const Login = () => {
         password: string;
     }
 
+    const { setUser } = useAuth();
+
     const navigate = useNavigate()
 
     const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
@@ -25,7 +28,7 @@ const Login = () => {
         formData.append("username", data.username);
         formData.append("password", data.password);
         try{
-            await api.post("/users/token", 
+            const response = await api.post("/users/token", 
                 formData, 
                 {
                     headers: {
@@ -33,7 +36,9 @@ const Login = () => {
                     }
                 }
             );
-            navigate("/")
+            navigate("/");
+            setUser(response.data);
+
         } catch (err: any) {
             if (err.response?.status === 401) {
                 setError("root", {

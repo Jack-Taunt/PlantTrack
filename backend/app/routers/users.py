@@ -9,6 +9,7 @@ from app.auth.utils import authenticate_user, create_access_token, hash_password
 from app.auth.dependencies import get_current_user
 from app.schemas.User import User, UserOut
 from app.crud.user import create_user, get_user_by_email
+from fastapi.encoders import jsonable_encoder
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -35,7 +36,10 @@ async def login(
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
-    json_response = JSONResponse(content={"message": "login successful"})
+    user_out = UserOut.model_validate(user)
+    user_json = jsonable_encoder(user_out)
+
+    json_response = JSONResponse(content={"message": "login successful", "user": user_json})
     json_response.set_cookie(
         key="access_token",
         value=access_token,
