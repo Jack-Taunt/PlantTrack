@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import type { User } from '../../types/user';
 import api from "../../client/client"
 import { Button } from '@mui/material';
+import Navbar from '../common/Navbar';
 
 function Home() {
     const [user, setUser] = useState<User | null>(null);
@@ -23,6 +24,7 @@ function Home() {
 
     return (
         <>
+            <Navbar/>
             <h1>Home Page</h1>
             
 

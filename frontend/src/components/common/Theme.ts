@@ -8,7 +8,7 @@ export const PlantTrackTheme: Theme = createTheme({
             main: '#237d1e',
         },
         secondary: {
-            main: '#31bd2a',
+            main: '#2ca625',
         },
     },
 })
