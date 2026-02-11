@@ -19,22 +19,16 @@ class Plant(Base):
     gardens = relationship('Garden', secondary='garden_plants', back_populates='plants')
     
     
-    # toxicity = relationship('Toxicity', secondary='plant_toxicity', back_populates='plants')
     toxicity_id = Column(Integer, ForeignKey("toxicity.id"))
     toxicity = relationship("Toxicity", back_populates="plants")
-    # edibility = relationship('Edibility', secondary='plant_edibility', back_populates='plants')
     edibility_id = Column(ForeignKey("edibility.id"))
     edibility = relationship("Edibility", back_populates="plants")
-    # environment = relationship('Environment', secondary='plant_environment', back_populates='plants')
     environment_id = Column(ForeignKey("environment.id"))
     environment = relationship("Environment", back_populates="plants")
-    # care_requirements = relationship('CareRequirements', secondary='plant_care', back_populates='plants')
     care_requirements_id = Column(ForeignKey("care_requirements.id"))
     care_requirements = relationship("CareRequirements", back_populates="plants")
-    # growth = relationship('Growth', secondary='plant_growth', back_populates='plants')
     growth_id = Column(ForeignKey("growth.id"))
     growth = relationship("Growth", back_populates="plants")
-    # planting = relationship('Planting', secondary='plant_planting', back_populates='plants')
     planting_id = Column(ForeignKey("planting.id"))
     planting = relationship("Planting", back_populates="plants")
 
@@ -58,14 +52,6 @@ class Toxicity(Base):
     plants = relationship('Plant', back_populates='toxicity')
 
 
-# plant_toxicity = Table(
-#     'plant_toxicity',
-#     Base.metadata,
-#     Column('plant_id', Integer, ForeignKey('plants.id'), primary_key=True),
-#     Column('toxicity_id', Integer, ForeignKey('toxicity.id'), primary_key=True)
-# )
-
-
 class Edibility(Base):
     __tablename__ = "edibility"
     id = Column(Integer, primary_key=True, nullable=False)
@@ -76,14 +62,6 @@ class Edibility(Base):
     edible_roots = Column(Boolean, nullable=True)
 
     plants = relationship('Plant', back_populates='edibility')
-
-
-# plant_edibility = Table(
-#     'plant_edibility',
-#     Base.metadata,
-#     Column('plant_id', Integer, ForeignKey('plants.id'), primary_key=True),
-#     Column('edibility_id', Integer, ForeignKey('edibility.id'), primary_key=True)
-# )
 
 
 class LightEnum(Enum):
@@ -105,14 +83,6 @@ class Environment(Base):
     max_usda_zone = Column(String, nullable=True)
 
     plants = relationship('Plant', back_populates='environment')
-
-
-# plant_environment = Table(
-#     'plant_environment',
-#     Base.metadata,
-#     Column('plant_id', Integer, ForeignKey('plants.id'), primary_key=True),
-#     Column('environment_id', Integer, ForeignKey('environment.id'), primary_key=True)
-# )
 
 
 class MoistureEnum(Enum):
@@ -146,14 +116,6 @@ class CareRequirements(Base):
     plants = relationship('Plant', back_populates='care_requirements')
 
 
-# plant_care = Table(
-#     'plant_care',
-#     Base.metadata,
-#     Column('plant_id', Integer, ForeignKey('plants.id'), primary_key=True),
-#     Column('care_requirements_id', Integer, ForeignKey('care_requirements.id'), primary_key=True)
-# )
-
-
 class GrowthRateEnum(Enum):
     fast = 1
     moderate = 2
@@ -176,14 +138,6 @@ class Growth(Base):
     plants = relationship('Plant', back_populates='growth')
 
 
-# plant_growth = Table(
-#     'plant_growth',
-#     Base.metadata,
-#     Column('plant_id', Integer, ForeignKey('plants.id'), primary_key=True),
-#     Column('growth_id', Integer, ForeignKey('growth.id'), primary_key=True)
-# )
-
-
 class Planting(Base):
     __tablename__ = "planting"
     id = Column(Integer, primary_key=True, nullable=False)
@@ -195,11 +149,3 @@ class Planting(Base):
     propagation = Column(Boolean, nullable=True)
 
     plants = relationship('Plant', back_populates='planting')
-
-
-# plant_planting = Table(
-#     'plant_planting',
-#     Base.metadata,
-#     Column('plant_id', Integer, ForeignKey('plants.id'), primary_key=True),
-#     Column('planting_id', Integer, ForeignKey('planting.id'), primary_key=True)
-# )
