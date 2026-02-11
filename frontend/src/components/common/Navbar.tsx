@@ -2,13 +2,12 @@ import { AppBar, Avatar, Box, Button, Container, Icon, IconButton, Menu, MenuIte
 import { useState } from "react";
 import PlantIcon from "../../assets/PlantTrack_Icon-temp.svg"
 import { useAuth } from "./AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../../client/client"
 
 const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const navigate = useNavigate();
     const { setUser } = useAuth();
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -17,10 +16,6 @@ const Navbar = () => {
 
     const handleCloseUserMenu = () => {
         setAnchorEl(null);
-    }
-
-    const redirectLoginPage = () => {
-        navigate("/login")
     }
 
     const handleUserSignOut = async () => {
@@ -34,9 +29,13 @@ const Navbar = () => {
         <AppBar position="static">
             <Container maxWidth={false}>
                 <Toolbar disableGutters>
-                    <Icon sx={{ fontSize: 40 }}>
+                    <IconButton 
+                        sx={{ p: 0, width: 50, height: 50 }} 
+                        component={Link}
+                        to="/"
+                    >
                         <img src={PlantIcon} style={{ width: "100%", height: "100%" }} />
-                    </Icon>
+                    </IconButton>
                     <Typography
                         variant="h6"
                         sx={{
@@ -52,25 +51,23 @@ const Navbar = () => {
                             variant="contained"
                             color="secondary"
                             sx={{ color: 'white' }}
+                            component={Link}
+                            to="/plants"
                         >
-                            Browse Plants 1
+                            Browse Plants
                         </Button>
-
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            sx={{ color: 'white', ml: 1 }}
-                        >
-                            Browse Plants 2
-                        </Button>
-
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            sx={{ color: 'white', ml: 1 }}
-                        >
-                            Browse Plants 3
-                        </Button>
+                        
+                        {user && (
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                sx={{ color: 'white', ml: 1 }}
+                                component={Link}
+                                to="/gardens"
+                            >
+                                My Gardens
+                            </Button>
+                        )}
                     </Box>
                     
 
@@ -108,7 +105,8 @@ const Navbar = () => {
                                     variant="contained"
                                     color="secondary"
                                     sx={{ color: 'white', ml: 1 }}
-                                    onClick={redirectLoginPage}
+                                    component={Link}
+                                    to="/login"
                                 >
                                     Sign In
                                 </Button>

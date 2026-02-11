@@ -1,11 +1,11 @@
 import Navbar from '../common/Navbar';
 
-function Home() {
+function CreateGarden() {
 
     return (
         <>
             <Navbar/>
-            <h1 style={{textAlign: 'center'}} >Home Page</h1>
+            <h1 style={{textAlign: 'center'}} >Create New Garden</h1>
             
 
         </>
@@ -13,4 +13,4 @@ function Home() {
 };
 
 
-export default Home;
+export default CreateGarden;
