@@ -10,7 +10,7 @@ class Garden(Base):
     is_public = Column(Boolean, nullable=False, default=False)
     
     user = relationship('User', secondary='user_gardens', back_populates='gardens')
-    plants = relationship('Plant', secondary='garden_plants', back_populates='garden')
+    plants = relationship('Plant', secondary='garden_plants', back_populates='gardens')
 
 
 garden_plants = Table(
