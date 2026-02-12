@@ -16,7 +16,7 @@ function Gardens() {
     const [snackVisability, setSnackVisability] = useState(false);
 
     const handleSnackClose = (
-        event: React.SyntheticEvent | Event,
+        _: React.SyntheticEvent | Event,
         reason?: SnackbarCloseReason,
     ) => {
         if (reason === 'clickaway') {
