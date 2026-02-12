@@ -5,11 +5,11 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import ProtectedRoute from "./components/common/ProtectedRoute";
 import Home from "./components/Home/Home"
 import Register from "./components/User/Register";
 import Login from "./components/User/Login";
 import Gardens from "./components/Garden/my-gardens"
-import CreateGarden from "./components/Garden/create-garden"
 
 function App() {
     return (
@@ -18,8 +18,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/gardens" element={<Gardens />} />
-                <Route path="/gardens/create" element={<CreateGarden />} />
+                <Route path="/gardens/me" element={<ProtectedRoute><Gardens /></ProtectedRoute>} />
             </Routes>
         </ThemeProvider>
     );

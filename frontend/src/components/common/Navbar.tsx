@@ -73,7 +73,7 @@ const Navbar = () => {
                                 color="secondary"
                                 sx={{ color: 'white', ml: 1 }}
                                 component={Link}
-                                to="/gardens"
+                                to="/gardens/me"
                             >
                                 My Gardens
                             </Button>
