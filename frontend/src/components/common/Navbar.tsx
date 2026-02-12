@@ -62,7 +62,7 @@ const Navbar = () => {
                             color="secondary"
                             sx={{ color: 'white', ml: 1  }}
                             component={Link}
-                            to="/plants"
+                            to="/gardens/public"
                         >
                             Browse Community Gardens
                         </Button>
