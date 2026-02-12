@@ -2,7 +2,7 @@ import { Card, CardContent, Grid, Stack, TextField, Typography, Box, Button, Lin
 import api from "../../client/client"
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../common/AuthProvider";
 
 const Login = () => {
@@ -22,6 +22,7 @@ const Login = () => {
     const { setUser } = useAuth();
 
     const navigate = useNavigate()
+    const location = useLocation();
 
     const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
         const formData = new URLSearchParams();
@@ -36,7 +37,8 @@ const Login = () => {
                     }
                 }
             );
-            navigate("/");
+            const from = (location.state as any)?.from || "/";
+            navigate(from);
             setUser(response.data);
 
         } catch (err: any) {
