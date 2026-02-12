@@ -1,9 +1,10 @@
-import { Button, Modal, Typography, Box, Stack, TextField, Checkbox, FormControlLabel, Alert, FormGroup } from '@mui/material';
+import { Button, Modal, Typography, Box, Stack, TextField, Checkbox, FormControlLabel, Alert, FormGroup, Fade, AlertTitle, Snackbar, type SnackbarCloseReason, IconButton } from '@mui/material';
 import Navbar from '../common/Navbar';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import api from "../../client/client"
+import CloseIcon from '@mui/icons-material/Close';
 
 function Gardens() {
     const [createGardenModalOpen, setCreateGardenModalOpen] = useState(false);
@@ -11,6 +12,18 @@ function Gardens() {
     const handleCreateGardenModalOpen = () => setCreateGardenModalOpen(true);
 
     const handleCreateGardenModalClose = () => setCreateGardenModalOpen(false);
+
+    const [snackVisability, setSnackVisability] = useState(false);
+
+    const handleSnackClose = (
+        event: React.SyntheticEvent | Event,
+        reason?: SnackbarCloseReason,
+    ) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackVisability(false);
+    }
 
     const {
             register, 
@@ -29,19 +42,49 @@ function Gardens() {
 
     const onSubmit: SubmitHandler<GardenFormInputs> = async (data) => {
         try {
-            await api.post("/gardens/create", 
+            await api.post("/gardens", 
                 {
                     name: data.name,
                     description: data.description,
-                    isPublic: data.isPublic,
+                    is_public: data.isPublic,
                 }
             );
+            handleCreateGardenModalClose();
+            setSnackVisability(true);
 
         } catch (err: any) {
-            console.log(err.response)
+            if (err.response?.status === 500) {
+                setError("root", {
+                    type: "server",
+                    message: "Something went wrong. Try again later",
+                })
+            } else {
+                for (let val of err.response.data.detail) {
+                    let input_field = val.loc[1]
+                    let error_message = val.msg
+
+                    setError(input_field, {
+                        type: "server",
+                        message: error_message,
+                    })
+                }
+            }
         }
         
     }
+
+    const snackAction = (
+        <React.Fragment>
+            <IconButton
+                size='small'
+                aria-label='close'
+                color='inherit'
+                onClick={handleSnackClose}
+            >
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </React.Fragment>
+    )
 
     return (
         <>
@@ -65,7 +108,8 @@ function Gardens() {
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
                         width: 500,
-                        height: 500,
+                        minHeight: 500,
+                        maxHeight: 620,
                         bgcolor: 'background.paper',
                         border: '2px solid #000',
                         boxShadow: 24,
@@ -144,6 +188,14 @@ function Gardens() {
 
                 </Box>
             </Modal>
+
+            <Snackbar
+                open={snackVisability}
+                autoHideDuration={5000}
+                onClose={handleSnackClose}
+                message="Garden Successfully Created"
+                action={snackAction}
+            />
 
         </>
     )
