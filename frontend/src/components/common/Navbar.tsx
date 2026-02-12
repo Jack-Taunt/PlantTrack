@@ -1,8 +1,8 @@
-import { AppBar, Avatar, Box, Button, Container, Icon, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import PlantIcon from "../../assets/PlantTrack_Icon-temp.svg"
 import { useAuth } from "./AuthProvider";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import api from "../../client/client"
 
 const Navbar = () => {
