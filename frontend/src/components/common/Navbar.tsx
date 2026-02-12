@@ -56,6 +56,16 @@ const Navbar = () => {
                         >
                             Browse Plants
                         </Button>
+
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            sx={{ color: 'white', ml: 1  }}
+                            component={Link}
+                            to="/plants"
+                        >
+                            Browse Community Gardens
+                        </Button>
                         
                         {user && (
                             <Button
