@@ -193,9 +193,16 @@ function Gardens() {
                 open={snackVisability}
                 autoHideDuration={5000}
                 onClose={handleSnackClose}
-                message="Garden Successfully Created"
-                action={snackAction}
-            />
+            >
+                <Alert
+                    onClose={handleSnackClose}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    Garden Successfully Created
+                </Alert>
+            </Snackbar>
 
         </>
     )
