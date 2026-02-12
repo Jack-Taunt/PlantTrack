@@ -7,6 +7,7 @@ class Garden(Base):
 
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String(30), nullable=False)
+    description = Column(String(256), nullable=False)
     is_public = Column(Boolean, nullable=False, default=False)
     
     user = relationship('User', secondary='user_gardens', back_populates='gardens')
