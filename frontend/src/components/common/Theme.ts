@@ -10,5 +10,8 @@ export const PlantTrackTheme: Theme = createTheme({
         secondary: {
             main: '#2ca625',
         },
+        action: {
+            disabled: 'white'
+        }
     },
 })

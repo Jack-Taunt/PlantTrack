@@ -2,13 +2,13 @@ import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, Too
 import { useState } from "react";
 import PlantIcon from "../../assets/PlantTrack_Icon-temp.svg"
 import { useAuth } from "./AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import api from "../../client/client"
 
 const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const { setUser } = useAuth();
+    const { user, setUser } = useAuth();
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -23,7 +23,7 @@ const Navbar = () => {
         setUser(null);
     }
 
-    const { user } = useAuth();
+    const location = useLocation();
 
     return (
         <AppBar position="static">
@@ -50,9 +50,10 @@ const Navbar = () => {
                         <Button
                             variant="contained"
                             color="secondary"
-                            sx={{ color: 'white' }}
+                            sx={{ color: 'white', border: 1, borderColor: "#000" }}
                             component={Link}
                             to="/plants"
+                            disabled={location.pathname === '/plants'}
                         >
                             Browse Plants
                         </Button>
@@ -60,9 +61,10 @@ const Navbar = () => {
                         <Button
                             variant="contained"
                             color="secondary"
-                            sx={{ color: 'white', ml: 1  }}
+                            sx={{ color: 'white', border: 1, borderColor: "#000", ml: 1  }}
                             component={Link}
                             to="/gardens/public"
+                            disabled={location.pathname === '/gardens/public'}
                         >
                             Browse Community Gardens
                         </Button>
@@ -71,9 +73,10 @@ const Navbar = () => {
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                sx={{ color: 'white', ml: 1 }}
+                                sx={{ color: 'white', border: 1, borderColor: "#000", ml: 1 }}
                                 component={Link}
                                 to="/gardens/me"
+                                disabled={location.pathname === '/gardens/me'}
                             >
                                 My Gardens
                             </Button>
