@@ -5,12 +5,14 @@ import type { User } from "../../types/user";
 interface AuthContextType {
     user: User | null;
     setUser: React.Dispatch<React.SetStateAction<User | null>>;
+    loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         
@@ -22,13 +24,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 if (err.response?.status === 401) {
                     setUser(null);
                 }
+            } finally {
+                setLoading(false);
             }
         }
         fetchUser()
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{ user, setUser, loading }}>
             {children}
         </AuthContext.Provider>
 
