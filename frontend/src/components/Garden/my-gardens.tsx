@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import api from "../../client/client"
-import CloseIcon from '@mui/icons-material/Close';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Gardens() {
     const [createGardenModalOpen, setCreateGardenModalOpen] = useState(false);
@@ -14,6 +14,9 @@ function Gardens() {
     const handleCreateGardenModalClose = () => setCreateGardenModalOpen(false);
 
     const [snackVisability, setSnackVisability] = useState(false);
+
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleSnackClose = (
         _: React.SyntheticEvent | Event,
@@ -53,11 +56,18 @@ function Gardens() {
             setSnackVisability(true);
 
         } catch (err: any) {
-            if (err.response?.status === 500) {
+            if (err.response?.status === 401) {
+                navigate("/login", {
+                    state: {from: location.pathname},
+                    replace: true
+                })
+
+            } else if (err.response?.status === 500) {
                 setError("root", {
                     type: "server",
                     message: "Something went wrong. Try again later",
                 })
+
             } else {
                 for (let val of err.response.data.detail) {
                     let input_field = val.loc[1]
@@ -72,19 +82,6 @@ function Gardens() {
         }
         
     }
-
-    const snackAction = (
-        <React.Fragment>
-            <IconButton
-                size='small'
-                aria-label='close'
-                color='inherit'
-                onClick={handleSnackClose}
-            >
-                <CloseIcon fontSize="small" />
-            </IconButton>
-        </React.Fragment>
-    )
 
     return (
         <>
