@@ -91,8 +91,8 @@ function Gardens() {
         const fetchGardens = async () => {
             try {
                 const gardens = await api.get("/gardens/me")
-                console.log(gardens)
                 setGardens(gardens.data)
+                
             } catch (err: any) {
                 console.log(err)
             }
@@ -104,7 +104,9 @@ function Gardens() {
     return (
         <>
             <Navbar/>
-            <h1 style={{textAlign: 'center'}} >My Gardens</h1>
+            <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', pt: 4}}>
+                My Gardens
+            </Typography>
             
             <Button 
                 variant='contained'
