@@ -10,6 +10,7 @@ import Home from "./components/Home/Home"
 import Register from "./components/User/Register";
 import Login from "./components/User/Login";
 import Gardens from "./components/Garden/my-gardens"
+import PublicGardens from "./components/Garden/public-gardens";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/gardens/me" element={<ProtectedRoute><Gardens /></ProtectedRoute>} />
+                <Route path="/gardens/public" element={<PublicGardens />} />
             </Routes>
         </ThemeProvider>
     );

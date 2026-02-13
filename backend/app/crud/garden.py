@@ -7,6 +7,11 @@ def get_user_gardens_db(user_id: int, db: Session):
     return garden_dict
 
 
+def get_public_gardens_db(db: Session):
+    garden_dict = db.query(Garden).filter(Garden.is_public == True).all()
+    return garden_dict
+
+
 def create_garden_db(name: str, description: str, is_public: bool, user_id: int, db: Session):
     new_garden = Garden(
         name=name,
