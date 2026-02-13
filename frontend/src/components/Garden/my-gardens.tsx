@@ -1,13 +1,16 @@
-import { Button, Modal, Typography, Box, Stack, TextField, Checkbox, FormControlLabel, Alert, FormGroup, Fade, AlertTitle, Snackbar, type SnackbarCloseReason, IconButton } from '@mui/material';
+import { Button, Modal, Typography, Box, Stack, TextField, Checkbox, FormControlLabel, Alert, FormGroup, Snackbar, type SnackbarCloseReason } from '@mui/material';
 import Navbar from '../common/Navbar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import api from "../../client/client"
 import { useLocation, useNavigate } from 'react-router-dom';
+import type { Garden } from '../../types/garden';
+import GardenList from './garden-list';
 
 function Gardens() {
     const [createGardenModalOpen, setCreateGardenModalOpen] = useState(false);
+    const [gardens, setGardens] = useState<Garden[]>([]);
 
     const handleCreateGardenModalOpen = () => setCreateGardenModalOpen(true);
 
@@ -83,6 +86,21 @@ function Gardens() {
         
     }
 
+
+    useEffect(() => {
+        const fetchGardens = async () => {
+            try {
+                const gardens = await api.get("/gardens/me")
+                console.log(gardens)
+                setGardens(gardens.data)
+            } catch (err: any) {
+                console.log(err)
+            }
+        }
+        fetchGardens()
+    }, []);
+
+
     return (
         <>
             <Navbar/>
@@ -94,6 +112,11 @@ function Gardens() {
             >
                 Create a New Garden
             </Button>
+
+
+            <GardenList gardens={gardens} />
+
+
             <Modal
                 open={createGardenModalOpen}
                 onClose={handleCreateGardenModalClose}

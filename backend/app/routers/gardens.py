@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
 from app.database import get_db
 from app.schemas.User import User
-from app.crud.garden import create_garden as create_garden_db
+from app.crud.garden import create_garden_db
+from app.crud.garden import get_user_gardens_db
 
 router = APIRouter(
     prefix="/gardens",
@@ -17,8 +18,18 @@ router = APIRouter(
 async def create_garden(
     garden: Garden, 
     db: Annotated[Session, Depends(get_db)], 
-    _: Annotated[User, Depends(get_current_user)]
+    user: Annotated[User, Depends(get_current_user)]
 ): 
 
-    new_garden = create_garden_db(garden.name, garden.description, garden.is_public, db)
+    new_garden = create_garden_db(garden.name, garden.description, garden.is_public, user.id, db)
     return new_garden
+
+
+@router.get("/me")
+async def get_user_gardens(
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+):
+    gardens = get_user_gardens_db(user.id, db)
+
+    return gardens

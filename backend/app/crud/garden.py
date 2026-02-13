@@ -1,17 +1,22 @@
 from sqlalchemy.orm import Session
 from app.models.Garden import Garden
+from app.models.User import User, user_gardens
 
-def get_user_gardens(user_id: int, db: Session):
-    garden_dict = db.query(Garden)
-    print(garden_dict)
+def get_user_gardens_db(user_id: int, db: Session):
+    garden_dict = db.query(Garden).join(user_gardens).join(User).filter(User.id == user_id).all()
+    return garden_dict
 
 
-def create_garden(name: str, description: str, is_public: bool, db: Session):
+def create_garden_db(name: str, description: str, is_public: bool, user_id: int, db: Session):
     new_garden = Garden(
         name=name,
         description=description,
         is_public=is_public,
     )
+
+    user = db.query(User).filter(User.id == user_id).first()
+    user.gardens.append(new_garden)
+
     db.add(new_garden)
     db.commit()
     db.refresh(new_garden)
