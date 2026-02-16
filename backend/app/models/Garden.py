@@ -12,6 +12,7 @@ class Garden(Base):
     
     user = relationship('User', secondary='user_gardens', back_populates='gardens')
     sections = relationship('Section', secondary='garden_sections', back_populates='garden')
+    tags = relationship("Tag", secondary='garden_tags', back_populates='gardens')
 
 
 garden_sections = Table(
@@ -38,4 +39,21 @@ section_plants = Table(
     Base.metadata,
     Column('section_id', Integer, ForeignKey('sections.id'), primary_key=True),
     Column('plant_id', Integer, ForeignKey('plants.id'), primary_key=True)
+)
+
+
+class Tag(Base):
+    __tablename__ = "tags"
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String(20), nullable=False)
+
+    gardens = relationship('Garden', secondary="garden_tags", back_populates='tags')
+
+
+garden_tags = Table(
+    'garden_tags',
+    Base.metadata,
+    Column('garden_id', Integer, ForeignKey('gardens.id'), primary_key=True),
+    Column('tag_id', Integer, ForeignKey('tags.id'), primary_key=True)
 )
