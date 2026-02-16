@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from app.schemas.Garden import Garden
+from fastapi import APIRouter, Depends
+from app.schemas.Garden import GardenCreate, GardenOut
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
 from app.database import get_db
 from app.schemas.User import User
-from app.crud.garden import create_garden_db, get_user_gardens_db, get_public_gardens_db
+from app.crud.garden import create_garden_db, get_user_gardens_db, get_public_gardens_db, get_garden_tags_db
 
 router = APIRouter(
     prefix="/gardens",
@@ -13,13 +13,13 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=Garden)
+@router.post("/", response_model=GardenOut)
 async def create_garden(
-    garden: Garden, 
+    garden: GardenCreate, 
     db: Annotated[Session, Depends(get_db)], 
     user: Annotated[User, Depends(get_current_user)]
 ): 
-    new_garden = create_garden_db(garden.name, garden.description, garden.is_public, user.id, db)
+    new_garden = create_garden_db(garden.name, garden.description, garden.is_public, garden.tags, user.id, db)
     return new_garden
 
 
@@ -38,3 +38,11 @@ async def get_public_gardens(
 ):
     gardens = get_public_gardens_db(db)
     return gardens
+
+
+@router.get("/tags")
+async def get_garden_tags(
+    db: Annotated[Session, Depends(get_db)]
+):
+    tags = get_garden_tags_db(db)
+    return tags

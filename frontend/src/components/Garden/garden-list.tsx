@@ -1,6 +1,7 @@
 import { Box, Grid, List, ListItem, ListItemButton, Typography } from "@mui/material"
 import type { Garden } from "../../types/garden"
 import placeholderImage from "../../assets/image_placeholder.svg"
+import TagBubble from "./tag";
 
 type GardenListProps = {
   gardens: Garden[];
@@ -48,6 +49,20 @@ const GardenList = ({gardens}: GardenListProps) => {
                                     <Typography variant="body2" sx={{pt:2, color: "text.primary", lineHeight: 1.4, pl: 1}}>
                                         {garden.description}
                                     </Typography>
+                                    
+                                    {garden.tags[0] && (
+
+                                        <List sx={{display: 'flex', flexDirection: 'row', pl: 0.5, pt: 3.5, pb: 0}}>
+                                            {garden.tags.map((tag) => {
+                                                return (
+                                                    <ListItem key={tag.id} sx={{width: "auto", padding: "3px"}}>
+                                                        <TagBubble tag={tag}/>
+                                                    </ListItem>
+                                                )
+                                            })}
+                                        </List>
+                                    )}
+                                    
                                     
                                 </Grid>
                             </Grid>

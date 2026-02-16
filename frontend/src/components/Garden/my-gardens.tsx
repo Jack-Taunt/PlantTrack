@@ -1,16 +1,17 @@
-import { Button, Modal, Typography, Box, Stack, TextField, Checkbox, FormControlLabel, Alert, FormGroup, Snackbar, type SnackbarCloseReason } from '@mui/material';
+import { Button, Modal, Typography, Box, Stack, TextField, Checkbox, FormControlLabel, Alert, FormGroup, Snackbar, type SnackbarCloseReason, FormControl, InputLabel, Select, OutlinedInput, Chip, MenuItem } from '@mui/material';
 import Navbar from '../common/Navbar';
 import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
+import { type SubmitHandler, Controller } from "react-hook-form";
 import api from "../../client/client"
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { Garden } from '../../types/garden';
+import type { Garden, Tag } from '../../types/garden';
 import GardenList from './garden-list';
 
 function Gardens() {
     const [createGardenModalOpen, setCreateGardenModalOpen] = useState(false);
     const [gardens, setGardens] = useState<Garden[]>([]);
+    const [tags, setTags] = useState<Tag[]>([]);
 
     const handleCreateGardenModalOpen = () => setCreateGardenModalOpen(true);
 
@@ -20,6 +21,7 @@ function Gardens() {
 
     const navigate = useNavigate();
     const location = useLocation();
+
 
     const handleSnackClose = (
         _: React.SyntheticEvent | Event,
@@ -31,20 +33,25 @@ function Gardens() {
         setSnackVisability(false);
     }
 
+
     const {
             register, 
             handleSubmit,
             setError,
+            control,
             formState: { errors },
         } = useForm<GardenFormInputs>({
             reValidateMode: "onSubmit"
     });
 
+
     type GardenFormInputs = {
         name: string;
         description: string;
         isPublic: string;
+        tags: number[];
     }
+
 
     const onSubmit: SubmitHandler<GardenFormInputs> = async (data) => {
         try {
@@ -53,6 +60,7 @@ function Gardens() {
                     name: data.name,
                     description: data.description,
                     is_public: data.isPublic,
+                    tags: data.tags,
                 }
             );
             handleCreateGardenModalClose();
@@ -98,7 +106,20 @@ function Gardens() {
             }
         }
         fetchGardens()
+
+        const fetchGardenTags = async () => {
+            try {
+                const tags = await api.get("/gardens/tags")
+                setTags(tags.data)
+            } catch (err: any) {
+                console.log(err)
+            }
+        }
+        fetchGardenTags()
     }, []);
+
+
+
 
 
     return (
@@ -174,11 +195,52 @@ function Gardens() {
                                             {errors.description.message}
                                         </Alert>
                                     )}
+
                                     <FormGroup>
                                         <FormControlLabel control={<Checkbox {...register("isPublic")} />} label="Make Garden Public?" />
-                                        
                                     </FormGroup>
                                     
+                                    <Controller
+                                        name="tags"
+                                        control={control}
+                                        defaultValue={[]}
+                                        render={({field}) => (
+                                            <FormControl sx={{width: "80%"}}>
+                                                <InputLabel id="garden-tags">Tags</InputLabel>
+                                                <Select
+                                                    labelId='garden-tags'
+                                                    multiple
+                                                    value={field.value}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        if (value.length <= 5) field.onChange(value);
+                                                    }}
+                                                    input={<OutlinedInput label="Chip" />}
+                                                    renderValue={(selected) => (
+                                                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                                                            {selected.map((id) => {
+                                                                const tag = tags.find(t => t.id === id);
+                                                                return <Chip key={id} label={tag?.name} />
+                                                            })}
+                                                        </Box>
+                                                    )}
+                                                >
+                                                    {tags.map((tag) => (
+                                                    <MenuItem
+                                                        key={tag.id}
+                                                        value={tag.id}
+                                                    >
+                                                        {tag.name}
+                                                    </MenuItem>
+                                                    ))}  
+                                                </Select>
+                                            </FormControl>
+                                        )}
+                                    />
+                                    <Typography variant='caption' sx={{pt: 0}}>
+                                        Maxiumum 5 tags per Garden
+                                    </Typography>
+
                                     {errors.root && (
                                         <Alert severity="error" sx={{width: "73%"}}>
                                             {errors.root.message}

@@ -3,4 +3,10 @@ export interface Garden {
     name: string;
     description: string;
     is_public: number;
+    tags: Tag[];
+}
+
+export interface Tag {
+    id: number;
+    name: string;
 }
