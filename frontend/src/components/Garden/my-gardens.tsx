@@ -65,6 +65,7 @@ function Gardens() {
             );
             handleCreateGardenModalClose();
             setSnackVisability(true);
+            fetchGardens();
 
         } catch (err: any) {
             if (err.response?.status === 401) {
@@ -93,33 +94,29 @@ function Gardens() {
         }
         
     }
+    const fetchGardens = async () => {
+        try {
+            const gardens = await api.get("/gardens/me")
+            setGardens(gardens.data)
+            
+        } catch (err: any) {
+            console.log(err)
+        }
+    }
 
+    const fetchGardenTags = async () => {
+        try {
+            const tags = await api.get("/gardens/tags")
+            setTags(tags.data)
+        } catch (err: any) {
+            console.log(err)
+        }
+    }
 
     useEffect(() => {
-        const fetchGardens = async () => {
-            try {
-                const gardens = await api.get("/gardens/me")
-                setGardens(gardens.data)
-                
-            } catch (err: any) {
-                console.log(err)
-            }
-        }
         fetchGardens()
-
-        const fetchGardenTags = async () => {
-            try {
-                const tags = await api.get("/gardens/tags")
-                setTags(tags.data)
-            } catch (err: any) {
-                console.log(err)
-            }
-        }
         fetchGardenTags()
     }, []);
-
-
-
 
 
     return (
