@@ -15,7 +15,12 @@ def get_user_gardens_db(user_id: int, db: Session):
 
 
 def get_public_gardens_db(db: Session):
-    garden_dict = db.query(Garden).filter(Garden.is_public == True).all()
+    garden_dict = (
+        db.query(Garden)
+        .filter(Garden.is_public == True)
+        .options(joinedload(Garden.tags))
+        .all()
+    )
     return garden_dict
 
 
