@@ -32,7 +32,7 @@ async def get_user_gardens(
     return gardens
 
 
-@router.get("/public")
+@router.get("/public", response_model=list[GardenOut])
 async def get_public_gardens(
     db: Annotated[Session, Depends(get_db)]
 ):

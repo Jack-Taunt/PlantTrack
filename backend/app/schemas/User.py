@@ -27,3 +27,7 @@ class UserOut(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+
+class UserPublic(BaseModel):
+    username: str

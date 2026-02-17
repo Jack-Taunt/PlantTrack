@@ -10,7 +10,8 @@ class Garden(Base):
     description = Column(String(256), nullable=False)
     is_public = Column(Boolean, nullable=False, default=False)
     
-    user = relationship('User', secondary='user_gardens', back_populates='gardens')
+    user = relationship('User', back_populates='gardens')
+    user_id = Column(ForeignKey("users.id"))
     sections = relationship('Section', secondary='garden_sections', back_populates='garden')
     tags = relationship("Tag", secondary='garden_tags', back_populates='gardens')
 

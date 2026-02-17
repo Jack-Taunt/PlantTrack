@@ -1,5 +1,5 @@
 from app.database import Base
-from sqlalchemy import Column, Integer, String, Table, ForeignKey
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
 class User(Base):
@@ -10,11 +10,4 @@ class User(Base):
     username = Column(String(20), nullable=False)
     password = Column(String, nullable=False)
 
-    gardens = relationship('Garden', secondary='user_gardens', back_populates='user')
-
-user_gardens = Table(
-    'user_gardens',
-    Base.metadata,
-    Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
-    Column('garden_id', Integer, ForeignKey('gardens.id'), primary_key=True)
-)
+    gardens = relationship('Garden', back_populates='user')

@@ -1,22 +1,24 @@
 from sqlalchemy.orm import Session, joinedload
 from app.models.Garden import Garden, Tag
-from app.models.User import User, user_gardens
+from app.models.User import User
+from sqlalchemy.inspection import inspect
 
 def get_user_gardens_db(user_id: int, db: Session):
     garden_dict = (
         db.query(Garden)
-        .join(user_gardens)
-        .join(User)
-        .filter(User.id == user_id)
+        .filter(Garden.user_id == user_id)
         .options(joinedload(Garden.tags))
         .all()
     )
     return garden_dict
 
+def to_dict(obj):
+    return {c.key: getattr(obj, c.key) for c in inspect(obj).mapper.column_attrs}
 
 def get_public_gardens_db(db: Session):
     garden_dict = (
         db.query(Garden)
+        .options(joinedload(Garden.user))
         .filter(Garden.is_public == True)
         .options(joinedload(Garden.tags))
         .all()
