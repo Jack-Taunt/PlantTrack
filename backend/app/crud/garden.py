@@ -3,6 +3,12 @@ from app.models.Garden import Garden, Tag
 from app.models.User import User
 from sqlalchemy.inspection import inspect
 
+
+def get_garden_db(garden_id: int, db: Session):
+    garden_dict = db.query(Garden).filter(Garden.id == garden_id).first()
+    return garden_dict
+
+
 def get_user_gardens_db(user_id: int, db: Session):
     garden_dict = (
         db.query(Garden)
@@ -50,3 +56,9 @@ def create_garden_db(name: str, description: str, is_public: bool, tags: list[in
 def get_garden_tags_db(db: Session):
     tag_dict = db.query(Tag).all()
     return tag_dict
+
+
+def delete_garden_db(garden_id: int, db: Session):
+    garden = db.query(Garden).filter(Garden.id == garden_id).first()
+    db.delete(garden)
+    db.commit()

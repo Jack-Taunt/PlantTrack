@@ -55,6 +55,6 @@ class Tag(Base):
 garden_tags = Table(
     'garden_tags',
     Base.metadata,
-    Column('garden_id', Integer, ForeignKey('gardens.id'), primary_key=True),
-    Column('tag_id', Integer, ForeignKey('tags.id'), primary_key=True)
+    Column('garden_id', Integer, ForeignKey('gardens.id', ondelete="CASCADE"), primary_key=True),
+    Column('tag_id', Integer, ForeignKey('tags.id', ondelete="CASCADE"), primary_key=True)
 )

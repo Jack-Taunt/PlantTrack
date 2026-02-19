@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 from app.schemas.Garden import GardenCreate, GardenOut
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
 from app.database import get_db
 from app.schemas.User import User
-from app.crud.garden import create_garden_db, get_user_gardens_db, get_public_gardens_db, get_garden_tags_db
+from app.crud.garden import create_garden_db, get_user_gardens_db, get_public_gardens_db, get_garden_tags_db, delete_garden_db, get_garden_db
 
 router = APIRouter(
     prefix="/gardens",
@@ -46,3 +47,22 @@ async def get_garden_tags(
 ):
     tags = get_garden_tags_db(db)
     return tags
+
+
+@router.delete("/{garden_id}")
+async def delete_garden(
+    garden_id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)]
+):
+    garden = get_garden_db(garden_id, db)
+    if (garden.user.id == user.id):
+        delete_garden_db(garden_id, db)
+        json_response = JSONResponse(content={"message": "Deletion Successful"})
+        return json_response
+
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="You do not own this garden!",
+        )
