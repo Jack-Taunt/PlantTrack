@@ -6,6 +6,7 @@ from sqlalchemy.inspection import inspect
 def get_user_gardens_db(user_id: int, db: Session):
     garden_dict = (
         db.query(Garden)
+        .options(joinedload(Garden.user))
         .filter(Garden.user_id == user_id)
         .options(joinedload(Garden.tags))
         .all()

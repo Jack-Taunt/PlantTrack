@@ -134,7 +134,7 @@ function Gardens() {
             </Button>
 
 
-            <GardenList gardens={gardens} />
+            <GardenList gardens={gardens} isPersonalGardensPage={true}/>
 
 
             <Modal

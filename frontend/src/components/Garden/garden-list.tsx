@@ -1,29 +1,36 @@
-import { Box, Collapse, Grid, List, ListItem, ListItemButton, Typography } from "@mui/material"
+import { Box, Grid, List, ListItem, ListItemButton, Typography, Stack, Button } from "@mui/material"
 import type { Garden } from "../../types/garden"
 import placeholderImage from "../../assets/image_placeholder.svg"
 import TagBubble from "./tag";
-import { ArrowForward, ArrowBack, ArrowForwardIos, ArrowBackIos } from "@mui/icons-material";
+import { ArrowForwardIos, ArrowBackIos, LocationOn, PersonRounded } from "@mui/icons-material";
 import { useState } from "react";
+import DeleteGardenButton from "./delete-garden-button";
+import { Link } from "react-router-dom";
 
 type GardenListProps = {
   gardens: Garden[];
+  isPersonalGardensPage: boolean;
 };
 
-const GardenList = ({gardens}: GardenListProps) => {
-    const [expandedGarden, setExpandedGarden] = useState<number | null>(null);
+const GardenList = ({gardens, isPersonalGardensPage}: GardenListProps) => {
+    const [selectedGarden, setExpandedGarden] = useState<Garden | null>(null);
 
     const handleClick = (gardenId: number) => {
-        if (expandedGarden === gardenId) {
+        if (selectedGarden?.id === gardenId) {
             setExpandedGarden(null)
         } else {
-            setExpandedGarden(gardenId)
+            const foundGarden = gardens.find((garden) => garden.id === gardenId)
+            if (foundGarden) {
+                setExpandedGarden(foundGarden)
+            }
+            
         }
         
     };
 
 
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{minHeight: "100vh"}}>
             <Grid size={2}/>
             <Grid size={5}>
                 <List sx={{width: "100%", mx: "auto", padding: 0}}>
@@ -34,10 +41,10 @@ const GardenList = ({gardens}: GardenListProps) => {
                                     sx={{
                                         width: "100%",
                                         border: '1px solid',
-                                        borderColor: garden.id === expandedGarden ? "black" : "divider",
+                                        borderColor: garden.id === selectedGarden?.id ? "black" : "divider",
                                         borderRadius: 2,
                                         p: 2,
-                                        backgroundColor: garden.id === expandedGarden ? '#f5f5f5' : 'white'
+                                        backgroundColor: garden.id === selectedGarden?.id ? '#f5f5f5' : 'white'
                                     }}
                                     onClick={() => handleClick(garden.id)}
                                 >
@@ -62,7 +69,7 @@ const GardenList = ({gardens}: GardenListProps) => {
                                             </Typography>
 
                                             <Typography variant="body1" color="text.secondary" sx={{pl: 1}}>
-                                                Created By: test - New Zealand
+                                                Created By: {garden.user.username} - New Zealand
                                             </Typography>
 
                                             <Typography variant="body2" sx={{pt:2, color: "text.primary", lineHeight: 1.4, pl: 1}}>
@@ -71,7 +78,7 @@ const GardenList = ({gardens}: GardenListProps) => {
                                             
                                             {garden.tags[0] && (
 
-                                                <List sx={{display: 'flex', flexDirection: 'row', pl: 0.5, pt: 3.5, pb: 0}}>
+                                                <List sx={{display: 'flex', flexDirection: 'row', pl: 0.5, pt: 3.5, pb: 0, overflow: 'hidden'}}>
                                                     {garden.tags.map((tag) => {
                                                         return (
                                                             <ListItem key={tag.id} sx={{width: "auto", padding: "3px"}}>
@@ -86,7 +93,7 @@ const GardenList = ({gardens}: GardenListProps) => {
                                         </Grid>
                                     </Grid>
                                     
-                                    {expandedGarden === garden.id ? <ArrowBackIos /> : <ArrowForwardIos />}
+                                    {selectedGarden?.id === garden.id ? <ArrowBackIos /> : <ArrowForwardIos />}
                                 </ListItemButton>
                             </ListItem>
                         )
@@ -94,17 +101,83 @@ const GardenList = ({gardens}: GardenListProps) => {
                 </List>
             </Grid>
             <Grid size={3}>
-                {expandedGarden && (
+                {selectedGarden && (
                     <Box
                         sx={{
                             border: "1px solid",
-                            height: "100%",
                             borderColor: "black",
                             borderRadius: 2,
-                            p: 2
+                            position: "sticky",
+                            top: 180,
+                            height: "80vh",
+                            display: 'flex',
+                            flexDirection: 'column'
                         }}
                     >
-                        <Typography>{gardens.filter((garden) => garden.id === expandedGarden)[0].name}</Typography>
+                        <Box
+                            sx={{
+                                overflowY: "auto",
+                                flexGrow: 1,
+                                p: 2
+                            }}
+                        >
+                            <Stack>
+                                <Box
+                                    component="img"
+                                    src={placeholderImage}
+                                    sx={{
+                                        height: 320, 
+                                        width: "100%", 
+                                        display: "block",
+                                        objectFit: "cover",
+                                        borderRadius: 2
+                                    }}
+                                />
+                                <Typography variant="h4" sx={{fontWeight: 600, p: 3}}>{selectedGarden.name}</Typography>
+                                <Stack direction="row" sx={{pl: 3}}>
+                                    <PersonRounded/>
+                                    <Typography variant="body1" color="text.secondary" sx={{fontWeight: 600, pl: 1}}>Created By:  {selectedGarden.user.username}</Typography>
+                                </Stack>
+                                <Stack direction="row" sx={{pl: 3}}>
+                                    <LocationOn/>
+                                    <Typography variant="body1" color="text.secondary" sx={{fontWeight: 600, pl: 1}}>Located In:  LOCATION</Typography>
+                                </Stack>
+                                <Typography variant="body2" sx={{pl: 3, pt: 3}}>{selectedGarden.description}</Typography>
+                                {selectedGarden.tags[0] && (
+
+                                    <List sx={{display: 'flex', flexDirection: 'row', pl: 0.5, pt: 3.5, pb: 0, overflow: 'hidden'}}>
+                                        {selectedGarden.tags.map((tag) => {
+                                            return (
+                                                <ListItem key={tag.id} sx={{width: "auto", padding: "3px"}}>
+                                                    <TagBubble tag={tag}/>
+                                                </ListItem>
+                                            )
+                                        })}
+                                    </List>
+                                )}
+                                <Box sx={{height: 800}}>
+                                </Box>
+                                
+                            </Stack>
+                        </Box>
+                        <Stack
+                            direction="row"
+                            sx={{width: "100%", pt: 2, pb: 3}}
+                            justifyContent='center'
+                        > 
+                            <Button 
+                                variant="contained" 
+                                sx={{width: '100%', ml: 3, mr: 3}}
+                                component={Link}
+                                to={`/gardens/${selectedGarden.id}`}
+                            >
+                                Visit Garden
+                            </Button>
+                            {isPersonalGardensPage &&
+                                <DeleteGardenButton garden={selectedGarden}/>
+                            }   
+                        </Stack>
+                        
                     </Box>
                 )}
             </Grid>
