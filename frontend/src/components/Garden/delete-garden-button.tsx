@@ -7,9 +7,10 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 type DeleteGardenProps = {
     garden: Garden;
+    onGardenDeleted: () => void;
 };
 
-const DeleteGardenButton = ({garden}: DeleteGardenProps) => {
+const DeleteGardenButton = ({garden, onGardenDeleted}: DeleteGardenProps) => {
     const [deleteGardenModalOpen, setDeleteGardenModalOpen] = useState(false);
 
     const handleDeleteGardenModalOpen = () => setDeleteGardenModalOpen(true);
@@ -35,6 +36,7 @@ const DeleteGardenButton = ({garden}: DeleteGardenProps) => {
             console.log(response.data)
             handleDeleteGardenModalClose();
             setSnackVisability(true);
+            onGardenDeleted();
 
         } catch (err: any) {
             if (err.response?.status === 401) {
