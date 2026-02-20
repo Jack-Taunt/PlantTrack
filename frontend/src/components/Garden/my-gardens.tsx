@@ -134,7 +134,7 @@ function MyGardensPage() {
             </Button>
 
 
-            <GardenList gardens={gardens} isPersonalGardensPage={true} onGardenDeleted={fetchGardens}/>
+            <GardenList gardens={gardens} onGardenDeleted={fetchGardens}/>
 
 
             <Modal

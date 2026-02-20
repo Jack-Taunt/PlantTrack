@@ -29,7 +29,7 @@ const PublicGardensPage = () => {
             <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', pt: 4}}>
                 Community Gardens
             </Typography>
-            <GardenList gardens={gardens} isPersonalGardensPage={false}/>
+            <GardenList gardens={gardens} />
         </>
     )
 }

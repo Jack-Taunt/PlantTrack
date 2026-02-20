@@ -9,11 +9,10 @@ import { Link } from "react-router-dom";
 
 type GardenListProps = {
   gardens: Garden[];
-  isPersonalGardensPage: boolean;
   onGardenDeleted?: () => void;
 };
 
-const GardenList = ({gardens, isPersonalGardensPage, onGardenDeleted}: GardenListProps) => {
+const GardenList = ({gardens, onGardenDeleted}: GardenListProps) => {
     const [selectedGarden, setExpandedGarden] = useState<Garden | null>(null);
 
     const handleClick = (gardenId: number) => {
