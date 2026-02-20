@@ -9,9 +9,9 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 import Home from "./components/Home/Home"
 import Register from "./components/User/Register";
 import Login from "./components/User/Login";
-import Gardens from "./components/Garden/my-gardens"
+import MyGardensPage from "./components/Garden/my-gardens"
 import GardenPage from "./components/Garden/garden";
-import PublicGardens from "./components/Garden/public-gardens";
+import PublicGardensPage from "./components/Garden/public-gardens";
 
 function App() {
     return (
@@ -20,8 +20,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/gardens/me" element={<ProtectedRoute><Gardens /></ProtectedRoute>} />
-                <Route path="/gardens/public" element={<PublicGardens />} />
+                <Route path="/gardens/me" element={<ProtectedRoute><MyGardensPage /></ProtectedRoute>} />
+                <Route path="/gardens/public" element={<PublicGardensPage />} />
                 <Route path="/gardens/:gardenId" element={<GardenPage />} />
             </Routes>
         </ThemeProvider>

@@ -6,7 +6,7 @@ import api from "../../client/client"
 import type { Garden } from '../../types/garden';
 
 
-const PublicGardens = () => {
+const PublicGardensPage = () => {
     const [gardens, setGardens] = useState<Garden[]>([]);
 
     useEffect(() => {
@@ -34,4 +34,4 @@ const PublicGardens = () => {
     )
 }
 
-export default PublicGardens;
+export default PublicGardensPage;

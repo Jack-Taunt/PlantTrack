@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import type { Garden, Tag } from '../../types/garden';
 import GardenList from './garden-list';
 
-function Gardens() {
+function MyGardensPage() {
     const [createGardenModalOpen, setCreateGardenModalOpen] = useState(false);
     const [gardens, setGardens] = useState<Garden[]>([]);
     const [tags, setTags] = useState<Tag[]>([]);
@@ -290,4 +290,4 @@ function Gardens() {
 };
 
 
-export default Gardens;
+export default MyGardensPage;
