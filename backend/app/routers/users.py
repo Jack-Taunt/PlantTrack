@@ -11,7 +11,7 @@ from app.schemas.User import User, UserOut
 from app.crud.user import create_user, get_user_by_email
 from fastapi.encoders import jsonable_encoder
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 240
 
 
 router = APIRouter(
