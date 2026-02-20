@@ -18,7 +18,7 @@ router = APIRouter(
 async def create_garden(
     garden: GardenCreate, 
     db: Annotated[Session, Depends(get_db)], 
-    user: Annotated[User, Depends(get_current_user)]
+    user: Annotated[User, Depends(get_current_user())]
 ): 
     new_garden = create_garden_db(garden.name, garden.description, garden.is_public, garden.tags, user.id, db)
     return new_garden
@@ -26,7 +26,7 @@ async def create_garden(
 
 @router.get("/me")
 async def get_user_gardens(
-    user: Annotated[User, Depends(get_current_user)],
+    user: Annotated[User, Depends(get_current_user())],
     db: Annotated[Session, Depends(get_db)],
 ):
     gardens = get_user_gardens_db(user.id, db)
@@ -52,7 +52,7 @@ async def get_garden_tags(
 @router.delete("/{garden_id}")
 async def delete_garden(
     garden_id: int,
-    user: Annotated[User, Depends(get_current_user)],
+    user: Annotated[User, Depends(get_current_user())],
     db: Annotated[Session, Depends(get_db)]
 ):
     garden = get_garden_db(garden_id, db)
@@ -66,3 +66,20 @@ async def delete_garden(
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="You do not own this garden!",
         )
+    
+
+@router.get("/{garden_id}")
+async def get_garden(
+    garden_id: int,
+    user: Annotated[User, Depends(get_current_user(False))],
+    db: Annotated[Session, Depends(get_db)]
+):
+    garden = get_garden_db(garden_id, db)
+    if not garden.is_public:
+        if (not user or garden.user_id != user.id):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, 
+                detail="You do not own this garden!",
+            )
+
+    return garden

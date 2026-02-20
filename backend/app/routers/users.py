@@ -83,5 +83,5 @@ async def register(user: User, db: Annotated[Session, Depends(get_db)]):
 
 
 @router.get("/me", response_model=UserOut)
-async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
+async def read_users_me(current_user: Annotated[User, Depends(get_current_user())]):
     return current_user

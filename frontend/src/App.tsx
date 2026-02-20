@@ -10,6 +10,7 @@ import Home from "./components/Home/Home"
 import Register from "./components/User/Register";
 import Login from "./components/User/Login";
 import Gardens from "./components/Garden/my-gardens"
+import GardenPage from "./components/Garden/garden";
 import PublicGardens from "./components/Garden/public-gardens";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/gardens/me" element={<ProtectedRoute><Gardens /></ProtectedRoute>} />
                 <Route path="/gardens/public" element={<PublicGardens />} />
+                <Route path="/gardens/:gardenId" element={<GardenPage />} />
             </Routes>
         </ThemeProvider>
     );
