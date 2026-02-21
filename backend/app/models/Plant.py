@@ -16,7 +16,7 @@ class Plant(Base):
     phylum = Column(String(50), nullable=True)
     variety = Column(String(50), nullable=True)
 
-    sections = relationship('Section', secondary='section_plants', back_populates='plants')
+    sections = relationship('Section', back_populates='plants')
     
     
     toxicity_id = Column(Integer, ForeignKey("toxicity.id"))
