@@ -1,5 +1,5 @@
 from app.database import Base
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table, Date
 from sqlalchemy.orm import relationship
 
 class Garden(Base):
@@ -12,16 +12,8 @@ class Garden(Base):
     
     user = relationship('User', back_populates='gardens')
     user_id = Column(ForeignKey("users.id"))
-    sections = relationship('Section', secondary='garden_sections', back_populates='garden')
+    sections = relationship('Section', back_populates='garden')
     tags = relationship("Tag", secondary='garden_tags', back_populates='gardens')
-
-
-garden_sections = Table(
-    'garden_sections',
-    Base.metadata,
-    Column('garden_id', Integer, ForeignKey('gardens.id'), primary_key=True),
-    Column('section_id', Integer, ForeignKey('sections.id'), primary_key=True)
-)
 
 
 class Section(Base):
@@ -29,18 +21,25 @@ class Section(Base):
 
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String(30), nullable=False)
-    description = Column(String(256), nullable=False)
+    description = Column(String(256), nullable=True)
 
-    garden = relationship('Garden', secondary='garden_sections', back_populates='sections')
-    plants = relationship('Plant', secondary='section_plants', back_populates='sections')
+    garden_id = Column(ForeignKey("gardens.id"))
+    garden = relationship('Garden', back_populates='sections')
+
+    section_plants = relationship('SectionPlant', back_populates='sections')
 
 
-section_plants = Table(
-    'section_plants',
-    Base.metadata,
-    Column('section_id', Integer, ForeignKey('sections.id'), primary_key=True),
-    Column('plant_id', Integer, ForeignKey('plants.id'), primary_key=True)
-)
+class SectionPlant(Base):
+    __tablename__ = "section_plants"
+    id = Column(Integer, primary_key=True, nullable=False)
+    planted_date = Column(Date, nullable=True)
+    notes = Column(String(256), nullable=True)
+
+    section_id = Column(ForeignKey("sections.id"))
+    section = relationship('Section', back_populates='section_plants')
+    plant_id = Column(ForeignKey("plants.id"))
+    plant = relationship('Plant', back_populates='section_plants')
+
 
 
 class Tag(Base):
