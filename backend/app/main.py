@@ -27,4 +27,4 @@ app.include_router(plants.router)
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "The Application is Running"}
