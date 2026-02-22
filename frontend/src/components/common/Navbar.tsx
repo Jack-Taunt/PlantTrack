@@ -52,8 +52,8 @@ const Navbar = () => {
                             color="secondary"
                             sx={{ color: 'white', border: 1, borderColor: "#000" }}
                             component={Link}
-                            to="/plants"
-                            disabled={location.pathname === '/plants'}
+                            to="/plants/public"
+                            disabled={location.pathname === '/plants/public'}
                         >
                             Browse Plants
                         </Button>

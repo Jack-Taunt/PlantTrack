@@ -12,6 +12,7 @@ import Login from "./components/User/Login";
 import MyGardensPage from "./components/Garden/my-gardens"
 import GardenPage from "./components/Garden/garden";
 import PublicGardensPage from "./components/Garden/public-gardens";
+import PublicPlantsPage from "./components/Plant/public-plants";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/gardens/me" element={<ProtectedRoute><MyGardensPage /></ProtectedRoute>} />
                 <Route path="/gardens/public" element={<PublicGardensPage />} />
                 <Route path="/gardens/:gardenId" element={<GardenPage />} />
+                <Route path="/plants/public" element={<PublicPlantsPage />} />
             </Routes>
         </ThemeProvider>
     );
