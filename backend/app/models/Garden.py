@@ -26,7 +26,7 @@ class Section(Base):
     garden_id = Column(ForeignKey("gardens.id"))
     garden = relationship('Garden', back_populates='sections')
 
-    section_plants = relationship('SectionPlant', back_populates='sections')
+    section_plants = relationship('SectionPlant', back_populates='section')
 
 
 class SectionPlant(Base):
