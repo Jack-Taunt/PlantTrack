@@ -14,6 +14,11 @@ activate .venv
 backend> .venv/scripts/activate
 ```
 
+download required packages
+```
+backend> pip instll -r requirements.txt
+```
+
 run fastapi
 ```
 backend/app> fastapi dev main.py
