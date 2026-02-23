@@ -4,6 +4,8 @@ __pycache__
 
 # Test
 test.db
+.coverage
+coverage.xml
 
 # Logs
 logs

@@ -37,3 +37,30 @@ run react
 ```
 frontend> npm run dev
 ```
+
+
+### Test
+
+to run tests
+activate .venv
+```
+backend> .venv/scripts/activate
+backend> pytest
+```
+
+For coverage numbers, requires pytest-cov
+
+
+run test coverage for line coverage
+```
+backend> pytest --cov=app
+```
+
+run test coverage for branch coverage
+```
+backend> pytest --cov=app --cov-branch
+```
+
+add --cov-report=html to view overall coverage
+
+add --cov-report=xml for use in coverage tools
