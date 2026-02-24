@@ -19,8 +19,6 @@ def get_user_gardens_db(user_id: int, db: Session):
     )
     return garden_dict
 
-def to_dict(obj):
-    return {c.key: getattr(obj, c.key) for c in inspect(obj).mapper.column_attrs}
 
 def get_public_gardens_db(db: Session):
     garden_dict = (
