@@ -3,7 +3,7 @@ import pytest
 def test_post_user_token_correct_details_logs_in(client, default_data):
     response = client.post(
         "/users/token", 
-        data={"username": "default@email.com", "password": "default_password"}
+        data={"username": "default1@email.com", "password": "Default_password1!"}
     )
     assert response.status_code == 200
     token = response.cookies.get("access_token")
@@ -31,9 +31,9 @@ def test_post_user_token_incorrect_details_error_received(payload, client, defau
 @pytest.mark.parametrize(
         "payload",
         [
-            {"email": "default@email.com", "username": "test_username", "password": "Default_password1"},
-            {"email": "default@email.com", "username": "test_username", "password": "Wrong_password1"},
-            {"email": "default@email.com", "username": "default_user", "password": "Default_password1"}
+            {"email": "default1@email.com", "username": "test_username", "password": "Default_password1"},
+            {"email": "default1@email.com", "username": "test_username", "password": "Wrong_password1"},
+            {"email": "default1@email.com", "username": "default_user", "password": "Default_password1"}
         ]
 )
 def test_post_register_existing_email_409_received(payload, client, default_data):
