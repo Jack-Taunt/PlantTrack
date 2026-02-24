@@ -75,11 +75,17 @@ async def get_garden(
     db: Annotated[Session, Depends(get_db)]
 ):
     garden = get_garden_db(garden_id, db)
-    if not garden.is_public:
-        if (not user or garden.user_id != user.id):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, 
-                detail="You do not own this garden!",
-            )
+    if garden != None:
+        if not garden.is_public:
+            if (not user or garden.user_id != user.id):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN, 
+                    detail="You do not own this garden!",
+                )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This garden doesn't exist!",
+        )
 
     return garden
