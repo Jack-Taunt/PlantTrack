@@ -38,10 +38,10 @@ class Edibility(BaseModel):
 
 class Environment(BaseModel):
     light_type: str | None
-    min_temp: int | None
-    max_temp: int | None
-    min_humidity: int | None
-    max_humidity: int | None
+    min_temp: float | None
+    max_temp: float | None
+    min_humidity: float | None
+    max_humidity: float | None
     min_usda_zone: str | None
     max_usda_zone: str | None
 
@@ -52,8 +52,8 @@ class CareRequirements(BaseModel):
     soil_moisture: str | None
     drought_tolerant: bool | None
     soil_type: str | None
-    min_soil_ph: int | None
-    max_soil_ph: int | None
+    min_soil_ph: float | None
+    max_soil_ph: float | None
     fertilizer_frequency: int | None
     fertilizer_nitrogen: int | None
     fertilizer_phosphorus: int | None
@@ -64,16 +64,16 @@ class Growth(BaseModel):
     annual: bool | None
     biennial: bool | None
     perennial: bool | None
-    max_height: int | None
-    max_width: int | None
+    max_height: float | None
+    max_width: float | None
     growth_rate: str | None
     min_days_to_harvest: int | None
     max_days_to_harvest: int | None
 
 
 class Planting(BaseModel):
-    spacing: int | None
-    seed_depth: int | None
+    spacing: float | None
+    seed_depth: float | None
     direct_sow: bool | None
     transplant: bool | None
     propagation: bool | None
