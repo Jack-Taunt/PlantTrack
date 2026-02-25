@@ -26,7 +26,7 @@ const PublicGardensPage = () => {
     return (
         <>
             <Navbar />
-            <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', pt: 4}}>
+            <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', paddingY: 4}}>
                 Community Gardens
             </Typography>
             <GardenList gardens={gardens} />
