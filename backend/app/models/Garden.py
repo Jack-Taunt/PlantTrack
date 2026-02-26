@@ -14,6 +14,7 @@ class Garden(Base):
     user_id = Column(ForeignKey("users.id"))
     sections = relationship('Section', back_populates='garden')
     tags = relationship("Tag", secondary='garden_tags', back_populates='gardens')
+    garden_plants = relationship('GardenPlant', back_populates='garden')
 
 
 class Section(Base):
@@ -26,19 +27,18 @@ class Section(Base):
     garden_id = Column(ForeignKey("gardens.id"))
     garden = relationship('Garden', back_populates='sections')
 
-    section_plants = relationship('SectionPlant', back_populates='section')
 
-
-class SectionPlant(Base):
-    __tablename__ = "section_plants"
+class GardenPlant(Base):
+    __tablename__ = "garden_plants"
     id = Column(Integer, primary_key=True, nullable=False)
     planted_date = Column(Date, nullable=True)
     notes = Column(String(256), nullable=True)
 
-    section_id = Column(ForeignKey("sections.id"))
-    section = relationship('Section', back_populates='section_plants')
-    plant_id = Column(ForeignKey("plants.id"))
-    plant = relationship('Plant', back_populates='section_plants')
+    garden_id = Column(ForeignKey("gardens.id"), nullable=False)
+    garden = relationship('Garden', back_populates='garden_plants')
+    section_id = Column(ForeignKey("sections.id"), nullable=True)
+    plant_id = Column(ForeignKey("plants.id"), nullable=False)
+    plant = relationship('Plant', back_populates='garden_plants')
 
 
 

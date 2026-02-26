@@ -4,4 +4,4 @@ from .Garden import Garden
 from .Plant import Plant
 from .Garden import Tag
 from .Garden import Section
-from .Garden import SectionPlant
+from .Garden import GardenPlant
