@@ -21,7 +21,7 @@ class User(BaseModel):
         return password
 
 class UserOut(BaseModel):
-    email: str
+    id: int
     username: str
 
     model_config = {

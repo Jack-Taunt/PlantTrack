@@ -1,4 +1,3 @@
-import { type UserPublic } from "./user";
 import { type SectionPlant } from "./plant";
 
 export interface Garden {
@@ -7,7 +6,7 @@ export interface Garden {
     description: string;
     is_public: number;
     tags: Tag[];
-    user: UserPublic;
+    user_id: number;
     sections: Section[];
 }
 
