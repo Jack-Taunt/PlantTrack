@@ -5,7 +5,13 @@ from sqlalchemy.inspection import inspect
 
 
 def get_garden_db(garden_id: int, db: Session):
-    garden_dict = db.query(Garden).filter(Garden.id == garden_id).first()
+    garden_dict = (
+        db.query(Garden)
+        .filter(Garden.id == garden_id)
+        .options(joinedload(Garden.tags))
+        .first()
+
+    )
     return garden_dict
 
 
