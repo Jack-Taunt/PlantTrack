@@ -39,7 +39,7 @@ const Login = () => {
             );
             const from = (location.state as any)?.from || "/";
             navigate(from);
-            setUser(response.data);
+            setUser(response.data.user);
 
         } catch (err: any) {
             if (err.response?.status === 401) {
