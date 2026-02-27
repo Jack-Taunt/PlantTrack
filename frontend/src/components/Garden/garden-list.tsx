@@ -1,7 +1,7 @@
 import { Box, Grid, List, ListItem, ListItemButton, Typography, Stack, Button } from "@mui/material"
 import type { Garden } from "../../types/garden"
 import placeholderImage from "../../assets/image_placeholder.svg"
-import TagBubble from "./tag";
+import TagList from "./tag-list";
 import { ArrowForwardIos, ArrowBackIos, LocationOn, PersonRounded } from "@mui/icons-material";
 import { useState } from "react";
 import DeleteGardenButton from "./delete-garden-button";
@@ -77,16 +77,7 @@ const GardenList = ({gardens, onGardenDeleted}: GardenListProps) => {
                                             </Typography>
                                             
                                             {garden.tags[0] && (
-
-                                                <List sx={{display: 'flex', flexDirection: 'row', pl: 0.5, pt: 3.5, pb: 0, overflow: 'hidden'}}>
-                                                    {garden.tags.map((tag) => {
-                                                        return (
-                                                            <ListItem key={tag.id} sx={{width: "auto", padding: "3px"}}>
-                                                                <TagBubble tag={tag}/>
-                                                            </ListItem>
-                                                        )
-                                                    })}
-                                                </List>
+                                                <TagList tags={garden.tags}/>
                                             )}
                                             
                                             
@@ -144,16 +135,7 @@ const GardenList = ({gardens, onGardenDeleted}: GardenListProps) => {
                                 </Stack>
                                 <Typography variant="body2" sx={{pl: 3, pt: 3}}>{selectedGarden.description}</Typography>
                                 {selectedGarden.tags[0] && (
-
-                                    <List sx={{display: 'flex', flexDirection: 'row', pl: 0.5, pt: 3.5, pb: 0, overflow: 'hidden'}}>
-                                        {selectedGarden.tags.map((tag) => {
-                                            return (
-                                                <ListItem key={tag.id} sx={{width: "auto", padding: "3px"}}>
-                                                    <TagBubble tag={tag}/>
-                                                </ListItem>
-                                            )
-                                        })}
-                                    </List>
+                                    <TagList tags={selectedGarden.tags}/>
                                 )}
                                 <Box sx={{height: 800}}>
                                 </Box>
