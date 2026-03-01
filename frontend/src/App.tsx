@@ -13,10 +13,12 @@ import MyGardensPage from "./components/Garden/my-gardens"
 import GardenPage from "./components/Garden/garden";
 import PublicGardensPage from "./components/Garden/public-gardens";
 import PublicPlantsPage from "./components/Plant/public-plants";
+import { CssBaseline } from "@mui/material";
 
 function App() {
     return (
         <ThemeProvider theme={PlantTrackTheme}>
+            <CssBaseline />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/register" element={<Register />} />
