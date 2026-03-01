@@ -24,10 +24,23 @@ const PlantList = ({plants}: PlantListProps) => {
     };
 
     return (
-        <Grid container spacing={1}>
-            <Grid container spacing={2} sx={{p: 2, borderRadius: 2, border: '1px solid', borderColor: 'black', maxHeight: "80vh", width: "80%", overflowY: "auto", margin: '0 auto', scrollbarGutter: 'auto'}}>
+        <Grid container spacing={1} sx={{height: '100%'}}>
+            <Grid 
+                container 
+                spacing={2} 
+                sx={{
+                    p: 2, 
+                    borderRadius: 2, 
+                    border: '1px solid', 
+                    borderColor: 'black', 
+                    height: "100%",
+                    width: "100%", 
+                    overflowY: "auto", 
+                    margin: '0 auto', 
+                    scrollbarGutter: 'auto'
+                }}>
                 {plants.map((plant) => (
-                    <Grid size={4} key={plant.id}>
+                    <Grid size={{md: 12, lg: 6, xl: 4}} key={plant.id}>
                         <ListItemButton 
                             sx={{
                                 width: "100%",
@@ -45,8 +58,7 @@ const PlantList = ({plants}: PlantListProps) => {
                                     component="img"
                                     src={placeholderImage}
                                     sx={{
-                                        maxHeight: 140, 
-                                        maxWidth: 140, 
+                                        maxWidth: "95%", 
                                         display: "block",
                                         objectFit: "cover",
                                         borderRadius: 2
