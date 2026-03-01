@@ -5,22 +5,31 @@ import placeholderImage from "../../assets/image_placeholder.svg"
 
 type PlantListProps = {
   plants: Plant[];
+  plantsSelected?: (plants: number[]) => void;
+  multipleSelect: boolean;
 };
 
-const PlantList = ({plants}: PlantListProps) => {
-    const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
+const PlantList = ({plants, plantsSelected, multipleSelect}: PlantListProps) => {
+    const [selectedPlants, setSelectedPlants] = useState<number[]>([]);
 
     const handleClick = (plantId: number) => {
-        if (selectedPlant?.id === plantId) {
-            setSelectedPlant(null)
-        } else {
-            const foundPlant = plants.find((plant) => plant.id === plantId)
-            if (foundPlant) {
-                setSelectedPlant(foundPlant)
+
+        const foundPlantIndex = selectedPlants.indexOf(plantId)
+        if (foundPlantIndex > -1) {
+            const updatedPlants = selectedPlants.filter(id => id !== plantId)
+            setSelectedPlants(updatedPlants)
+            if (plantsSelected) {
+                plantsSelected(updatedPlants)
             }
-            
-        }
-        
+
+        } else {
+            const updatedPlants = (multipleSelect == true) ? [...selectedPlants, plantId] : [plantId]
+            setSelectedPlants(updatedPlants)
+            if (plantsSelected) {
+                plantsSelected(updatedPlants)
+            }
+        }  
+          
     };
 
     return (
@@ -44,12 +53,12 @@ const PlantList = ({plants}: PlantListProps) => {
                         <ListItemButton 
                             sx={{
                                 width: "100%",
-                                height: 160,
+                                height: "100%",
                                 border: '1px solid',
-                                borderColor: plant.id === selectedPlant?.id ? "black" : "divider",
+                                borderColor: selectedPlants.indexOf(plant.id) > -1 ? "black" : "divider",
                                 borderRadius: 2,
                                 p: 1,
-                                backgroundColor: plant.id === selectedPlant?.id ? '#f5f5f5' : 'white'
+                                backgroundColor: selectedPlants.indexOf(plant.id) > -1 ? '#f5f5f5' : 'white'
                             }}
                             onClick={() => handleClick(plant.id)}
                         >
@@ -58,7 +67,8 @@ const PlantList = ({plants}: PlantListProps) => {
                                     component="img"
                                     src={placeholderImage}
                                     sx={{
-                                        maxWidth: "95%", 
+                                        maxHeight: "100%",
+                                        maxWidth: "100%", 
                                         display: "block",
                                         objectFit: "cover",
                                         borderRadius: 2
@@ -66,13 +76,22 @@ const PlantList = ({plants}: PlantListProps) => {
                                 />
                             </Grid>
                             <Grid size={8}>
-                                <Typography variant="h6" fontWeight={600} sx={{pl: 0}}>
-                                    {plant.common_name && plant.common_name.toLowerCase() !== plant.scientific_name.toLowerCase() ? 
-                                        <>{plant.common_name} ({plant.scientific_name})</>
-                                    : 
-                                        plant.scientific_name
-                                    }
-                                </Typography>
+                                <Box>
+                                    {plant.common_name && plant.common_name.toLowerCase() !== plant.scientific_name.toLowerCase() ? (
+                                        <>
+                                            <Typography variant="h5" fontWeight={600} sx={{pl: 0}} align="center">
+                                                {plant.common_name}
+                                            </Typography>
+                                            <Typography variant="h6" sx={{pl: 0}} align="center">
+                                                ({plant.scientific_name})
+                                            </Typography>
+                                        </>
+                                    ) : (
+                                        <Typography variant="h5" fontWeight={600} sx={{pl: 0}} align="center">
+                                                {plant.scientific_name}
+                                        </Typography>
+                                    )}
+                                </Box>
                             </Grid>
                             
                         </ListItemButton>

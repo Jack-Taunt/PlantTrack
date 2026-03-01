@@ -36,7 +36,7 @@ const PublicPlantsPage = () => {
                 Community Plants
             </Typography>
             <Box sx={{flex: 1, minHeight: 0, display: 'flex', pb: 5, width: '80%', mx: 'auto'}}>
-                <PlantList plants={plants}/>
+                <PlantList plants={plants} multipleSelect={false}/>
             </Box>
         </Box>
     )
