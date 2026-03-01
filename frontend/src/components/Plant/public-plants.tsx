@@ -3,7 +3,7 @@ import Navbar from "../common/Navbar";
 import PlantList from "./plant-list";
 import { type Plant } from "../../types/plant";
 import api from "../../client/client"
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 
 const PublicPlantsPage = () => {
     const [plants, setPlants] = useState<Plant[]>([]);
@@ -23,13 +23,22 @@ const PublicPlantsPage = () => {
     
 
     return (
-        <>
+        <Box
+            sx={{
+                height: "100dvh",
+                display: "flex",
+                flexDirection: "column",
+                overflow: 'hidden',
+            }}
+        >
             <Navbar />
             <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', paddingY: 4}}>
                 Community Plants
             </Typography>
-            <PlantList plants={plants}/>
-        </>
+            <Box sx={{flex: 1, minHeight: 0, display: 'flex', pb: 5, width: '80%', mx: 'auto'}}>
+                <PlantList plants={plants}/>
+            </Box>
+        </Box>
     )
 }
 
