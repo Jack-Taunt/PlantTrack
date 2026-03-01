@@ -1,4 +1,5 @@
 import { type SectionPlant } from "./plant";
+import type { UserPublic } from "./user";
 
 export interface Garden {
     id: number;
@@ -7,6 +8,7 @@ export interface Garden {
     is_public: number;
     tags: Tag[];
     user_id: number;
+    user: UserPublic;
     sections: Section[];
 }
 
