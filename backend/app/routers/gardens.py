@@ -1,12 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
-from app.schemas.Garden import GardenCreate, GardenOut
+from app.schemas.Garden import GardenCreate, GardenOut, GardenPlant
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
 from app.database import get_db
 from app.schemas.User import User
-from app.crud.garden import create_garden_db, get_user_gardens_db, get_public_gardens_db, get_garden_tags_db, delete_garden_db, get_garden_db
+from app.crud.garden import (create_garden_db, 
+                             get_user_gardens_db, 
+                             get_public_gardens_db, 
+                             get_garden_tags_db, 
+                             delete_garden_db, 
+                             get_garden_db, 
+                             create_garden_plants_db)
 
 router = APIRouter(
     prefix="/gardens",
@@ -89,3 +95,21 @@ async def get_garden(
         )
 
     return garden
+
+
+@router.post("/{garden_id}/plants")
+async def create_garden_plant(
+    garden_id: int,
+    plants: list[int],
+    user: Annotated[User, Depends(get_current_user())],
+    db: Annotated[Session, Depends(get_db)]
+):
+    garden = get_garden_db(garden_id, db)
+    if (garden.user.id == user.id):
+        create_garden_plants_db(garden_id, plants, db)
+
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="You do not own this garden!",
+        )

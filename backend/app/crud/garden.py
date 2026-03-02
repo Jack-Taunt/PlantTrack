@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 from app.models.Garden import Garden, Tag
 from app.models.User import User
-from sqlalchemy.inspection import inspect
-
+from app.models.Garden import GardenPlant
 
 def get_garden_db(garden_id: int, db: Session):
     garden_dict = (
@@ -66,3 +65,14 @@ def delete_garden_db(garden_id: int, db: Session):
     garden = db.query(Garden).filter(Garden.id == garden_id).first()
     db.delete(garden)
     db.commit()
+
+
+def create_garden_plants_db(garden_id: int, plants: list[int], db: Session):
+    for plant in plants:
+        create_garden_plant_db(garden_id, plant, db)
+    db.commit()
+
+
+def create_garden_plant_db(garden_id: int, plant: int, db: Session):
+    garden_plant = GardenPlant(garden_id=garden_id, plant_id=plant)
+    db.add(garden_plant)
