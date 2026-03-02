@@ -31,7 +31,7 @@ class GardenPlant(BaseModel):
     id: int
     planted_date: PastDate
     notes: str
-    section_id: int
+    garden_id: int
     plant: PlantOut
 
 
