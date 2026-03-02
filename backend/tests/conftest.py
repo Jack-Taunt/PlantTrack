@@ -5,7 +5,7 @@ from app.database import get_db, Base
 import pytest
 from fastapi.testclient import TestClient
 from app.auth.utils import hash_password
-from app.models import User, Garden, Tag
+from app.models import User, Garden, Tag, Plant, Toxicity, Edibility, Environment, CareRequirements, Growth, Planting
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -86,5 +86,69 @@ def default_data(db_session):
     db_session.add(default_garden_2)
     db_session.add(default_garden_3)
     db_session.add(default_garden_4)
+
+    default_toxicity_1 = Toxicity(toxic_to_cats=False, toxic_to_dogs=False, toxic_to_humans=False, toxicity="non_toxic")
+    db_session.add(default_toxicity_1)
+
+    default_edibility_1 = Edibility(edible_fruit=True, edible_leaves=False, edible_flowers=False, edible_roots=False)
+    db_session.add(default_edibility_1)
+
+    default_environment_1 = Environment(light_type="bright_indirect_light", min_temp=15.0, max_temp=30.0, min_humidity=20.0, max_humidity=50.0, min_usda_zone="8", max_usda_zone="11")
+    db_session.add(default_environment_1)
+
+    default_care_requirements_1 = CareRequirements(min_water_frequency=5, max_water_frequency=15, soil_moisture="moderate", drought_tolerant=False, soil_type="loamy", min_soil_ph=6.0, max_soil_ph=8.0, fertilizer_frequency=14, fertilizer_nitrogen=5, fertilizer_phosphorus=10, fertilizer_potassium=10)
+    db_session.add(default_care_requirements_1)
+
+    default_growth_1 = Growth(annual=True, biennial=False, perennial=False, max_height=100.0, max_width=50.0, growth_rate="moderate", min_days_to_harvest=50, max_days_to_harvest=80)
+    db_session.add(default_growth_1)
+
+    default_planting_1 = Planting(spacing=15.0, seed_depth=5.0, direct_sow=True, transplant=True, propagation=True)
+    db_session.add(default_planting_1)
+
+    default_plant_1 = Plant(common_name="default_plant_1", 
+                            scientific_name="default_scientific_1", 
+                            genus="default_genus_1", 
+                            order="default_order_1", 
+                            class_="default_class_1", 
+                            phylum="default_phylum_1", 
+                            variety="default_variety_1",
+                            toxicity_id=1,
+                            edibility_id=1,
+                            environment_id=1,
+                            care_requirements_id=1,
+                            growth_id=1,
+                            planting_id=1,
+                            )
+    default_plant_2 = Plant(common_name="default_plant_2", 
+                            scientific_name="default_scientific_2", 
+                            genus="default_genus_2", 
+                            order="default_order_2", 
+                            class_="default_class_2", 
+                            phylum="default_phylum_2", 
+                            variety="default_variety_2",
+                            toxicity_id=1,
+                            edibility_id=1,
+                            environment_id=1,
+                            care_requirements_id=1,
+                            growth_id=1,
+                            planting_id=1,
+                            )
+    default_plant_3 = Plant(common_name="default_plant_3", 
+                            scientific_name="default_scientific_3", 
+                            genus="default_genus_3", 
+                            order="default_order_3", 
+                            class_="default_class_3", 
+                            phylum="default_phylum_3", 
+                            variety="default_variety_3",
+                            toxicity_id=1,
+                            edibility_id=1,
+                            environment_id=1,
+                            care_requirements_id=1,
+                            growth_id=1,
+                            planting_id=1,
+                            )
+    db_session.add(default_plant_1)
+    db_session.add(default_plant_2)
+    db_session.add(default_plant_3)
 
     db_session.commit()
