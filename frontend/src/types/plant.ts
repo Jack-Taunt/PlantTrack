@@ -17,11 +17,12 @@ export interface Plant {
     planting: Planting;
 }
 
-export interface SectionPlant {
+export interface GardenPlant {
     id: number;
     planted_date: string;
     notes: string;
     plant: Plant;
+    section_id: number;
 }
 
 export interface Toxicity{

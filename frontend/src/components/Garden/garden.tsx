@@ -3,41 +3,48 @@ import Navbar from "../common/Navbar";
 import { useState, useEffect } from "react";
 import { type Garden } from "../../types/garden";
 import api from "../../client/client"
-import { Box, Button, Typography, Modal, Stack } from "@mui/material";
+import { Box, Button, Typography, Modal, Stack, List } from "@mui/material";
 import TagList from "./tag-list";
 import { useAuth } from "../common/AuthProvider";
 import PlantList from "../Plant/plant-list";
-import { type Plant } from "../../types/plant";
+import { type Plant, type GardenPlant } from "../../types/plant";
 
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
-    const [garden, setGarden] = useState<Garden | null>(null);
-
     const { user } = useAuth();
+
+    const [garden, setGarden] = useState<Garden | null>(null);
+    const [gardenPlants, setGardenPlants] = useState<GardenPlant[]>([])
 
     const [addPlantModalOpen, setAddPlantModalOpen] = useState(false);
     const handleAddPlantModalOpen = () => setAddPlantModalOpen(true);
     const handleAddPlantModalClose = () => setAddPlantModalOpen(false);
 
+    const [publicPlants, setPublicPlants] = useState<Plant[]>([]);
+    const [hasLoadedPlants, setHasLoadedPlants] = useState(false);
+    const [selectedPlants, setSelectedPlants] = useState<number[]>([]);
+
     const fetchGarden = async () => {
         try {
-            const garden = await api.get("/gardens/" + gardenId)
+            const garden = await api.get(`/gardens/${gardenId}`)
             setGarden(garden.data)
         } catch (err: any) {
             console.log(err)
         }
     }
 
-    useEffect(() => {
-        fetchGarden()
-    }, []);
 
-    const [publicPlants, setPublicPlants] = useState<Plant[]>([]);
-    const [hasLoadedPlants, setHasLoadedPlants] = useState(false);
+    const fetchGardenPlants = async () => {
+        try {
+            const gardenPlants = await api.get(`/gardens/${gardenId}/plants`)
+            setGardenPlants(gardenPlants.data)
+        } catch (err: any) {
+            console.log(err)
+        }
+    }
 
 
-    const [selectedPlants, setSelectedPlants] = useState<number[]>([]);
     const plantsSelected = async (plants: number[]) => {
         setSelectedPlants(plants)
     }
@@ -68,12 +75,19 @@ const GardenPage = () => {
                 selectedPlants
             )
             handleAddPlantModalClose()
+            fetchGardenPlants()
         } catch (err: any) {
             console.log(err)
         }
     }
 
 
+    useEffect(() => {
+        fetchGarden()
+        fetchGardenPlants()
+    }, []);
+
+    
     return (
         
         <>
@@ -100,6 +114,9 @@ const GardenPage = () => {
                             Add New Plant
                         </Button>
                     )}
+
+                    <PlantList plants={gardenPlants.map((gardenPlant) => gardenPlant.plant)} multipleSelect={false}/>
+
                     <Modal
                         open={addPlantModalOpen}
                         onClose={handleAddPlantModalClose}

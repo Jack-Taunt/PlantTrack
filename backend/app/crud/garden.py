@@ -76,3 +76,13 @@ def create_garden_plants_db(garden_id: int, plants: list[int], db: Session):
 def create_garden_plant_db(garden_id: int, plant: int, db: Session):
     garden_plant = GardenPlant(garden_id=garden_id, plant_id=plant)
     db.add(garden_plant)
+
+
+def get_garden_plants_db(garden_id: int, db: Session):
+    garden_plants_dict = (
+        db.query(GardenPlant)
+        .filter(GardenPlant.garden_id == garden_id)
+        .options(joinedload(GardenPlant.plant))
+        .all()
+    )
+    return garden_plants_dict

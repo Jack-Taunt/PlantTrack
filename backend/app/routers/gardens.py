@@ -12,7 +12,8 @@ from app.crud.garden import (create_garden_db,
                              get_garden_tags_db, 
                              delete_garden_db, 
                              get_garden_db, 
-                             create_garden_plants_db)
+                             create_garden_plants_db,
+                             get_garden_plants_db)
 
 router = APIRouter(
     prefix="/gardens",
@@ -107,6 +108,24 @@ async def create_garden_plant(
     garden = get_garden_db(garden_id, db)
     if (garden.user.id == user.id):
         create_garden_plants_db(garden_id, plants, db)
+
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="You do not own this garden!",
+        )
+    
+
+@router.get("/{garden_id}/plants")
+async def get_garden_plant(
+    garden_id: int,
+    user: Annotated[User, Depends(get_current_user())],
+    db: Annotated[Session, Depends(get_db)]
+):
+    garden = get_garden_db(garden_id, db)
+    if (garden.user.id == user.id):
+        garden_plants = get_garden_plants_db(garden_id, db)
+        return garden_plants
 
     else:
         raise HTTPException(
