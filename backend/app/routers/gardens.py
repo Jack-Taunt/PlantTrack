@@ -127,16 +127,22 @@ async def create_garden_plant(
 @router.get("/{garden_id}/plants")
 async def get_garden_plant(
     garden_id: int,
-    user: Annotated[User, Depends(get_current_user())],
+    user: Annotated[User, Depends(get_current_user(False))],
     db: Annotated[Session, Depends(get_db)]
 ):
     garden = get_garden_db(garden_id, db)
-    if (garden.user.id == user.id):
-        garden_plants = get_garden_plants_db(garden_id, db)
-        return garden_plants
-
+    if garden != None:
+        if not garden.is_public:
+            if (not user or garden.user_id != user.id):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN, 
+                    detail="You do not own this garden!",
+                )
     else:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, 
-            detail="You do not own this garden!",
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This garden doesn't exist!",
         )
+    
+    garden_plants = get_garden_plants_db(garden_id, db)
+    return garden_plants
