@@ -29,8 +29,8 @@ class Section(BaseModel):
 
 class GardenPlant(BaseModel):
     id: int
-    planted_date: PastDate
-    notes: str
+    planted_date: PastDate | None
+    notes: str | None
     garden_id: int
     plant: PlantOut
 
