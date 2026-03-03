@@ -1,5 +1,5 @@
 from app.models.User import User
-from app.models.Garden import Garden
+from app.models.Garden import Garden, GardenPlant
 import pytest
 from sqlalchemy.orm import joinedload
 from app.schemas.Garden import Tag
@@ -25,7 +25,7 @@ def test_get_public_gardens_returns_garden_list(client, default_data):
 def test_get_my_gardens_returns_garden_list(auth_client, default_data, db_session):
     response = auth_client.get("/gardens/me")
     assert response.status_code == 200
-    assert len(response.json()) == 2
+    assert len(response.json()) == 3
 
     testuser = db_session.query(User).filter(User.username == "testusername").first()
 
@@ -134,7 +134,7 @@ def test_delete_garden_not_auth_401_recieved(client, default_data, db_session):
         db_session.query(Garden)
         .all()
     )
-    assert len(gardens) == 4
+    assert len(gardens) == 5
 
 
     response = client.delete(
@@ -147,7 +147,7 @@ def test_delete_garden_not_auth_401_recieved(client, default_data, db_session):
         .all()
     )
 
-    assert len(gardens) == 4
+    assert len(gardens) == 5
 
 
 def test_delete_garden_auth_owned_garden_200_recieved(auth_client, default_data, db_session):
@@ -155,7 +155,7 @@ def test_delete_garden_auth_owned_garden_200_recieved(auth_client, default_data,
         db_session.query(Garden)
         .all()
     )
-    assert len(gardens) == 4
+    assert len(gardens) == 5
     garden = None
     for g in gardens:
         if g.id == 1:
@@ -172,7 +172,7 @@ def test_delete_garden_auth_owned_garden_200_recieved(auth_client, default_data,
         .all()
     )
 
-    assert len(gardens) == 3
+    assert len(gardens) == 4
     garden = None
     for g in gardens:
         if g.id == 1:
@@ -185,15 +185,15 @@ def test_delete_garden_auth_not_owned_garden_403_recieved(auth_client, default_d
         db_session.query(Garden)
         .all()
     )
-    assert len(gardens) == 4
+    assert len(gardens) == 5
     garden = None
     for g in gardens:
-        if g.id == 3:
+        if g.id == 4:
             garden = g
     assert garden != None
 
     response = auth_client.delete(
-        "/gardens/3",
+        "/gardens/4",
     )
     assert response.status_code == 403
     assert response.json()["detail"] == "You do not own this garden!"
@@ -203,10 +203,10 @@ def test_delete_garden_auth_not_owned_garden_403_recieved(auth_client, default_d
         .all()
     )
 
-    assert len(gardens) == 4
+    assert len(gardens) == 5
     garden = None
     for g in gardens:
-        if g.id == 3:
+        if g.id == 4:
             garden = g
     assert garden != None
 
@@ -247,3 +247,93 @@ def test_get_garden_private_garden_auth_200_recieved(auth_client, default_data):
     assert response.json()["name"] == "default_garden_2"
     assert response.json()["description"] == "default description 2"
     assert response.json()["is_public"] == False
+
+
+def test_create_garden_plants_not_auth_401_recieved(client, default_data):
+    response = client.post(
+        "/gardens/1/plants",
+        json=[1, 2, 3]
+    )
+    assert response.status_code == 401
+
+
+def test_create_garden_plants_not_owning_garden_403_recieved(auth_client, default_data):
+    response = auth_client.post(
+        "/gardens/4/plants",
+        json=[1, 2, 3]
+    )
+    assert response.status_code == 403
+    assert response.json()["detail"] == "You do not own this garden!"
+
+
+def test_create_garden_plants_non_existant_plant_404_recieved(auth_client, default_data):
+    response = auth_client.post(
+        "/gardens/1/plants",
+        json=[999, 1000, 1001]
+    )
+    assert response.status_code == 404
+    assert response.json()["detail"] == "This plant doesnt exist!"
+
+
+def test_create_garden_plants_garden_plant_created_200_recieved(auth_client, default_data, db_session):
+    garden_plants = (
+        db_session.query(GardenPlant)
+        .filter(GardenPlant.garden_id == 3)
+        .all()
+    )
+    assert len(garden_plants) == 0
+    
+    response = auth_client.post(
+        "/gardens/3/plants",
+        json=[1, 2, 3]
+    )
+    assert response.status_code == 200
+
+    garden_plants = (
+        db_session.query(GardenPlant)
+        .filter(GardenPlant.garden_id == 3)
+        .all()
+    )
+    assert len(garden_plants) == 3
+
+    for garden_plant in garden_plants:
+        assert garden_plant.planted_date == None
+        assert garden_plant.notes == None
+        assert garden_plant.garden_id == 3
+        assert garden_plant.plant_id != None
+
+
+def test_get_garden_plants_garden_doesnt_exist_404_recieved(client):
+    
+    response = client.get(
+        "/gardens/999/plants"
+    )
+    assert response.status_code == 404
+    assert response.json()["detail"] == "This garden doesn't exist!"
+
+
+def test_get_garden_plants_public_garden_unauth_plants_recieved(client, default_data):
+    
+    response = client.get(
+        "/gardens/1/plants"
+    )
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+
+
+def test_get_garden_plants_private_garden_unauth_403_recieved(client, default_data):
+    
+    response = client.get(
+        "/gardens/2/plants"
+    )
+    assert response.status_code == 403
+    assert response.json()["detail"] == "You do not own this garden!"
+
+
+def test_get_garden_plants_private_garden_auth_200_recieved(auth_client, default_data):
+    
+    response = auth_client.get(
+        "/gardens/2/plants"
+    )
+    assert response.status_code == 200
+    assert len(response.json()) == 2
