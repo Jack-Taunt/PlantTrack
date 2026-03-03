@@ -12,9 +12,9 @@ class Garden(Base):
     
     user = relationship('User', back_populates='gardens')
     user_id = Column(ForeignKey("users.id"))
-    sections = relationship('Section', back_populates='garden')
+    sections = relationship('Section', back_populates='garden', passive_deletes=True)
     tags = relationship("Tag", secondary='garden_tags', back_populates='gardens')
-    garden_plants = relationship('GardenPlant', back_populates='garden')
+    garden_plants = relationship('GardenPlant', back_populates='garden', passive_deletes=True)
 
 
 class Section(Base):
@@ -24,7 +24,7 @@ class Section(Base):
     name = Column(String(30), nullable=False)
     description = Column(String(256), nullable=True)
 
-    garden_id = Column(ForeignKey("gardens.id"))
+    garden_id = Column(ForeignKey("gardens.id", ondelete="CASCADE"))
     garden = relationship('Garden', back_populates='sections')
 
 
@@ -34,10 +34,10 @@ class GardenPlant(Base):
     planted_date = Column(Date, nullable=True)
     notes = Column(String(256), nullable=True)
 
-    garden_id = Column(ForeignKey("gardens.id"), nullable=False)
+    garden_id = Column(ForeignKey("gardens.id", ondelete="CASCADE"), nullable=False)
     garden = relationship('Garden', back_populates='garden_plants')
     section_id = Column(ForeignKey("sections.id"), nullable=True)
-    plant_id = Column(ForeignKey("plants.id"), nullable=False)
+    plant_id = Column(ForeignKey("plants.id", ondelete="CASCADE"), nullable=False)
     plant = relationship('Plant', back_populates='garden_plants')
 
 
