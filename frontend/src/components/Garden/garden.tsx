@@ -8,6 +8,7 @@ import TagList from "./tag-list";
 import { useAuth } from "../common/AuthProvider";
 import PlantList from "../Plant/plant-list";
 import { type Plant, type GardenPlant } from "../../types/plant";
+import GardenPlantList from "../Plant/garden-plant-list";
 
 
 const GardenPage = () => {
@@ -115,7 +116,7 @@ const GardenPage = () => {
                         </Button>
                     )}
 
-                    <PlantList plants={gardenPlants.map((gardenPlant) => gardenPlant.plant)} multipleSelect={false}/>
+                    <GardenPlantList gardenPlants={gardenPlants}/>
 
                     <Modal
                         open={addPlantModalOpen}
