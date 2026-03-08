@@ -143,6 +143,16 @@ const GardenPage = () => {
                                 }}
                                 gap={1}
                             >
+                                <Box sx={{position: 'absolute', right: '2%', top: '2%'}}>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        sx={{height: 30, width: 30, p: 0}}
+                                        onClick={() => handleAddPlantModalClose()}
+                                    >
+                                        X
+                                    </Button>
+                                </Box>
                                 <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center'}}>
                                     Add a new Plant
                                 </Typography>
