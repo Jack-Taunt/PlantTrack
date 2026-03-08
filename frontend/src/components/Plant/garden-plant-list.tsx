@@ -28,9 +28,17 @@ const GardenPlantList = ({gardenPlants}: PlantListProps) => {
                 }}
             >
                 {gardenPlants.map((plant) => (
-                    <Typography key={plant.id}>
-                        {plant.plant.common_name}
-                    </Typography>
+                    <Grid size={{md: 12, lg: 6, xl: 4}} key={plant.id}>
+                        <Typography variant="h5" fontWeight={600}>
+                            {plant.plant.common_name}
+                        </Typography>
+                        <Typography>
+                            {plant.planted_date ? plant.planted_date : "No Planted Date Set"}
+                        </Typography>
+                        <Typography>
+                            {plant.notes ? plant.notes : "No Plant notes Set"}
+                        </Typography>
+                    </Grid>
 
                 ))}
 
