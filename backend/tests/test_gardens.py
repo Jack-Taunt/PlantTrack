@@ -3,6 +3,7 @@ from app.models.Garden import Garden, GardenPlant
 import pytest
 from sqlalchemy.orm import joinedload
 from app.schemas.Garden import Tag
+from datetime import date, timedelta
 
 def test_get_public_gardens_empty_returns_empty_list(client):
     response = client.get("/gardens/public")
@@ -260,7 +261,7 @@ def test_create_garden_plants_not_auth_401_recieved(client, default_data):
 def test_create_garden_plants_not_owning_garden_403_recieved(auth_client, default_data):
     response = auth_client.post(
         "/gardens/4/plants",
-        json=[1, 2, 3]
+        json={"plants": [1, 2, 3], "planted_date": None}
     )
     assert response.status_code == 403
     assert response.json()["detail"] == "You do not own this garden!"
@@ -269,13 +270,22 @@ def test_create_garden_plants_not_owning_garden_403_recieved(auth_client, defaul
 def test_create_garden_plants_non_existant_plant_404_recieved(auth_client, default_data):
     response = auth_client.post(
         "/gardens/1/plants",
-        json=[999, 1000, 1001]
+        json={"plants": [999, 1000, 1001], "planted_date": None}
     )
     assert response.status_code == 404
     assert response.json()["detail"] == "This plant doesnt exist!"
 
 
-def test_create_garden_plants_garden_plant_created_200_recieved(auth_client, default_data, db_session):
+def test_create_garden_plants_incorrect_date_422_recieved(auth_client, default_data):
+    response = auth_client.post(
+        "/gardens/1/plants",
+        json={"plants": [1, 2, 3], "planted_date": str(date.today() + timedelta(days=1))}
+    )
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["msg"] == "Value error, Planted date cannot be in the future!"
+
+
+def test_create_garden_plants_garden_plant_correct_date_created_200_recieved(auth_client, default_data, db_session):
     garden_plants = (
         db_session.query(GardenPlant)
         .filter(GardenPlant.garden_id == 3)
@@ -285,7 +295,7 @@ def test_create_garden_plants_garden_plant_created_200_recieved(auth_client, def
     
     response = auth_client.post(
         "/gardens/3/plants",
-        json=[1, 2, 3]
+        json={"plants": [1, 2, 3], "planted_date": str(date.today())}
     )
     assert response.status_code == 200
 
@@ -297,7 +307,7 @@ def test_create_garden_plants_garden_plant_created_200_recieved(auth_client, def
     assert len(garden_plants) == 3
 
     for garden_plant in garden_plants:
-        assert garden_plant.planted_date == None
+        assert garden_plant.planted_date == date.today()
         assert garden_plant.notes == None
         assert garden_plant.garden_id == 3
         assert garden_plant.plant_id != None

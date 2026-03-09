@@ -3,13 +3,15 @@ import Navbar from "../common/Navbar";
 import { useState, useEffect } from "react";
 import { type Garden } from "../../types/garden";
 import api from "../../client/client"
-import { Box, Button, Typography, Modal, Stack, List } from "@mui/material";
+import { Box, Button, Typography, Modal, Stack, Grid } from "@mui/material";
 import TagList from "./tag-list";
 import { useAuth } from "../common/AuthProvider";
 import PlantList from "../Plant/plant-list";
 import { type Plant, type GardenPlant } from "../../types/plant";
 import GardenPlantList from "../Plant/garden-plant-list";
-
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, {Dayjs} from 'dayjs';
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
@@ -20,11 +22,18 @@ const GardenPage = () => {
 
     const [addPlantModalOpen, setAddPlantModalOpen] = useState(false);
     const handleAddPlantModalOpen = () => setAddPlantModalOpen(true);
-    const handleAddPlantModalClose = () => setAddPlantModalOpen(false);
+    const handleAddPlantModalClose = () => {
+        setAddPlantModalOpen(false);
+        setPlantedDate(null);
+        setSelectedPlants([]);
+    }
 
     const [publicPlants, setPublicPlants] = useState<Plant[]>([]);
     const [hasLoadedPlants, setHasLoadedPlants] = useState(false);
     const [selectedPlants, setSelectedPlants] = useState<number[]>([]);
+    const [plantedDate, setPlantedDate] = useState<Dayjs | null>(null);
+
+    const currentYear = dayjs();
 
     const fetchGarden = async () => {
         try {
@@ -73,7 +82,10 @@ const GardenPage = () => {
     const addGardenPlants = async () => {
         try {
             await api.post(`/gardens/${gardenId}/plants`,
-                selectedPlants
+                {
+                    plants: selectedPlants,
+                    planted_date: plantedDate?.format("YYYY-MM-DD") ?? null 
+                }
             )
             handleAddPlantModalClose()
             fetchGardenPlants()
@@ -155,7 +167,7 @@ const GardenPage = () => {
                                     </Button>
                                 </Box>
                                 <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center'}}>
-                                    Add a new Plant
+                                    Add New Plants
                                 </Typography>
                                 <Stack 
                                     direction="row"
@@ -163,7 +175,7 @@ const GardenPage = () => {
                                     justifyContent='center'
                                 >
                                     <Typography sx={{alignContent: 'center'}}>
-                                        Choose a plant from our plant database
+                                        Choose plants from our plant database
                                     </Typography>
                                     <Button sx={{p: 0, textTransform: 'capitalize'}}>
                                         or Create a custom plant
@@ -176,36 +188,50 @@ const GardenPage = () => {
                                 >
                                     <PlantList plants={publicPlants} plantsSelected={plantsSelected} multipleSelect={true} />
                                 </Box>
-                                <Stack
-                                    direction="row"
-                                    sx={{
-                                        width: "100%", 
-                                        gap: 5, 
-                                        p: 2, 
-                                        borderRadius: 2, 
-                                        border: '1px solid', 
-                                        borderColor: 'black', 
-                                    }}
-                                    justifyContent='center'
-                                >
-                                    {selectedPlants.length > 0 &&
-                                        <Typography
-                                            sx={{alignContent: 'center', fontWeight: 600}}
-                                            variant="body1"
+
+                                <Grid container sx={{mt: {xl: 1}}}>
+                                    <Grid size={{xs:12, lg:5, xl:6}} sx={{alignContent: 'center'}}>
+                                        {selectedPlants.length > 0 &&
+                                            <Typography
+                                                sx={{alignContent: 'center', fontWeight: 600, mr:{lg:2}, my:{xs:2, lg:0}}}
+                                                variant="body1"
+                                            >
+                                                Currently Selected Plants: {selectedPlants.map(id => publicPlants.find(p => p.id === id)?.common_name).join(', ')}
+                                            </Typography>
+                                        }
+                                    </Grid>
+                                    
+                                    <Grid size={{xs: 12, md:6, lg:4, xl:3}} sx={{pr: {md: 2}, alignContent: 'center', mb:{xs:2, md:0}}}>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <DatePicker 
+                                                maxDate={currentYear} 
+                                                format="DD/MM/YYYY"
+                                                label="Select Planted Date"
+                                                sx={{width: '100%'}}
+                                                value={plantedDate}
+                                                onChange={(newDate) => setPlantedDate(newDate)}
+                                            />
+                                        </LocalizationProvider>
+                                    </Grid>
+
+                                    
+
+                                    <Grid size={{xs: 12, md:6, lg:3}} sx={{alignContent: 'center'}}>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            disabled={selectedPlants.length === 0}
+                                            sx={{width: "100%", height: 56}}
+                                            onClick={() => addGardenPlants()}
                                         >
-                                            Currently Selected Plants: {selectedPlants.map(id => publicPlants.find(p => p.id === id)?.common_name).join(', ')}
-                                        </Typography>
-                                    }
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        disabled={selectedPlants.length === 0}
-                                        sx={{height: 50, width: 150}}
-                                        onClick={() => addGardenPlants()}
-                                    >
-                                        Add Plants
-                                    </Button>
-                                </Stack>
+                                            Add Plants
+                                        </Button>
+                                    </Grid>
+                                    
+                                    
+                                    
+                                    
+                                </Grid>
                             </Stack>
                         </Box>
                     </Modal>

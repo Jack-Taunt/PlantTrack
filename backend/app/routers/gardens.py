@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
-from app.schemas.Garden import GardenCreate, GardenOut, GardenPlant
+from app.schemas.Garden import GardenCreate, GardenOut, GardenPlantsCreate
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
@@ -102,20 +102,20 @@ async def get_garden(
 @router.post("/{garden_id}/plants")
 async def create_garden_plant(
     garden_id: int,
-    plants: list[int],
+    gardenPlants: GardenPlantsCreate,
     user: Annotated[User, Depends(get_current_user())],
     db: Annotated[Session, Depends(get_db)]
 ):
     garden = get_garden_db(garden_id, db)
     if (garden.user.id == user.id):
-        for plant_id in plants:
+        for plant_id in gardenPlants.plants:
             plant = get_plant_db(plant_id, db)
             if plant == None:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND, 
                     detail="This plant doesnt exist!",
                 )
-        create_garden_plants_db(garden_id, plants, db)
+        create_garden_plants_db(garden_id, gardenPlants.plants, gardenPlants.planted_date, db)
 
     else:
         raise HTTPException(

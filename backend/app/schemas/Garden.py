@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field, PastDate
+from pydantic import BaseModel, Field, field_validator
 from typing import Annotated, List
 from app.schemas.User import UserPublic
 from app.schemas.Plant import PlantOut
+from datetime import date
 
 class GardenCreate(BaseModel):
     name: Annotated[str, Field(max_length=30)]
@@ -29,10 +30,21 @@ class Section(BaseModel):
 
 class GardenPlant(BaseModel):
     id: int
-    planted_date: PastDate | None
+    planted_date: date | None
     notes: str | None
     garden_id: int
     plant: PlantOut
+
+
+class GardenPlantsCreate(BaseModel):
+    plants: List[int]
+    planted_date: date | None
+    
+    @field_validator("planted_date")
+    def check_date_past(cls, planted_date: date):
+        if planted_date and planted_date > date.today():
+            raise ValueError("Planted date cannot be in the future!")
+        return planted_date
 
 
 class Tag(BaseModel):
