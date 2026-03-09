@@ -108,8 +108,8 @@ async def create_garden_plant(
 ):
     garden = get_garden_db(garden_id, db)
     if (garden.user.id == user.id):
-        for plant_id in gardenPlants.plants:
-            plant = get_plant_db(plant_id, db)
+        for plant_amount in gardenPlants.plants:
+            plant = get_plant_db(plant_amount.plant_id, db)
             if plant == None:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND, 

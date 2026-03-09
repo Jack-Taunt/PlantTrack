@@ -1,36 +1,64 @@
-import { Grid, Box, ListItemButton, Typography } from "@mui/material";
+import { Grid, Box, ListItemButton, Typography, Button } from "@mui/material";
 import { type Plant } from "../../types/plant";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import placeholderImage from "../../assets/image_placeholder.svg"
+import IncrementDecrementButtons from "../common/incrementDecrementButtons";
+import {type GardenPlantAmount} from "../../types/garden";
 
 type PlantListProps = {
   plants: Plant[];
-  plantsSelected?: (plants: number[]) => void;
+  plantsSelected?: (plants: GardenPlantAmount[]) => void;
   multipleSelect: boolean;
 };
 
 const PlantList = ({plants, plantsSelected, multipleSelect}: PlantListProps) => {
-    const [selectedPlants, setSelectedPlants] = useState<number[]>([]);
+    const [selectedPlants, setSelectedPlants] = useState<GardenPlantAmount[]>([]);
 
-    const handleClick = (plantId: number) => {
+    const setPlantAmount = (plantId: number, amount: number | null) => {
 
-        const foundPlantIndex = selectedPlants.indexOf(plantId)
+        const foundPlantIndex = selectedPlants.map((plant) => plant.plant_id).indexOf(plantId)
+        if (!amount) {
+            if (foundPlantIndex > -1) {
+                amount = 0
+            } else {
+                amount = 1
+            }
+        }
+
         if (foundPlantIndex > -1) {
-            const updatedPlants = selectedPlants.filter(id => id !== plantId)
-            setSelectedPlants(updatedPlants)
-            if (plantsSelected) {
-                plantsSelected(updatedPlants)
+
+            if (amount === 0) {
+                const updatedPlants = selectedPlants.filter(plant => plant.plant_id !== plantId)
+                setSelectedPlants(updatedPlants)
+                if (plantsSelected) {
+                    plantsSelected(updatedPlants)
+                }
+
+            } else {
+                const updatedPlants = selectedPlants.map(plant => plant.plant_id === plantId ? {...plant, amount: amount} : plant);
+                setSelectedPlants(updatedPlants)
+                if (plantsSelected) {
+                    plantsSelected(updatedPlants)
+                }
             }
 
         } else {
-            const updatedPlants = (multipleSelect == true) ? [...selectedPlants, plantId] : [plantId]
+            const updatedPlants = (multipleSelect == true) ? [...selectedPlants, {plant_id: plantId, amount: 1}] : [{plant_id: plantId, amount: 1}]
             setSelectedPlants(updatedPlants)
             if (plantsSelected) {
                 plantsSelected(updatedPlants)
             }
-        }  
-          
+        }
+    }
+
+    const handleClick = (plantId: number) => {
+        setPlantAmount(plantId, null);
     };
+
+    const setPlantAmountCallback = (id: number, value: number) => {
+        setPlantAmount(id, value)
+    }
+    
 
     return (
         <Grid container spacing={1} sx={{height: '100%'}}>
@@ -55,10 +83,10 @@ const PlantList = ({plants, plantsSelected, multipleSelect}: PlantListProps) => 
                                 width: "100%",
                                 height: "100%",
                                 border: '1px solid',
-                                borderColor: selectedPlants.indexOf(plant.id) > -1 ? "black" : "divider",
+                                borderColor: selectedPlants.map((plant) => plant.plant_id).indexOf(plant.id) > -1 ? "black" : "divider",
                                 borderRadius: 2,
                                 p: 1,
-                                backgroundColor: selectedPlants.indexOf(plant.id) > -1 ? '#f5f5f5' : 'white'
+                                backgroundColor: selectedPlants.map((plant) => plant.plant_id).indexOf(plant.id) > -1 ? '#f5f5f5' : 'white'
                             }}
                             onClick={() => handleClick(plant.id)}
                         >
@@ -93,6 +121,11 @@ const PlantList = ({plants, plantsSelected, multipleSelect}: PlantListProps) => 
                                     )}
                                 </Box>
                             </Grid>
+                            {selectedPlants.map((plant) => plant.plant_id).indexOf(plant.id) > -1 &&
+                                <Box sx={{position: 'absolute', right: '2%', top: '2%', width: 120, height: 35}}>
+                                    <IncrementDecrementButtons setValueCallback={(value) => setPlantAmountCallback(plant.id, value)}/>
+                                </Box>
+                            }
                             
                         </ListItemButton>
                     </Grid>

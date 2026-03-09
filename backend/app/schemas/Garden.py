@@ -36,8 +36,13 @@ class GardenPlant(BaseModel):
     plant: PlantOut
 
 
+class GardenPlantAmount(BaseModel):
+    plant_id: int
+    amount: int
+
+
 class GardenPlantsCreate(BaseModel):
-    plants: List[int]
+    plants: List[GardenPlantAmount]
     planted_date: date | None
     
     @field_validator("planted_date")

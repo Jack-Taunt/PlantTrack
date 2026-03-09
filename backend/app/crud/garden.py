@@ -69,8 +69,9 @@ def delete_garden_db(garden_id: int, db: Session):
 
 
 def create_garden_plants_db(garden_id: int, plants: list[int], planted_date: date, db: Session):
-    for plant in plants:
-        create_garden_plant_db(garden_id, plant, planted_date, db)
+    for plant_amount in plants:
+        for _ in range(plant_amount.amount):
+            create_garden_plant_db(garden_id, plant_amount.plant_id, planted_date, db)
     db.commit()
 
 

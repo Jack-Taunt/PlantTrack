@@ -12,6 +12,7 @@ import GardenPlantList from "../Plant/garden-plant-list";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, {Dayjs} from 'dayjs';
+import {type GardenPlantAmount} from "../../types/garden";
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
@@ -30,7 +31,7 @@ const GardenPage = () => {
 
     const [publicPlants, setPublicPlants] = useState<Plant[]>([]);
     const [hasLoadedPlants, setHasLoadedPlants] = useState(false);
-    const [selectedPlants, setSelectedPlants] = useState<number[]>([]);
+    const [selectedPlants, setSelectedPlants] = useState<GardenPlantAmount[]>([]);
     const [plantedDate, setPlantedDate] = useState<Dayjs | null>(null);
 
     const currentYear = dayjs();
@@ -55,7 +56,7 @@ const GardenPage = () => {
     }
 
 
-    const plantsSelected = async (plants: number[]) => {
+    const plantsSelected = async (plants: GardenPlantAmount[]) => {
         setSelectedPlants(plants)
     }
 
@@ -196,7 +197,14 @@ const GardenPage = () => {
                                                 sx={{alignContent: 'center', fontWeight: 600, mr:{lg:2}, my:{xs:2, lg:0}}}
                                                 variant="body1"
                                             >
-                                                Currently Selected Plants: {selectedPlants.map(id => publicPlants.find(p => p.id === id)?.common_name).join(', ')}
+                                                Currently Selected Plants: {selectedPlants.map(plant =>  {
+                                                    const foundPlant = publicPlants.find(p => p.id === plant.plant_id)
+                                                    const name = foundPlant?.common_name? foundPlant.common_name : foundPlant?.scientific_name
+
+                                                    return plant.amount > 1 ? `${name} x${plant.amount}` : `${name}`
+
+                                                    }).filter(Boolean).join(', ')
+                                                }
                                             </Typography>
                                         }
                                     </Grid>

@@ -1,4 +1,3 @@
-import { type SectionPlant } from "./plant";
 import type { UserPublic } from "./user";
 
 export interface Garden {
@@ -21,5 +20,9 @@ export interface Section {
     id: number;
     name: string;
     description: string;
-    section_plants: SectionPlant[];
+}
+
+export type GardenPlantAmount = {
+    plant_id: number,
+    amount: number
 }
