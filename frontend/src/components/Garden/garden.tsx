@@ -13,6 +13,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, {Dayjs} from 'dayjs';
 import {type GardenPlantAmount} from "../../types/garden";
+import placeholderImage from "../../assets/image_placeholder.svg"
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
@@ -111,14 +112,45 @@ const GardenPage = () => {
                     <Typography variant="h3" sx={{fontWeight: 'bold', textAlign: 'center', pt: 4}}>
                         {garden.name}
                     </Typography>
-                    <Typography variant="h5" sx={{textAlign: 'center', pt: 4}}>
-                        {garden.description}
-                    </Typography>
-                    <Box sx={{display: "flex", mx: 'auto', justifyContent: 'center'}}>
-                        {garden.tags &&
-                            <TagList tags={garden.tags}/>
-                        }
-                    </Box>
+                    <Grid container sx={{height: 500, p: 5}}>
+                        <Grid size={7} >
+                            <Box sx={{border: '1px solid #000', borderRadius: 2, mr: 2, height: "100%"}}>
+                                <Typography variant="h4" sx={{fontWeight: 'bold', pt: 2, mx: 3, borderBottom: '2px solid'}}>
+                                    Garden Information:
+                                </Typography>
+                                <Typography variant="h5" sx={{pt: 4, mx: 3}}>
+                                    {garden.description}
+                                </Typography>
+                                <Box sx={{display: "flex", mx: 3}}>
+                                    {garden.tags &&
+                                        <TagList tags={garden.tags}/>
+                                    }
+                                </Box>
+                            </Box>
+                        </Grid>
+                        <Grid size={5} sx={{ minHeight: 0, height: 500 }}>
+                            <Box sx={{
+                                width: '100%',
+                                height: '100%',
+                                border: '1px solid #000',
+                                borderRadius: 2,
+                            }}>
+                            <Box
+                                component="img"
+                                src={placeholderImage}
+                                alt={garden.name}
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    display: 'block',
+                                    p: 4
+                                }}
+                            />
+                            </Box>
+                        </Grid>
+                    </Grid>
+                    
                     {user?.id === garden.user_id && (
                         <Button 
                             variant="contained"
