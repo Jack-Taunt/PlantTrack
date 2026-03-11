@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import Navbar from "../common/Navbar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, type SyntheticEvent } from "react";
 import { type Garden } from "../../types/garden";
 import api from "../../client/client"
-import { Box, Button, Typography, Modal, Stack, Grid } from "@mui/material";
+import { Box, Button, Typography, Modal, Stack, Grid, Tabs, Tab } from "@mui/material";
 import TagList from "./tag-list";
 import { useAuth } from "../common/AuthProvider";
 import PlantList from "../Plant/plant-list";
@@ -14,6 +14,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, {Dayjs} from 'dayjs';
 import {type GardenPlantAmount} from "../../types/garden";
 import placeholderImage from "../../assets/image_placeholder.svg"
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
@@ -41,6 +42,10 @@ const GardenPage = () => {
         try {
             const garden = await api.get(`/gardens/${gardenId}`)
             setGarden(garden.data)
+            if (garden.data.sections.length > 0) {
+                setGardenSectionTabSelected(garden.data.sections[0].id)
+            }
+            
         } catch (err: any) {
             console.log(err)
         }
@@ -102,7 +107,14 @@ const GardenPage = () => {
         fetchGardenPlants()
     }, []);
 
+
+    const [gardenSectionTabSelected, setGardenSectionTabSelected] = useState<number | undefined>();
+
+    const handleGardenSelectionTabChange = (_: SyntheticEvent, newSectionTabId: number) => {
+        setGardenSectionTabSelected(newSectionTabId);
+    }
     
+
     return (
         
         <>
@@ -150,6 +162,19 @@ const GardenPage = () => {
                             </Box>
                         </Grid>
                     </Grid>
+                    
+                    {gardenSectionTabSelected && (
+                        <TabContext value={gardenSectionTabSelected} >
+                            <TabList onChange={handleGardenSelectionTabChange}>
+                                {garden.sections.map((section) => (
+                                    <Tab key={section.id} value={section.id} label={section.name} />
+                                ))}
+                            </TabList>
+                            {garden.sections.map((section) => (
+                                <TabPanel key={section.id} value={section.id}>Description: {section.description}</TabPanel>
+                            ))}
+                        </TabContext>
+                    )}
                     
                     {user?.id === garden.user_id && (
                         <Button 

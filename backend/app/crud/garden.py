@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
-from app.models.Garden import Garden, Tag
+from app.models.Garden import Garden, Tag, Section
 from app.models.User import User
 from app.models.Garden import GardenPlant
 from datetime import date
@@ -9,6 +9,7 @@ def get_garden_db(garden_id: int, db: Session):
         db.query(Garden)
         .filter(Garden.id == garden_id)
         .options(joinedload(Garden.tags))
+        .options(joinedload(Garden.sections))
         .first()
 
     )
@@ -21,6 +22,7 @@ def get_user_gardens_db(user_id: int, db: Session):
         .options(joinedload(Garden.user))
         .filter(Garden.user_id == user_id)
         .options(joinedload(Garden.tags))
+        .options(joinedload(Garden.sections))
         .all()
     )
     return garden_dict
@@ -32,6 +34,7 @@ def get_public_gardens_db(db: Session):
         .options(joinedload(Garden.user))
         .filter(Garden.is_public == True)
         .options(joinedload(Garden.tags))
+        .options(joinedload(Garden.sections))
         .all()
     )
     return garden_dict
@@ -55,6 +58,20 @@ def create_garden_db(name: str, description: str, is_public: bool, tags: list[in
     db.commit()
     db.refresh(new_garden)
     return new_garden
+
+
+def create_garden_section_db(name: str, garden_id: int, db: Session):
+    new_section = Section(
+        name=name,
+    )
+
+    garden = db.query(Garden).filter(Garden.id == garden_id).first()
+    garden.sections.append(new_section)
+
+    db.add(new_section)
+    db.commit()
+    db.refresh(new_section)
+    return new_section
 
 
 def get_garden_tags_db(db: Session):
