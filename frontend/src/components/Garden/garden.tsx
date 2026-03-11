@@ -3,7 +3,7 @@ import Navbar from "../common/Navbar";
 import { useState, useEffect, type SyntheticEvent } from "react";
 import { type Garden } from "../../types/garden";
 import api from "../../client/client"
-import { Box, Button, Typography, Modal, Stack, Grid, Tabs, Tab } from "@mui/material";
+import { Box, Button, Typography, Modal, Stack, Grid, Tab } from "@mui/material";
 import TagList from "./tag-list";
 import { useAuth } from "../common/AuthProvider";
 import PlantList from "../Plant/plant-list";
