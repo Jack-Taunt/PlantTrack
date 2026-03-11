@@ -73,7 +73,7 @@ const DeleteGardenButton = ({garden, onGardenDeleted}: DeleteGardenProps) => {
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
                         width: 350,
-                        height: 200,
+                        height: 220,
                         bgcolor: 'background.paper',
                         border: '2px solid #000',
                         boxShadow: 24,
@@ -105,7 +105,7 @@ const DeleteGardenButton = ({garden, onGardenDeleted}: DeleteGardenProps) => {
                     </Box>
                     <Stack
                         direction="row"
-                        sx={{width: "100%", pt: 2}}
+                        sx={{width: "100%", py: 2}}
                         justifyContent='center'
                     > 
                         <Button 
