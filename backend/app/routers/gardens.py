@@ -13,7 +13,8 @@ from app.crud.garden import (create_garden_db,
                              delete_garden_db, 
                              get_garden_db, 
                              create_garden_plants_db,
-                             get_garden_plants_db)
+                             get_garden_plants_db,
+                             create_garden_section_db)
 from app.crud.plant import get_plant_db
 
 router = APIRouter(
@@ -29,6 +30,8 @@ async def create_garden(
     user: Annotated[User, Depends(get_current_user())]
 ): 
     new_garden = create_garden_db(garden.name, garden.description, garden.is_public, garden.tags, user.id, db)
+    create_garden_section_db("Section 1", new_garden.id, db)
+    
     return new_garden
 
 

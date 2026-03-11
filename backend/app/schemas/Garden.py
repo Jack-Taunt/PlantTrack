@@ -25,7 +25,7 @@ class GardenOut(BaseModel):
 class Section(BaseModel):
     id: int
     name: str
-    description: str
+    description: str | None
 
 
 class GardenPlant(BaseModel):
