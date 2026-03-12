@@ -3,7 +3,7 @@ import Navbar from "../common/Navbar";
 import { useState, useEffect, type SyntheticEvent } from "react";
 import { type Garden } from "../../types/garden";
 import api from "../../client/client"
-import { Box, Button, Typography, Modal, Stack, Grid, Tab } from "@mui/material";
+import { Box, Button, Typography, Modal, Stack, Grid, Tab, tabsClasses } from "@mui/material";
 import TagList from "./tag-list";
 import { useAuth } from "../common/AuthProvider";
 import PlantList from "../Plant/plant-list";
@@ -109,7 +109,7 @@ const GardenPage = () => {
     }, []);
 
 
-    const [gardenSectionTabSelected, setGardenSectionTabSelected] = useState<number | undefined>();
+    const [gardenSectionTabSelected, setGardenSectionTabSelected] = useState<number>(0);
 
     const handleGardenSelectionTabChange = (_: SyntheticEvent, newSectionTabId: number) => {
         setGardenSectionTabSelected(newSectionTabId);
@@ -125,7 +125,7 @@ const GardenPage = () => {
                     <Typography variant="h3" sx={{fontWeight: 'bold', textAlign: 'center', pt: 4}}>
                         {garden.name}
                     </Typography>
-                    <Grid container sx={{height: 500, p: 5}}>
+                    <Grid container sx={{height: 600, p: 5}}>
                         <Grid size={7} >
                             <Box sx={{border: '1px solid #000', borderRadius: 2, mr: 2, height: "100%"}}>
                                 <Typography variant="h4" sx={{fontWeight: 'bold', pt: 2, mx: 3, borderBottom: '2px solid'}}>
@@ -141,7 +141,7 @@ const GardenPage = () => {
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid size={5} sx={{ minHeight: 0, height: 500 }}>
+                        <Grid size={5} sx={{ minHeight: 0, height: "100%" }}>
                             <Box sx={{
                                 width: '100%',
                                 height: '100%',
@@ -164,31 +164,56 @@ const GardenPage = () => {
                         </Grid>
                     </Grid>
                     
-                    {gardenSectionTabSelected && (
-                        <TabContext value={gardenSectionTabSelected} >
-                            <TabList onChange={handleGardenSelectionTabChange}>
-                                {garden.sections.map((section) => (
-                                    <Tab key={section.id} value={section.id} label={section.name} />
-                                ))}
-                            </TabList>
-                            {garden.sections.map((section) => (
-                                <TabPanel key={section.id} value={section.id}>
-                                    <Typography>Description: {section.description}</Typography>
-                                    {user?.id === garden.user_id && (
-                                        <Button 
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={handleAddPlantModalOpen}
-                                        >
-                                            Add New Plant
-                                        </Button>
-                                    )}
-                                </TabPanel>
-                            ))}
-                        </TabContext>
-                    )}
 
-                    <GardenPlantList gardenPlants={gardenPlants}/>
+                    <Box sx={{px:5}}>
+                        <Box sx={{border: '1px solid', borderRadius: 2, overflow: 'hidden'}}>
+                            <Box>
+                                <TabContext value={gardenSectionTabSelected} >
+                                    <TabList 
+                                        onChange={handleGardenSelectionTabChange} 
+                                        variant="scrollable" 
+                                        sx={{
+                                            [`& .${tabsClasses.scrollButtons}`]: {
+                                                '&.Mui-disabled': { opacity: 0.3 },
+                                                border: 1,
+                                                backgroundColor: "secondary.main"
+                                            },
+                                            borderBottom: 1
+                                        }}
+                                        >
+                                        {garden.sections.map((section) => (
+                                            <Tab 
+                                                key={section.id} 
+                                                value={section.id} 
+                                                label={<Typography variant="body1" sx={{fontWeight: 'bold'}}>{section.name}</Typography>} 
+                                                sx={{
+                                                    width: "100%",
+                                                    backgroundColor: gardenSectionTabSelected === section.id? '#dedede' : "#ffffff"
+                                                }}
+                                            />
+                                        ))}
+                                    </TabList>
+                                    {garden.sections.map((section) => (
+                                        <TabPanel key={section.id} value={section.id}>
+                                            {section.description && (
+                                                <Typography>Description: {section.description}</Typography>
+                                            )}
+                                            {user?.id === garden.user_id && (
+                                                <Button 
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={handleAddPlantModalOpen}
+                                                >
+                                                    Add New Plant
+                                                </Button>
+                                            )}
+                                            <GardenPlantList gardenPlants={gardenPlants.filter(gardenPlant => gardenPlant.section_id === section.id)}/>
+                                        </TabPanel>
+                                    ))}
+                                </TabContext>
+                            </Box> 
+                        </Box>
+                    </Box>
 
                     <Modal
                         open={addPlantModalOpen}
