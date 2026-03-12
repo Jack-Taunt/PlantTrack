@@ -14,7 +14,8 @@ from app.crud.garden import (create_garden_db,
                              get_garden_db, 
                              create_garden_plants_db,
                              get_garden_plants_db,
-                             create_garden_section_db)
+                             create_garden_section_db,
+                             get_section_db)
 from app.crud.plant import get_plant_db
 
 router = APIRouter(
@@ -118,7 +119,21 @@ async def create_garden_plant(
                     status_code=status.HTTP_404_NOT_FOUND, 
                     detail="This plant doesnt exist!",
                 )
-        create_garden_plants_db(garden_id, gardenPlants.plants, gardenPlants.planted_date, db)
+            
+        section = get_section_db(gardenPlants.section_id, db)
+        if (section):
+            if (section.garden_id != garden_id):
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND, 
+                    detail="This garden doesn't own this section!",
+                )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail="This section doesnt exist!",
+            )
+        
+        create_garden_plants_db(garden_id, gardenPlants.plants, gardenPlants.planted_date, gardenPlants.section_id, db)
 
     else:
         raise HTTPException(

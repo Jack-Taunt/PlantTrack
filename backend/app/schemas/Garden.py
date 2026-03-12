@@ -44,6 +44,7 @@ class GardenPlantAmount(BaseModel):
 class GardenPlantsCreate(BaseModel):
     plants: List[GardenPlantAmount]
     planted_date: date | None
+    section_id: int
     
     @field_validator("planted_date")
     def check_date_past(cls, planted_date: date):

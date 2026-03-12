@@ -85,15 +85,15 @@ def delete_garden_db(garden_id: int, db: Session):
     db.commit()
 
 
-def create_garden_plants_db(garden_id: int, plants: list[int], planted_date: date, db: Session):
+def create_garden_plants_db(garden_id: int, plants: list[int], planted_date: date, section_id: int, db: Session):
     for plant_amount in plants:
         for _ in range(plant_amount.amount):
-            create_garden_plant_db(garden_id, plant_amount.plant_id, planted_date, db)
+            create_garden_plant_db(garden_id, plant_amount.plant_id, planted_date, section_id, db)
     db.commit()
 
 
-def create_garden_plant_db(garden_id: int, plant: int, planted_date: date, db: Session):
-    garden_plant = GardenPlant(garden_id=garden_id, plant_id=plant, planted_date=planted_date)
+def create_garden_plant_db(garden_id: int, plant: int, planted_date: date, section_id: int, db: Session):
+    garden_plant = GardenPlant(garden_id=garden_id, plant_id=plant, planted_date=planted_date, section_id=section_id)
     db.add(garden_plant)
 
 
@@ -105,3 +105,12 @@ def get_garden_plants_db(garden_id: int, db: Session):
         .all()
     )
     return garden_plants_dict
+
+
+def get_section_db(section_id: int, db: Session):
+    section_dict = (
+        db.query(Section)
+        .filter(Section.id == section_id)
+        .first()
+    )
+    return section_dict

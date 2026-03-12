@@ -36,7 +36,7 @@ class GardenPlant(Base):
 
     garden_id = Column(ForeignKey("gardens.id", ondelete="CASCADE"), nullable=False)
     garden = relationship('Garden', back_populates='garden_plants')
-    section_id = Column(ForeignKey("sections.id"), nullable=True)
+    section_id = Column(ForeignKey("sections.id"), nullable=False)
     plant_id = Column(ForeignKey("plants.id", ondelete="CASCADE"), nullable=False)
     plant = relationship('Plant', back_populates='garden_plants')
 

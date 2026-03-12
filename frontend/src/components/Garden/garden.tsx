@@ -91,7 +91,8 @@ const GardenPage = () => {
             await api.post(`/gardens/${gardenId}/plants`,
                 {
                     plants: selectedPlants,
-                    planted_date: plantedDate?.format("YYYY-MM-DD") ?? null 
+                    planted_date: plantedDate?.format("YYYY-MM-DD") ?? null,
+                    section_id: gardenSectionTabSelected,
                 }
             )
             handleAddPlantModalClose()
@@ -171,19 +172,20 @@ const GardenPage = () => {
                                 ))}
                             </TabList>
                             {garden.sections.map((section) => (
-                                <TabPanel key={section.id} value={section.id}>Description: {section.description}</TabPanel>
+                                <TabPanel key={section.id} value={section.id}>
+                                    <Typography>Description: {section.description}</Typography>
+                                    {user?.id === garden.user_id && (
+                                        <Button 
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={handleAddPlantModalOpen}
+                                        >
+                                            Add New Plant
+                                        </Button>
+                                    )}
+                                </TabPanel>
                             ))}
                         </TabContext>
-                    )}
-                    
-                    {user?.id === garden.user_id && (
-                        <Button 
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleAddPlantModalOpen}
-                        >
-                            Add New Plant
-                        </Button>
                     )}
 
                     <GardenPlantList gardenPlants={gardenPlants}/>
