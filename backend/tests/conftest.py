@@ -5,7 +5,7 @@ from app.database import get_db, Base
 import pytest
 from fastapi.testclient import TestClient
 from app.auth.utils import hash_password
-from app.models import User, Garden, GardenPlant, Tag, Plant, Toxicity, Edibility, Environment, CareRequirements, Growth, Planting
+from app.models import User, Garden, Section, GardenPlant, Tag, Plant, Toxicity, Edibility, Environment, CareRequirements, Growth, Planting
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -88,6 +88,17 @@ def default_data(db_session):
     db_session.add(default_garden_3)
     db_session.add(default_garden_4)
     db_session.add(default_garden_5)
+
+    default_section_1 = Section(name="default_section_1", garden_id=1)
+    default_section_2 = Section(name="default_section_2", garden_id=2)
+    default_section_3 = Section(name="default_section_3", garden_id=3)
+    default_section_4 = Section(name="default_section_4", garden_id=4)
+    default_section_5 = Section(name="default_section_5", garden_id=5)
+    db_session.add(default_section_1)
+    db_session.add(default_section_2)
+    db_session.add(default_section_3)
+    db_session.add(default_section_4)
+    db_session.add(default_section_5)
 
     default_toxicity_1 = Toxicity(toxic_to_cats=False, toxic_to_dogs=False, toxic_to_humans=False, toxicity="non_toxic")
     db_session.add(default_toxicity_1)
