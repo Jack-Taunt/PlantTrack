@@ -1,4 +1,4 @@
-import { Button, Snackbar, Alert, type SnackbarCloseReason, Typography } from "@mui/material"
+import { Button, type SnackbarCloseReason, Typography } from "@mui/material"
 import { useState } from "react";
 import api from "../../client/client"
 import { useNavigate } from "react-router-dom";
@@ -15,27 +15,14 @@ const DeleteGardenButton = ({garden, onGardenDeleted}: DeleteGardenProps) => {
 
     const handleDeleteGardenModalOpen = () => setDeleteGardenModalOpen(true);
     const handleDeleteGardenModalClose = () => setDeleteGardenModalOpen(false);
-    
-    const [snackVisability, setSnackVisability] = useState(false);
 
     const navigate = useNavigate();
-
-    const handleSnackClose = (
-        _: React.SyntheticEvent | Event,
-        reason?: SnackbarCloseReason,
-    ) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSnackVisability(false);
-    }
 
     const deleteGarden = async () => {
         try {
             const response = await api.delete(`/gardens/${garden.id}`)
             console.log(response.data)
             handleDeleteGardenModalClose();
-            setSnackVisability(true);
             onGardenDeleted();
 
         } catch (err: any) {
@@ -49,7 +36,6 @@ const DeleteGardenButton = ({garden, onGardenDeleted}: DeleteGardenProps) => {
             }
         }
     }
-
 
     return (
         <>
