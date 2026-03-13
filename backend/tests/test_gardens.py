@@ -276,6 +276,15 @@ def test_create_garden_plants_non_existant_plant_404_recieved(auth_client, defau
     assert response.json()["detail"] == "This plant doesnt exist!"
 
 
+def test_create_garden_plants_non_existant_garden_404_recieved(auth_client, default_data):
+    response = auth_client.post(
+        "/gardens/9999/plants",
+        json={"plants": [{"plant_id": 1, "amount": 1}, {"plant_id": 2, "amount": 2}, {"plant_id": 3, "amount": 3}], "planted_date": None, "section_id": 1}
+    )
+    assert response.status_code == 404
+    assert response.json()["detail"] == "This garden doesnt exist!"
+
+
 def test_create_garden_plants_incorrect_date_422_recieved(auth_client, default_data):
     response = auth_client.post(
         "/gardens/1/plants",

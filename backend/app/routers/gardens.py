@@ -111,6 +111,13 @@ async def create_garden_plant(
     db: Annotated[Session, Depends(get_db)]
 ):
     garden = get_garden_db(garden_id, db)
+
+    if (garden == None):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This garden doesnt exist!",
+        )
+
     if (garden.user.id == user.id):
         for plant_amount in gardenPlants.plants:
             plant = get_plant_db(plant_amount.plant_id, db)
