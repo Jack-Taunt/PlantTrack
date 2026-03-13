@@ -1,9 +1,9 @@
-import { Button, Snackbar, Alert, type SnackbarCloseReason, Modal, Typography, Box, Stack } from "@mui/material"
+import { Button, Snackbar, Alert, type SnackbarCloseReason, Typography } from "@mui/material"
 import { useState } from "react";
 import api from "../../client/client"
 import { useNavigate } from "react-router-dom";
 import type { Garden } from "../../types/garden";
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import ConfirmDeleteModal from "../common/confirmDeleteModal";
 
 type DeleteGardenProps = {
     garden: Garden;
@@ -61,71 +61,21 @@ const DeleteGardenButton = ({garden, onGardenDeleted}: DeleteGardenProps) => {
             >
                 Delete Garden
             </Button>
-
-            <Modal
-                open={deleteGardenModalOpen}
-                onClose={handleDeleteGardenModalClose}
-            >
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: 350,
-                        height: 220,
-                        bgcolor: 'background.paper',
-                        border: '2px solid #000',
-                        boxShadow: 24,
-                        p: 2,
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}
-                >   
-                    <Box sx={{flexGrow: 1}}>
-                        <Stack spacing={4}>
-                            <Stack
-                                direction="row"
-                            >
-                                <WarningAmberIcon sx={{fontSize: 64, pr: 3}}/>
-                                <Typography
-                                    variant="h5"
-                                >
-                                    Are you sure you want to Delete this Garden?
-                                </Typography>
-                            </Stack>
-                            <Typography
-                                fontWeight={500}
-                                variant="h5"
-                                sx={{textAlign: 'center'}}
-                            >
-                                {garden.name}
-                            </Typography>
-                        </Stack>
-                    </Box>
-                    <Stack
-                        direction="row"
-                        sx={{width: "100%", py: 2}}
-                        justifyContent='center'
-                    > 
-                        <Button 
-                            onClick={deleteGarden}
-                            variant="contained" 
-                            sx={{width: '100%', ml: 2, mr: 2}}
-                            color="error"
-                        >
-                            Delete
-                        </Button>
-                        <Button 
-                            onClick={handleDeleteGardenModalClose} 
-                            variant="contained" 
-                            sx={{width: '100%', ml: 2, mr: 2}}
-                        >
-                            Cancel
-                        </Button>  
-                    </Stack>
-                </Box>
-            </Modal>
+            <ConfirmDeleteModal 
+                modalOpen={deleteGardenModalOpen} 
+                handleModalClose={handleDeleteGardenModalClose} 
+                deleteFunction={deleteGarden} 
+                title={"Are you sure you want to Delete this Garden?"} 
+                body={
+                    <Typography
+                        fontWeight={500}
+                        variant="h5"
+                        sx={{textAlign: 'center'}}
+                    >
+                        {garden.name}
+                    </Typography>
+                } 
+            />
 
             <Snackbar
                 open={snackVisability}
