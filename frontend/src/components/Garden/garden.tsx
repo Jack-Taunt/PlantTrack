@@ -207,7 +207,10 @@ const GardenPage = () => {
                                                 sx={{
                                                     width: { xs: 50, sm: 150, md: 250, xl: 400 },
                                                     flexShrink: 0,
-                                                    backgroundColor: gardenSectionTabSelected === section.id? '#dedede' : "#ffffff"
+                                                    backgroundColor: gardenSectionTabSelected === section.id? '#dedede' : "#ffffff",
+                                                    '&:hover': {
+                                                        backgroundColor: '#dedede',
+                                                    },
                                                 }}
                                             />
                                         ))}
