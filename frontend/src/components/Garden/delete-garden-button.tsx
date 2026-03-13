@@ -75,22 +75,8 @@ const DeleteGardenButton = ({garden, onGardenDeleted}: DeleteGardenProps) => {
                         {garden.name}
                     </Typography>
                 } 
+                snackMessage="Garden Successfully Deleted!"
             />
-
-            <Snackbar
-                open={snackVisability}
-                autoHideDuration={5000}
-                onClose={handleSnackClose}
-            >
-                <Alert
-                    onClose={handleSnackClose}
-                    severity="success"
-                    variant="filled"
-                    sx={{ width: '100%' }}
-                >
-                    Garden Deleted
-                </Alert>
-            </Snackbar>
         </>
     )
 }
