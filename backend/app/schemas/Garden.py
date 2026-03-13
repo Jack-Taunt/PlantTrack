@@ -18,11 +18,15 @@ class GardenOut(BaseModel):
     is_public: bool
     tags: List[Tag]
     user: UserPublic
-    sections: List[Section]
+    sections: List[SectionOut]
     garden_plants: List[GardenPlant]
 
 
-class Section(BaseModel):
+class GardenSectionCreate(BaseModel):
+    name: str
+
+
+class SectionOut(BaseModel):
     id: int
     name: str
     description: str | None

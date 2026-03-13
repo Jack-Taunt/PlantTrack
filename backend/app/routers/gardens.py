@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
-from app.schemas.Garden import GardenCreate, GardenOut, GardenPlantsCreate
+from app.schemas.Garden import GardenCreate, GardenOut, GardenPlantsCreate, GardenSectionCreate, SectionOut
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
@@ -171,3 +171,31 @@ async def get_garden_plant(
     
     garden_plants = get_garden_plants_db(garden_id, db)
     return garden_plants
+
+
+
+@router.post("/{garden_id}/section", response_model=SectionOut)
+async def create_garden_section(
+    garden_id: int,
+    garden_section: GardenSectionCreate,
+    user: Annotated[User, Depends(get_current_user())],
+    db: Annotated[Session, Depends(get_db)]
+):
+    garden = get_garden_db(garden_id, db)
+
+    if (garden == None):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This garden doesnt exist!",
+        )
+
+    if (garden.user.id == user.id):
+
+        section = create_garden_section_db(garden_section.name, garden_id, db)
+        return section
+    
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="You do not own this garden!",
+        )

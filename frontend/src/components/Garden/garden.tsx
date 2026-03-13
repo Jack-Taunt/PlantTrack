@@ -112,12 +112,27 @@ const GardenPage = () => {
     const [gardenSectionTabSelected, setGardenSectionTabSelected] = useState<number>(0);
 
     const handleGardenSelectionTabChange = (_: SyntheticEvent, newSectionTabId: number) => {
+        if (newSectionTabId === -1) return;
         setGardenSectionTabSelected(newSectionTabId);
     }
     
+    const handleCreateNewSection = async () => {
+        try {
+            const sectionNumber = garden?.sections.length ? garden?.sections.length + 1 : 1
+            const section = await api.post(`/gardens/${gardenId}/section`,
+                {
+                    name: `Section ${sectionNumber}`
+                }
+            )
+            await fetchGarden();
+            setGardenSectionTabSelected(section.data.id);
+        } catch (err: any) {
+            console.log(err)
+        }
+    }
 
+    
     return (
-        
         <>
             <Navbar/>
             {garden && (
@@ -169,14 +184,17 @@ const GardenPage = () => {
                         <Box sx={{border: '1px solid', borderRadius: 2, overflow: 'hidden'}}>
                             <Box>
                                 <TabContext value={gardenSectionTabSelected} >
+
                                     <TabList 
                                         onChange={handleGardenSelectionTabChange} 
                                         variant="scrollable" 
+                                        allowScrollButtonsMobile
                                         sx={{
                                             [`& .${tabsClasses.scrollButtons}`]: {
                                                 '&.Mui-disabled': { opacity: 0.3 },
                                                 border: 1,
-                                                backgroundColor: "secondary.main"
+                                                backgroundColor: "secondary.main",
+                                                color: 'black'
                                             },
                                             borderBottom: 1
                                         }}
@@ -185,14 +203,34 @@ const GardenPage = () => {
                                             <Tab 
                                                 key={section.id} 
                                                 value={section.id} 
-                                                label={<Typography variant="body1" sx={{fontWeight: 'bold'}}>{section.name}</Typography>} 
+                                                label={<Typography variant="body1" sx={{textTransform: 'none', fontWeight: 'bold', color: gardenSectionTabSelected === section.id? 'primary.main' : "black"}}>{section.name}</Typography>} 
                                                 sx={{
-                                                    width: "100%",
+                                                    width: { xs: 50, sm: 150, md: 250, xl: 400 },
+                                                    flexShrink: 0,
                                                     backgroundColor: gardenSectionTabSelected === section.id? '#dedede' : "#ffffff"
                                                 }}
                                             />
                                         ))}
+                                        <Tab 
+                                            value={-1}
+                                            onMouseDown={handleCreateNewSection}
+                                            sx={{
+                                                backgroundColor: "secondary.main", 
+                                                color: 'white',
+                                                '&.Mui-disabled': {
+                                                    opacity: 1,
+                                                    color: 'white',
+                                                },
+                                                '&.Mui-selected': {
+                                                    backgroundColor: "secondary.main",
+                                                    color: 'white',
+                                                }
+                                            }}
+                                            label={"+ Add New Section"} 
+                                        />
                                     </TabList>
+                                    
+                                    
                                     {garden.sections.map((section) => (
                                         <TabPanel key={section.id} value={section.id}>
                                             {section.description && (
@@ -306,8 +344,6 @@ const GardenPage = () => {
                                         </LocalizationProvider>
                                     </Grid>
 
-                                    
-
                                     <Grid size={{xs: 12, md:6, lg:3}} sx={{alignContent: 'center'}}>
                                         <Button
                                             variant="contained"
@@ -319,10 +355,7 @@ const GardenPage = () => {
                                             Add Plants
                                         </Button>
                                     </Grid>
-                                    
-                                    
-                                    
-                                    
+                                      
                                 </Grid>
                             </Stack>
                         </Box>
