@@ -109,7 +109,7 @@ const GardenPage = () => {
     }, []);
 
 
-    const [gardenSectionTabSelected, setGardenSectionTabSelected] = useState<number>(0);
+    const [gardenSectionTabSelected, setGardenSectionTabSelected] = useState<number>(-1);
 
     const handleGardenSelectionTabChange = (_: SyntheticEvent, newSectionTabId: number) => {
         if (newSectionTabId === -1) return;
