@@ -1,6 +1,6 @@
-import { Grid, Box, ListItemButton, Typography, Button } from "@mui/material";
+import { Grid, Box, ListItemButton, Typography } from "@mui/material";
 import { type Plant } from "../../types/plant";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import placeholderImage from "../../assets/image_placeholder.svg"
 import IncrementDecrementButtons from "../common/incrementDecrementButtons";
 import {type GardenPlantAmount} from "../../types/garden";
