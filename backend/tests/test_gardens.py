@@ -151,6 +151,28 @@ def test_delete_garden_not_auth_401_recieved(client, default_data, db_session):
     assert len(gardens) == 5
 
 
+def test_delete_garden_doesnt_exist_404_recieved(auth_client, default_data, db_session):
+    gardens = (
+        db_session.query(Garden)
+        .all()
+    )
+    assert len(gardens) == 5
+
+
+    response = auth_client.delete(
+        "/gardens/999",
+    )
+    assert response.status_code == 404
+    assert response.json()["detail"] == "This garden doesn't exist!"
+
+    gardens = (
+        db_session.query(Garden)
+        .all()
+    )
+
+    assert len(gardens) == 5
+
+
 def test_delete_garden_auth_owned_garden_200_recieved(auth_client, default_data, db_session):
     gardens = (
         db_session.query(Garden)

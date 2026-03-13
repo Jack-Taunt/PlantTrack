@@ -70,6 +70,12 @@ async def delete_garden(
     db: Annotated[Session, Depends(get_db)]
 ):
     garden = get_garden_db(garden_id, db)
+    if (garden == None):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This garden doesn't exist!",
+        )
+    
     if (garden.user.id == user.id):
         delete_garden_db(garden_id, db)
         json_response = JSONResponse(content={"message": "Deletion Successful"})
