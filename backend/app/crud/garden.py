@@ -74,6 +74,22 @@ def create_garden_section_db(name: str, garden_id: int, db: Session):
     return new_section
 
 
+def edit_garden_section_db(section_id: int, name: str, description: str, db: Session):
+    section = (
+        db.query(Section)
+        .filter(Section.id == section_id)
+        .first()
+    )
+
+    section.name = name
+    section.description = description
+
+    db.commit()
+    db.refresh(section)
+
+    return section
+
+
 def get_garden_tags_db(db: Session):
     tag_dict = db.query(Tag).all()
     return tag_dict

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
-from app.schemas.Garden import GardenCreate, GardenOut, GardenPlantsCreate, GardenSectionCreate, SectionOut
+from app.schemas.Garden import GardenCreate, GardenOut, GardenPlantsCreate, GardenSectionCreate, GardenSectionUpdate, SectionOut
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
@@ -15,6 +15,7 @@ from app.crud.garden import (create_garden_db,
                              create_garden_plants_db,
                              get_garden_plants_db,
                              create_garden_section_db,
+                             edit_garden_section_db,
                              get_section_db)
 from app.crud.plant import get_plant_db
 
@@ -192,6 +193,39 @@ async def create_garden_section(
     if (garden.user.id == user.id):
 
         section = create_garden_section_db(garden_section.name, garden_id, db)
+        return section
+    
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="You do not own this garden!",
+        )
+    
+
+@router.put("/{garden_id}/section/{section_id}")
+async def create_garden_section(
+    garden_id: int,
+    section_id: int,
+    garden_section: GardenSectionUpdate,
+    user: Annotated[User, Depends(get_current_user())],
+    db: Annotated[Session, Depends(get_db)]
+):
+    garden = get_garden_db(garden_id, db)
+    if (garden == None):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This garden doesnt exist!",
+        )
+    
+    if not any([section.id == section_id for section in garden.sections]):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This section doesnt exist!",
+        )
+
+    if (garden.user.id == user.id):
+
+        section = edit_garden_section_db(section_id, garden_section.name, garden_section.description, db)
         return section
     
     else:

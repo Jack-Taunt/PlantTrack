@@ -3,7 +3,7 @@ import Navbar from "../common/Navbar";
 import { useState, useEffect, type SyntheticEvent } from "react";
 import { type Garden } from "../../types/garden";
 import api from "../../client/client"
-import { Box, Button, Typography, Modal, Stack, Grid, Tab, tabsClasses } from "@mui/material";
+import { Box, Button, Typography, Modal, Stack, Grid, Tab, tabsClasses, TextField } from "@mui/material";
 import TagList from "./tag-list";
 import { useAuth } from "../common/AuthProvider";
 import PlantList from "../Plant/plant-list";
@@ -131,7 +131,28 @@ const GardenPage = () => {
         }
     }
 
+    const [editingSectionName, setEditingSectionName] = useState<number | null>();
+    const [sectionName, setSectionName] = useState<string>();
+
     
+    const saveSectionName = async () => {
+        setEditingSectionName(null);
+        
+        try {
+            await api.put(`/gardens/${gardenId}/section/${gardenSectionTabSelected}`,
+                {
+                    name: sectionName,
+                    description: ""
+                }
+            )
+            await fetchGarden();
+            setGardenSectionTabSelected(gardenSectionTabSelected);
+        } catch (err: any) {
+            console.log(err)
+        }
+    }
+
+
     return (
         <>
             <Navbar/>
@@ -199,11 +220,54 @@ const GardenPage = () => {
                                             borderBottom: 1
                                         }}
                                         >
-                                        {garden.sections.map((section) => (
+                                        {garden.sections.sort((a, b) => a.id > b.id ? 1 : -1).map((section) => (
                                             <Tab 
                                                 key={section.id} 
                                                 value={section.id} 
-                                                label={<Typography variant="body1" sx={{textTransform: 'none', fontWeight: 'bold', color: gardenSectionTabSelected === section.id? 'primary.main' : "black"}}>{section.name}</Typography>} 
+                                                label=
+                                                {   
+                                                    (editingSectionName === section.id) ? 
+                                                    (
+                                                        <TextField
+                                                            value={sectionName}
+                                                            variant="standard"
+                                                            autoFocus
+                                                            onBlur={() => saveSectionName()}
+                                                            onChange={(e) => setSectionName(e.target.value)}
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === "Enter") {
+                                                                    saveSectionName()
+                                                                }
+                                                            }}
+                                                            sx={{
+                                                                '& .MuiInputBase-input': {
+                                                                    fontWeight: 'bold',
+                                                                    fontSize: '1rem',
+                                                                    textTransform: 'none',
+                                                                    color: gardenSectionTabSelected === section.id ? 'primary.main' : 'black',
+                                                                    p: 0,
+                                                                    textAlign: 'center'
+                                                                }
+                                                            }}
+                                                        />
+
+                                                    ) : (
+                                                        <Typography 
+                                                            variant="body1" 
+                                                            onDoubleClick={() => {
+                                                                setEditingSectionName(section.id)
+                                                                setSectionName(section.name)
+                                                            }} 
+                                                            sx={{
+                                                                textTransform: 'none', 
+                                                                fontWeight: 'bold', 
+                                                                color: gardenSectionTabSelected === section.id? 'primary.main' : "black"
+                                                            }}
+                                                        >
+                                                            {section.name}
+                                                        </Typography>
+                                                    )
+                                                } 
                                                 sx={{
                                                     width: { xs: 50, sm: 150, md: 250, xl: 400 },
                                                     flexShrink: 0,
