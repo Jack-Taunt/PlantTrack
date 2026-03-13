@@ -16,7 +16,8 @@ from app.crud.garden import (create_garden_db,
                              get_garden_plants_db,
                              create_garden_section_db,
                              edit_garden_section_db,
-                             get_section_db)
+                             get_section_db,
+                             delete_section_db)
 from app.crud.plant import get_plant_db
 
 router = APIRouter(
@@ -228,6 +229,38 @@ async def create_garden_section(
         section = edit_garden_section_db(section_id, garden_section.name, garden_section.description, db)
         return section
     
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="You do not own this garden!",
+        )
+
+
+@router.delete("/{garden_id}/section/{section_id}")
+async def delete_section(
+    garden_id: int,
+    section_id: int,
+    user: Annotated[User, Depends(get_current_user())],
+    db: Annotated[Session, Depends(get_db)]
+):
+    garden = get_garden_db(garden_id, db)
+    if (garden == None):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This garden doesn't exist!",
+        )
+    
+    if not any([section.id == section_id for section in garden.sections]):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This section doesnt exist!",
+        )
+    
+    if (garden.user.id == user.id):
+        delete_section_db(section_id, db)
+        json_response = JSONResponse(content={"message": "Deletion Successful"})
+        return json_response
+
     else:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 

@@ -130,3 +130,9 @@ def get_section_db(section_id: int, db: Session):
         .first()
     )
     return section_dict
+
+
+def delete_section_db(section_id: int, db: Session):
+    section = db.query(Section).filter(Section.id == section_id).first()
+    db.delete(section)
+    db.commit()

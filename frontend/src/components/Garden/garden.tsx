@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../common/Navbar";
 import { useState, useEffect, type SyntheticEvent } from "react";
 import { type Garden } from "../../types/garden";
@@ -15,6 +15,8 @@ import dayjs, {Dayjs} from 'dayjs';
 import {type GardenPlantAmount} from "../../types/garden";
 import placeholderImage from "../../assets/image_placeholder.svg"
 import { TabContext, TabList, TabPanel } from '@mui/lab';
+import ConfirmDeleteModal from "../common/confirmDeleteModal";
+
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
@@ -37,6 +39,8 @@ const GardenPage = () => {
     const [plantedDate, setPlantedDate] = useState<Dayjs | null>(null);
 
     const currentYear = dayjs();
+
+    const navigate = useNavigate();
 
     const fetchGarden = async () => {
         try {
@@ -152,6 +156,30 @@ const GardenPage = () => {
         }
     }
 
+    const [deleteSectionModalOpen, setDeleteSectionModalOpen] = useState(false);
+    const handleDeleteSectionModalOpen = () => setDeleteSectionModalOpen(true);
+    const handleDeleteSectionModalClose = () => setDeleteSectionModalOpen(false);
+
+
+    const deleteSection = async () => {
+        try {
+            await api.delete(`/gardens/${gardenId}/section/${gardenSectionTabSelected}`)
+
+            handleDeleteSectionModalClose();
+            await fetchGarden();
+
+        } catch (err: any) {
+            if (err.response?.status === 401) {
+                navigate("/login", {
+                    state: {from: location.pathname},
+                    replace: true
+                })
+            } else if (err.response?.status === 500) {
+                console.log(err.response)
+            }
+        }
+    }
+
 
     return (
         <>
@@ -228,28 +256,51 @@ const GardenPage = () => {
                                                 {   
                                                     (editingSectionName === section.id) ? 
                                                     (
-                                                        <TextField
-                                                            value={sectionName}
-                                                            variant="standard"
-                                                            autoFocus
-                                                            onBlur={() => saveSectionName()}
-                                                            onChange={(e) => setSectionName(e.target.value)}
-                                                            onKeyDown={(e) => {
-                                                                if (e.key === "Enter") {
-                                                                    saveSectionName()
-                                                                }
-                                                            }}
-                                                            sx={{
-                                                                '& .MuiInputBase-input': {
+                                                        <div>
+                                                            <TextField
+                                                                value={sectionName}
+                                                                variant="standard"
+                                                                autoFocus
+                                                                onBlur={() => saveSectionName()}
+                                                                onChange={(e) => setSectionName(e.target.value)}
+                                                                onKeyDown={(e) => {
+                                                                    if (e.key === "Enter") {
+                                                                        saveSectionName()
+                                                                    }
+                                                                }}
+                                                                sx={{
+                                                                    '& .MuiInputBase-input': {
+                                                                        fontWeight: 'bold',
+                                                                        fontSize: '1rem',
+                                                                        textTransform: 'none',
+                                                                        color: gardenSectionTabSelected === section.id ? 'primary.main' : 'black',
+                                                                        p: 0,
+                                                                        textAlign: 'center'
+                                                                    }
+                                                                }}
+                                                            />
+                                                            <span
+                                                                onMouseDown={(e) => {
+                                                                    e.stopPropagation();
+                                                                    e.preventDefault();
+                                                                    handleDeleteSectionModalOpen();
+                                                                }}
+                                                                style={{
+                                                                    position: 'absolute',
+                                                                    top: 1,
+                                                                    right: 2,
+                                                                    cursor: 'pointer',
+                                                                    fontSize: '1.5rem',
                                                                     fontWeight: 'bold',
-                                                                    fontSize: '1rem',
-                                                                    textTransform: 'none',
-                                                                    color: gardenSectionTabSelected === section.id ? 'primary.main' : 'black',
-                                                                    p: 0,
-                                                                    textAlign: 'center'
-                                                                }
-                                                            }}
-                                                        />
+                                                                    lineHeight: 1,
+                                                                    padding: '1px 2px',
+                                                                    backgroundColor: '#ff0000',
+                                                                    color: 'white',
+                                                                }}
+                                                            >
+                                                                ✕
+                                                            </span>
+                                                        </div>
 
                                                     ) : (
                                                         <Typography 
@@ -275,7 +326,7 @@ const GardenPage = () => {
                                                     '&:hover': {
                                                         backgroundColor: '#dedede',
                                                     },
-                                                }}
+                                                }} 
                                             />
                                         ))}
                                         <Tab 
@@ -319,6 +370,30 @@ const GardenPage = () => {
                             </Box> 
                         </Box>
                     </Box>
+
+                    <ConfirmDeleteModal 
+                        modalOpen={deleteSectionModalOpen} 
+                        handleModalClose={handleDeleteSectionModalClose} 
+                        deleteFunction={deleteSection} 
+                        title={"Are you sure you want to Delete this Section?"} 
+                        body={
+                            <div>
+                                <Typography
+                                    fontWeight={500}
+                                    variant="h6"
+                                    sx={{textAlign: 'center'}}
+                                >
+                                    {sectionName}
+                                </Typography>
+                                <Typography
+                                    sx={{textAlign: 'center'}}
+                                >
+                                    All plants will also be deleted!
+                                </Typography>
+                            </div>
+                        } 
+                        snackMessage="Section Successfully Deleted!"
+                    />
 
                     <Modal
                         open={addPlantModalOpen}
