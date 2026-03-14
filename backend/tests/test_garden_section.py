@@ -106,11 +106,6 @@ def test_edit_section_correct_details_200_recieved(auth_client, default_data, db
     assert sections[0].description == "new_section_description"
 
 
-
-
-
-
-
 def test_delete_section_not_auth_401_recieved(client, default_data):
     response = client.delete(
         "/gardens/1/section/1"
@@ -140,3 +135,18 @@ def test_delete_section_doesnt_own_garden_403_recieved(auth_client, default_data
     )
     assert response.status_code == 403
     assert response.json()["detail"] == "You do not own this garden!"
+
+
+def test_delete_section_correct_details_200_recieved(auth_client, default_data, db_session):
+    
+    response = auth_client.delete(
+        "/gardens/1/section/1"
+    )
+    assert response.status_code == 200
+
+    sections = (
+        db_session.query(Section)
+        .filter(Section.garden_id == 1)
+        .all()
+    )
+    assert len(sections) == 0
