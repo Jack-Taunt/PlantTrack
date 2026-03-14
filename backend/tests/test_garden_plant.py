@@ -35,7 +35,7 @@ def test_create_garden_plants_non_existant_plant_404_recieved(auth_client, defau
         json={"plants": [{"plant_id": 999, "amount": 1}, {"plant_id": 1000, "amount": 2}, {"plant_id": 1001, "amount": 3}], "planted_date": None, "section_id": 1}
     )
     assert response.status_code == 404
-    assert response.json()["detail"] == "This plant doesnt exist!"
+    assert response.json()["detail"] == "This plant doesn't exist!"
 
 
 def test_create_garden_plants_non_existant_garden_404_recieved(auth_client, default_data):
@@ -44,7 +44,7 @@ def test_create_garden_plants_non_existant_garden_404_recieved(auth_client, defa
         json={"plants": [{"plant_id": 1, "amount": 1}, {"plant_id": 2, "amount": 2}, {"plant_id": 3, "amount": 3}], "planted_date": None, "section_id": 1}
     )
     assert response.status_code == 404
-    assert response.json()["detail"] == "This garden doesnt exist!"
+    assert response.json()["detail"] == "This garden doesn't exist!"
 
 
 def test_create_garden_plants_incorrect_date_422_recieved(auth_client, default_data):
@@ -62,7 +62,7 @@ def test_create_garden_plants_nonexistant_section_404_recieved(auth_client, defa
         json={"plants": [{"plant_id": 1, "amount": 1}, {"plant_id": 2, "amount": 2}, {"plant_id": 3, "amount": 3}], "planted_date": str(date.today()), "section_id": 9999}
     )
     assert response.status_code == 404
-    assert response.json()["detail"] == "This section doesnt exist!"
+    assert response.json()["detail"] == "This section doesn't exist!"
 
 
 def test_create_garden_plants_garden_doesnt_own_section_403_recieved(auth_client, default_data):
