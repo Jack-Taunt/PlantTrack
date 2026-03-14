@@ -310,10 +310,28 @@ def test_create_garden_plants_non_existant_garden_404_recieved(auth_client, defa
 def test_create_garden_plants_incorrect_date_422_recieved(auth_client, default_data):
     response = auth_client.post(
         "/gardens/1/plants",
-        json={"plants": [{"plant_id": 1, "amount": 1}, {"plant_id": 2, "amount": 2}, {"plant_id": 3, "amount": 3}], "planted_date": str(date.today() + timedelta(days=1))}
+        json={"plants": [{"plant_id": 1, "amount": 1}, {"plant_id": 2, "amount": 2}, {"plant_id": 3, "amount": 3}], "planted_date": str(date.today() + timedelta(days=1)), "section_id": 1}
     )
     assert response.status_code == 422
     assert response.json()["detail"][0]["msg"] == "Value error, Planted date cannot be in the future!"
+
+
+def test_create_garden_plants_nonexistant_section_404_recieved(auth_client, default_data):
+    response = auth_client.post(
+        "/gardens/1/plants",
+        json={"plants": [{"plant_id": 1, "amount": 1}, {"plant_id": 2, "amount": 2}, {"plant_id": 3, "amount": 3}], "planted_date": str(date.today()), "section_id": 9999}
+    )
+    assert response.status_code == 404
+    assert response.json()["detail"] == "This section doesnt exist!"
+
+
+def test_create_garden_plants_garden_doesnt_own_section_403_recieved(auth_client, default_data):
+    response = auth_client.post(
+        "/gardens/1/plants",
+        json={"plants": [{"plant_id": 1, "amount": 1}, {"plant_id": 2, "amount": 2}, {"plant_id": 3, "amount": 3}], "planted_date": str(date.today()), "section_id": 2}
+    )
+    assert response.status_code == 403
+    assert response.json()["detail"] == "This garden doesn't own this section!"
 
 
 def test_create_garden_plants_garden_plant_correct_date_created_200_recieved(auth_client, default_data, db_session):

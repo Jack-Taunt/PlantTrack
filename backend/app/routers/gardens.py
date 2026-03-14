@@ -139,7 +139,7 @@ async def create_garden_plant(
         if (section):
             if (section.garden_id != garden_id):
                 raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND, 
+                    status_code=status.HTTP_403_FORBIDDEN, 
                     detail="This garden doesn't own this section!",
                 )
         else:
