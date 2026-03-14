@@ -123,7 +123,7 @@ async def create_garden_plant(
     if (garden == None):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail="This garden doesnt exist!",
+            detail="This garden doesn't exist!",
         )
 
     if (garden.user.id == user.id):
@@ -132,7 +132,7 @@ async def create_garden_plant(
             if plant == None:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND, 
-                    detail="This plant doesnt exist!",
+                    detail="This plant doesn't exist!",
                 )
             
         section = get_section_db(gardenPlants.section_id, db)
@@ -145,7 +145,7 @@ async def create_garden_plant(
         else:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, 
-                detail="This section doesnt exist!",
+                detail="This section doesn't exist!",
             )
         
         create_garden_plants_db(garden_id, gardenPlants.plants, gardenPlants.planted_date, gardenPlants.section_id, db)
@@ -194,7 +194,7 @@ async def create_garden_section(
     if (garden == None):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail="This garden doesnt exist!",
+            detail="This garden doesn't exist!",
         )
 
     if (garden.user.id == user.id):
@@ -221,13 +221,13 @@ async def create_garden_section(
     if (garden == None):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail="This garden doesnt exist!",
+            detail="This garden doesn't exist!",
         )
     
     if not any([section.id == section_id for section in garden.sections]):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail="This section doesnt exist!",
+            detail="This section doesn't exist!",
         )
 
     if (garden.user.id == user.id):
@@ -259,7 +259,7 @@ async def delete_section(
     if not any([section.id == section_id for section in garden.sections]):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail="This section doesnt exist!",
+            detail="This section doesn't exist!",
         )
     
     if (garden.user.id == user.id):
