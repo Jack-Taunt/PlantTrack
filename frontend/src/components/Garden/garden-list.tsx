@@ -28,6 +28,11 @@ const GardenList = ({gardens, onGardenDeleted}: GardenListProps) => {
         
     };
 
+    const handleDeleteGarden = () => {
+        onGardenDeleted && onGardenDeleted();
+        setExpandedGarden(null);
+    }
+
 
     return (
         <Grid container spacing={2} sx={{minHeight: "100vh"}}>
@@ -156,7 +161,7 @@ const GardenList = ({gardens, onGardenDeleted}: GardenListProps) => {
                                 Visit Garden
                             </Button>
                             {onGardenDeleted &&
-                                <DeleteGardenButton garden={selectedGarden} onGardenDeleted={onGardenDeleted}/>
+                                <DeleteGardenButton garden={selectedGarden} onGardenDeleted={handleDeleteGarden}/>
                             }   
                         </Stack>
                         
