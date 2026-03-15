@@ -55,8 +55,6 @@ def create_garden_db(name: str, description: str, is_public: bool, tags: list[in
         new_garden.tags.extend(tags_db)
 
     db.add(new_garden)
-    db.commit()
-    db.refresh(new_garden)
     return new_garden
 
 
@@ -69,8 +67,6 @@ def create_garden_section_db(name: str, garden_id: int, db: Session):
     garden.sections.append(new_section)
 
     db.add(new_section)
-    db.commit()
-    db.refresh(new_section)
     return new_section
 
 
@@ -84,9 +80,6 @@ def edit_garden_section_db(section_id: int, name: str, description: str, db: Ses
     section.name = name
     section.description = description
 
-    db.commit()
-    db.refresh(section)
-
     return section
 
 
@@ -98,15 +91,7 @@ def get_garden_tags_db(db: Session):
 def delete_garden_db(garden_id: int, db: Session):
     garden = db.query(Garden).filter(Garden.id == garden_id).first()
     db.delete(garden)
-    db.commit()
-
-
-def create_garden_plants_db(garden_id: int, plants: list[int], planted_date: date, section_id: int, db: Session):
-    for plant_amount in plants:
-        for _ in range(plant_amount.amount):
-            create_garden_plant_db(garden_id, plant_amount.plant_id, planted_date, section_id, db)
-    db.commit()
-
+    
 
 def create_garden_plant_db(garden_id: int, plant: int, planted_date: date, section_id: int, db: Session):
     garden_plant = GardenPlant(garden_id=garden_id, plant_id=plant, planted_date=planted_date, section_id=section_id)
@@ -135,4 +120,3 @@ def get_section_db(section_id: int, db: Session):
 def delete_section_db(section_id: int, db: Session):
     section = db.query(Section).filter(Section.id == section_id).first()
     db.delete(section)
-    db.commit()
