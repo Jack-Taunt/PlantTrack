@@ -10,6 +10,7 @@ from app.auth.dependencies import get_current_user
 from app.schemas.User import User, UserOut
 from app.crud.user import create_user, get_user_by_email
 from fastapi.encoders import jsonable_encoder
+from app.services.auth_service import login_service, register_service
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 240
 
@@ -25,19 +26,7 @@ async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], 
     db: Annotated[Session, Depends(get_db)],
 ):
-    user = authenticate_user(form_data.username, form_data.password, db)
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, 
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
-    user_out = UserOut.model_validate(user)
-    user_json = jsonable_encoder(user_out)
+    access_token, user_json = login_service(form_data, db)
 
     json_response = JSONResponse(content={"message": "login successful", "user": user_json})
     json_response.set_cookie(
@@ -66,20 +55,11 @@ async def logout():
 
 
 @router.post("/register", response_model=UserOut)
-async def register(user: User, db: Annotated[Session, Depends(get_db)]):
-
-    if get_user_by_email(user.email, db):
-
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, 
-            detail="Email Already in use",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    else:
-        hashed_password = hash_password(user.password)
-        new_user = create_user(user.email, user.username, hashed_password, db)
-        return new_user
+async def register(
+    user: User, 
+    db: Annotated[Session, Depends(get_db)]
+):
+    return register_service(user, db)
 
 
 @router.get("/me", response_model=UserOut)
