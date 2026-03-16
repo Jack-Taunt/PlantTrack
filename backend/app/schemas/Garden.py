@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Annotated, List
 from app.schemas.User import UserPublic
 from app.schemas.GardenPlant import GardenPlant
-
+from app.schemas.GardenSection import SectionOut
 
 class GardenCreate(BaseModel):
     name: Annotated[str, Field(max_length=30)]
@@ -20,21 +20,6 @@ class GardenOut(BaseModel):
     user: UserPublic
     sections: List[SectionOut]
     garden_plants: List[GardenPlant]
-
-
-class GardenSectionCreate(BaseModel):
-    name: str
-
-
-class GardenSectionUpdate(BaseModel):
-    name: str
-    description: str | None
-
-
-class SectionOut(BaseModel):
-    id: int
-    name: str
-    description: str | None
 
 
 class Tag(BaseModel):

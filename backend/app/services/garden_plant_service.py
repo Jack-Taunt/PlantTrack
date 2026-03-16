@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.schemas.User import User
-from app.crud.garden import (get_garden_db, get_section_db)
+from app.crud.garden import get_garden_db
+from app.crud.garden_section import get_section_db
 from app.crud.garden_plant import (create_garden_plant_db, get_garden_plants_db)
 from fastapi import HTTPException, status
 from app.crud.plant import get_plant_db
