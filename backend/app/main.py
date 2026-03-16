@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.models import Base
 from app.database import engine
-from .routers import users, gardens, plants
+from .routers import users, gardens, plants, garden_plants
 
 app = FastAPI()
 
@@ -23,6 +23,7 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(gardens.router)
 app.include_router(plants.router)
+app.include_router(garden_plants.router)
 
 
 @app.get("/")

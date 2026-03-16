@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from app.schemas.Garden import GardenCreate, GardenOut, GardenPlantsCreate, GardenSectionCreate, GardenSectionUpdate, SectionOut
+from app.schemas.Garden import GardenCreate, GardenOut, GardenSectionCreate, GardenSectionUpdate, SectionOut
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
@@ -11,8 +11,6 @@ from app.crud.garden import (get_user_gardens_db,
 from app.services.garden_service import (delete_garden_service, 
                                          create_garden_service,
                                          get_garden_service,
-                                         create_garden_plant_service,
-                                         get_garden_plant_service,
                                          create_garden_section_service,
                                          edit_garden_section_service,
                                          delete_garden_section_service)
@@ -71,25 +69,6 @@ async def get_garden(
     db: Annotated[Session, Depends(get_db)]
 ):
     return get_garden_service(garden_id, user, db)
-
-
-@router.post("/{garden_id}/plants")
-async def create_garden_plant(
-    garden_id: int,
-    garden_plants: GardenPlantsCreate,
-    user: Annotated[User, Depends(get_current_user())],
-    db: Annotated[Session, Depends(get_db)]
-):
-    return create_garden_plant_service(garden_id, garden_plants, user, db)
-    
-
-@router.get("/{garden_id}/plants")
-async def get_garden_plant(
-    garden_id: int,
-    user: Annotated[User, Depends(get_current_user(False))],
-    db: Annotated[Session, Depends(get_db)]
-):
-    return get_garden_plant_service(garden_id, user, db)
 
 
 @router.post("/{garden_id}/section", response_model=SectionOut)

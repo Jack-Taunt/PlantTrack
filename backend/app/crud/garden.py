@@ -1,8 +1,6 @@
 from sqlalchemy.orm import Session, joinedload
 from app.models.Garden import Garden, Tag, Section
 from app.models.User import User
-from app.models.Garden import GardenPlant
-from datetime import date
 
 def get_garden_db(garden_id: int, db: Session):
     garden_dict = (
@@ -91,21 +89,6 @@ def get_garden_tags_db(db: Session):
 def delete_garden_db(garden_id: int, db: Session):
     garden = db.query(Garden).filter(Garden.id == garden_id).first()
     db.delete(garden)
-    
-
-def create_garden_plant_db(garden_id: int, plant: int, planted_date: date, section_id: int, db: Session):
-    garden_plant = GardenPlant(garden_id=garden_id, plant_id=plant, planted_date=planted_date, section_id=section_id)
-    db.add(garden_plant)
-
-
-def get_garden_plants_db(garden_id: int, db: Session):
-    garden_plants_dict = (
-        db.query(GardenPlant)
-        .filter(GardenPlant.garden_id == garden_id)
-        .options(joinedload(GardenPlant.plant))
-        .all()
-    )
-    return garden_plants_dict
 
 
 def get_section_db(section_id: int, db: Session):
