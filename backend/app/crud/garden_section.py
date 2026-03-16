@@ -21,8 +21,11 @@ def edit_garden_section_db(section_id: int, name: str, description: str, db: Ses
         .first()
     )
 
-    section.name = name
-    section.description = description
+    if name != None:
+        section.name = name
+
+    if description != None:
+        section.description = description
 
     return section
 

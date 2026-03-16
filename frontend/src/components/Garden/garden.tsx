@@ -138,15 +138,15 @@ const GardenPage = () => {
     const [editingSectionName, setEditingSectionName] = useState<number | null>();
     const [sectionName, setSectionName] = useState<string>();
 
-    
-    const saveSectionName = async () => {
-        setEditingSectionName(null);
-        
+    const [editingSectionDescription, setEditingSectionDescription] = useState<number | null>();
+    const [sectionDescription, setSectionDescription] = useState<string>();
+
+    const editSection = async (name: string | undefined, description: string | undefined) => {
         try {
             await api.put(`/gardens/${gardenId}/section/${gardenSectionTabSelected}`,
                 {
-                    name: sectionName,
-                    description: ""
+                    name: name,
+                    description: description
                 }
             )
             await fetchGarden();
@@ -156,10 +156,21 @@ const GardenPage = () => {
         }
     }
 
+
+    const saveSectionName = async () => {
+        setEditingSectionName(null);
+        editSection(sectionName, undefined)
+    }
+
+    const saveSectionDescription = async () => {
+        setEditingSectionDescription(null);
+        editSection(undefined, sectionDescription)
+    }
+
+
     const [deleteSectionModalOpen, setDeleteSectionModalOpen] = useState(false);
     const handleDeleteSectionModalOpen = () => setDeleteSectionModalOpen(true);
     const handleDeleteSectionModalClose = () => setDeleteSectionModalOpen(false);
-
 
     const deleteSection = async () => {
         try {
@@ -350,9 +361,67 @@ const GardenPage = () => {
                                     
                                     
                                     {garden.sections.map((section) => (
-                                        <TabPanel key={section.id} value={section.id}>
-                                            {section.description && (
-                                                <Typography>Description: {section.description}</Typography>
+                                        <TabPanel key={section.id} value={section.id} sx={{py: 1}}>
+                                            {editingSectionDescription ? (
+                                                <TextField
+                                                    value={sectionDescription}
+                                                    variant="standard"
+                                                    autoFocus
+                                                    onBlur={() => saveSectionDescription()}
+                                                    onChange={(e) => setSectionDescription(e.target.value)}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === "Enter") {
+                                                            saveSectionDescription()
+                                                        }
+                                                    }}
+                                                    sx={{
+                                                        width: '100%',
+                                                        border: '1px solid transparent',
+                                                        borderRadius: 1,
+                                                        px: 0.5,
+                                                        my: 2,
+                                                        borderColor: 'primary.main',
+                                                        '& .MuiInputBase-root': {
+                                                            p: 0,
+                                                            alignItems: 'center',
+                                                        },
+                                                        '& .MuiInputBase-input': {
+                                                            fontSize: '1.25rem',
+                                                            fontWeight: 500,
+                                                            lineHeight: '1.6',
+                                                            letterSpacing: '0.0075em',
+                                                            p: 0,
+                                                            height: 'auto',
+                                                        },
+                                                        '& .MuiInput-underline:before': { borderBottom: 'none' },
+                                                        '& .MuiInput-underline:after': { borderBottom: 'none' },
+                                                        '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: 'none' },
+                                                    }}
+                                                />
+                                            ) : (
+                                                <Typography
+                                                    onClick={() => {
+                                                        setEditingSectionDescription(section.id)
+                                                        setSectionDescription(section.description)
+                                                    }}
+                                                    sx={{
+                                                        fontSize: '1.25rem',
+                                                        fontWeight: 500,
+                                                        lineHeight: '1.6',
+                                                        letterSpacing: '0.0075em',
+                                                        width: '100%',
+                                                        border: '1px solid transparent',
+                                                        borderRadius: 1,
+                                                        px: 0.5,
+                                                        my: 2,
+                                                        cursor: 'text',
+                                                        '&:hover': { borderColor: 'divider' },
+                                                        fontStyle: section.description ? 'normal' : 'italic',
+                                                        color: section.description ? 'inherit' : 'text.secondary',
+                                                    }}
+                                                >
+                                                    {section.description || "+ Add a description..."}
+                                                </Typography>
                                             )}
                                             {user?.id === garden.user_id && (
                                                 <Button 

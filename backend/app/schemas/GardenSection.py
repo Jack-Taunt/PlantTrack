@@ -5,8 +5,8 @@ class GardenSectionCreate(BaseModel):
 
 
 class GardenSectionUpdate(BaseModel):
-    name: str
-    description: str | None
+    name: str | None = None
+    description: str | None = None
 
 
 class SectionOut(BaseModel):
