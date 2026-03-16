@@ -62,5 +62,5 @@ def get_garden_tags_db(db: Session):
 
 
 def delete_garden_db(garden_id: int, db: Session):
-    garden = db.query(Garden).filter(Garden.id == garden_id).first()
-    db.delete(garden)
+    garden = db.query(Garden).filter(Garden.id == garden_id).delete()
+    # db.delete(garden)
