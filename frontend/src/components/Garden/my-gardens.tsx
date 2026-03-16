@@ -15,8 +15,10 @@ function MyGardensPage() {
 
     const handleCreateGardenModalOpen = () => setCreateGardenModalOpen(true);
 
-    const handleCreateGardenModalClose = () => setCreateGardenModalOpen(false);
-
+    const handleCreateGardenModalClose = () => {
+        setCreateGardenModalOpen(false);
+        reset({});
+    }
     const [snackVisability, setSnackVisability] = useState(false);
 
     const navigate = useNavigate();
@@ -37,6 +39,7 @@ function MyGardensPage() {
     const {
             register, 
             handleSubmit,
+            reset,
             setError,
             control,
             formState: { errors },
