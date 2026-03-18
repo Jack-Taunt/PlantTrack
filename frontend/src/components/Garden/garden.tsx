@@ -16,7 +16,7 @@ import {type GardenPlantAmount} from "../../types/garden";
 import placeholderImage from "../../assets/image_placeholder.svg"
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import ConfirmDeleteModal from "../common/confirmDeleteModal";
-
+import DraggableTab from "./garden_section_draggable_tab";
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
@@ -192,6 +192,28 @@ const GardenPage = () => {
     }
 
 
+    const moveTab = (sourceId: number, targetId: number) => {
+        setGarden((prev) => {
+            if (!prev) return prev;
+
+            const updated = [...prev.sections];
+
+            const fromIndex = updated.findIndex(s => s.id === sourceId);
+            const toIndex = updated.findIndex(s => s.id === targetId);
+
+            if (fromIndex === -1 || toIndex === -1) return prev;
+
+            const [moved] = updated.splice(fromIndex, 1);
+            updated.splice(toIndex, 0, moved);
+
+            return {
+                ...prev,
+                sections: updated,
+            };
+        });
+    };
+
+
     return (
         <>
             <Navbar/>
@@ -259,9 +281,12 @@ const GardenPage = () => {
                                             borderBottom: 1
                                         }}
                                         >
-                                        {garden.sections.sort((a, b) => a.id > b.id ? 1 : -1).map((section) => (
-                                            <Tab 
-                                                key={section.id} 
+                                        {garden.sections.map((section, index) => (
+                                            <DraggableTab 
+                                                key={section.id}
+                                                section={section}
+                                                index={index}
+                                                moveTab={moveTab}
                                                 value={section.id} 
                                                 label=
                                                 {   
