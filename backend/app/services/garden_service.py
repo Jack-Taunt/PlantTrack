@@ -11,7 +11,7 @@ def create_garden_service(garden: GardenCreate, user: User, db: Session):
     new_garden = create_garden_db(garden.name, garden.description, garden.is_public, garden.tags, user.id, db)
     db.flush()
 
-    create_garden_section_db("Section 1", new_garden.id, db)
+    create_garden_section_db("Section 1", 1, new_garden.id, db)
     db.commit()
 
     return new_garden

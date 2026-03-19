@@ -23,6 +23,7 @@ class Section(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String(30), nullable=False)
     description = Column(String(256), nullable=True)
+    order = Column(Integer, nullable=False)
 
     garden_id = Column(ForeignKey("gardens.id", ondelete="CASCADE"), nullable=False)
     garden = relationship('Garden', back_populates='sections')

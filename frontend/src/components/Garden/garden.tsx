@@ -17,13 +17,15 @@ import placeholderImage from "../../assets/image_placeholder.svg"
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import ConfirmDeleteModal from "../common/confirmDeleteModal";
 import DraggableTab from "./garden_section_draggable_tab";
+import { type Section } from "../../types/garden";
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
     const { user } = useAuth();
 
     const [garden, setGarden] = useState<Garden | null>(null);
-    const [gardenPlants, setGardenPlants] = useState<GardenPlant[]>([])
+    const [gardenPlants, setGardenPlants] = useState<GardenPlant[]>([]);
+    const [sections, setSections] = useState<Section[]>([]);
 
     const [addPlantModalOpen, setAddPlantModalOpen] = useState(false);
     const handleAddPlantModalOpen = () => setAddPlantModalOpen(true);
@@ -46,8 +48,10 @@ const GardenPage = () => {
         try {
             const garden = await api.get(`/gardens/${gardenId}`)
             setGarden(garden.data)
-            if (garden.data.sections.length > 0) {
-                setGardenSectionTabSelected(garden.data.sections[0].id)
+            setSections(garden.data.sections)
+            if (garden.data.sections.length > 0 && selectedTab === -1) {
+                const firstSection = garden.data.sections.reduce((a: Section, b: Section) => b.order < a.order ? b : a, garden.data.sections[0])
+                setSelectedTab(firstSection.id)
             }
             
         } catch (err: any) {
@@ -96,7 +100,7 @@ const GardenPage = () => {
                 {
                     plants: selectedPlants,
                     planted_date: plantedDate?.format("YYYY-MM-DD") ?? null,
-                    section_id: gardenSectionTabSelected,
+                    section_id: selectedTab,
                 }
             )
             handleAddPlantModalClose()
@@ -113,11 +117,11 @@ const GardenPage = () => {
     }, []);
 
 
-    const [gardenSectionTabSelected, setGardenSectionTabSelected] = useState<number>(-1);
+    const [selectedTab, setSelectedTab] = useState<number>(-1);
 
     const handleGardenSelectionTabChange = (_: SyntheticEvent, newSectionTabId: number) => {
         if (newSectionTabId === -1) return;
-        setGardenSectionTabSelected(newSectionTabId);
+        setSelectedTab(newSectionTabId);
     }
     
     const handleCreateNewSection = async () => {
@@ -129,28 +133,28 @@ const GardenPage = () => {
                 }
             )
             await fetchGarden();
-            setGardenSectionTabSelected(section.data.id);
+            setSelectedTab(section.data.id);
         } catch (err: any) {
             console.log(err)
         }
     }
 
-    const [editingSectionName, setEditingSectionName] = useState<number | null>();
+    const [editingSectionName, setEditingSectionName] = useState<number | null>(null);
     const [sectionName, setSectionName] = useState<string>();
 
     const [editingSectionDescription, setEditingSectionDescription] = useState<number | null>();
     const [sectionDescription, setSectionDescription] = useState<string>();
 
-    const editSection = async (name: string | undefined, description: string | undefined) => {
+    const editSection = async (sectionId: number, name: string | undefined, description: string | undefined, order: number | undefined) => {
         try {
-            await api.put(`/gardens/${gardenId}/section/${gardenSectionTabSelected}`,
+            await api.put(`/gardens/${gardenId}/section/${sectionId}`,
                 {
                     name: name,
-                    description: description
+                    description: description,
+                    order: order
                 }
             )
             await fetchGarden();
-            setGardenSectionTabSelected(gardenSectionTabSelected);
         } catch (err: any) {
             console.log(err)
         }
@@ -159,12 +163,12 @@ const GardenPage = () => {
 
     const saveSectionName = async () => {
         setEditingSectionName(null);
-        editSection(sectionName, undefined)
+        editSection(selectedTab, sectionName, undefined, undefined)
     }
 
     const saveSectionDescription = async () => {
         setEditingSectionDescription(null);
-        editSection(undefined, sectionDescription)
+        editSection(selectedTab, undefined, sectionDescription, undefined)
     }
 
 
@@ -174,7 +178,7 @@ const GardenPage = () => {
 
     const deleteSection = async () => {
         try {
-            await api.delete(`/gardens/${gardenId}/section/${gardenSectionTabSelected}`)
+            await api.delete(`/gardens/${gardenId}/section/${selectedTab}`)
 
             handleDeleteSectionModalClose();
             await fetchGarden();
@@ -193,25 +197,29 @@ const GardenPage = () => {
 
 
     const moveTab = (sourceId: number, targetId: number) => {
-        setGarden((prev) => {
-            if (!prev) return prev;
 
-            const updated = [...prev.sections];
+        const fromIndex = sections.findIndex(s => s.id === sourceId);
+        const toIndex = sections.findIndex(s => s.id === targetId);
+        
+        const updatedSections = [...sections];
 
-            const fromIndex = updated.findIndex(s => s.id === sourceId);
-            const toIndex = updated.findIndex(s => s.id === targetId);
+        const [moved] = updatedSections.splice(fromIndex, 1);
+        updatedSections.splice(toIndex, 0, moved);
 
-            if (fromIndex === -1 || toIndex === -1) return prev;
+        const newSections = updatedSections.map((s, index) => ({
+            ...s,
+            order: index
+        }));
 
-            const [moved] = updated.splice(fromIndex, 1);
-            updated.splice(toIndex, 0, moved);
-
-            return {
-                ...prev,
-                sections: updated,
-            };
-        });
+        setSections(newSections)
     };
+
+    const moveTabEnd = async () => {
+        sections.forEach((section) => {
+            editSection(section.id, undefined, undefined, section.order)
+        })
+        
+    }
 
 
     return (
@@ -265,7 +273,7 @@ const GardenPage = () => {
                     <Box sx={{px:5}}>
                         <Box sx={{border: '1px solid', borderRadius: 2, overflow: 'hidden'}}>
                             <Box>
-                                <TabContext value={gardenSectionTabSelected} >
+                                <TabContext value={selectedTab} >
 
                                     <TabList 
                                         onChange={handleGardenSelectionTabChange} 
@@ -281,13 +289,17 @@ const GardenPage = () => {
                                             borderBottom: 1
                                         }}
                                         >
-                                        {garden.sections.map((section, index) => (
+                                        {sections
+                                            .sort((a, b) => a.order - b.order)
+                                            .map((section, index) => (
                                             <DraggableTab 
                                                 key={section.id}
                                                 section={section}
                                                 index={index}
                                                 moveTab={moveTab}
-                                                value={section.id} 
+                                                onDragEnd={moveTabEnd}
+                                                value={section.id}
+                                                draggingDisabled={editingSectionName !== null}
                                                 label=
                                                 {   
                                                     (editingSectionName === section.id) ? 
@@ -309,7 +321,7 @@ const GardenPage = () => {
                                                                         fontWeight: 'bold',
                                                                         fontSize: '1rem',
                                                                         textTransform: 'none',
-                                                                        color: gardenSectionTabSelected === section.id ? 'primary.main' : 'black',
+                                                                        color: selectedTab === section.id ? 'primary.main' : 'black',
                                                                         p: 0,
                                                                         textAlign: 'center'
                                                                     }
@@ -348,7 +360,7 @@ const GardenPage = () => {
                                                             sx={{
                                                                 textTransform: 'none', 
                                                                 fontWeight: 'bold', 
-                                                                color: gardenSectionTabSelected === section.id? 'primary.main' : "black"
+                                                                color: selectedTab === section.id? 'primary.main' : "black"
                                                             }}
                                                         >
                                                             {section.name}
@@ -358,7 +370,7 @@ const GardenPage = () => {
                                                 sx={{
                                                     width: { xs: 50, sm: 150, md: 250, xl: 400 },
                                                     flexShrink: 0,
-                                                    backgroundColor: gardenSectionTabSelected === section.id? '#dedede' : "#ffffff",
+                                                    backgroundColor: selectedTab === section.id? '#dedede' : "#ffffff",
                                                     '&:hover': {
                                                         backgroundColor: '#dedede',
                                                     },
@@ -385,7 +397,7 @@ const GardenPage = () => {
                                     </TabList>
                                     
                                     
-                                    {garden.sections.map((section) => (
+                                    {sections.map((section) => (
                                         <TabPanel key={section.id} value={section.id} sx={{py: 1}}>
                                             {editingSectionDescription ? (
                                                 <TextField

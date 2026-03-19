@@ -8,13 +8,15 @@ type DraggableTabProps = {
     section: Section;
     index: number;
     moveTab: (from: number, to: number) => void;
+    onDragEnd: () => void;
+    draggingDisabled: boolean
 } & React.ComponentProps<typeof Tab>;
 
-const DraggableTab = ({ section, index, moveTab, children, ...props }: DraggableTabProps) => {
+const DraggableTab = ({ section, index, moveTab, onDragEnd, draggingDisabled, children, ...props }: DraggableTabProps) => {
     const ref = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        if (!ref.current) return;
+        if (!ref.current || draggingDisabled) return;
 
         const cleanupDrag = draggable({
             element: ref.current,
@@ -38,6 +40,10 @@ const DraggableTab = ({ section, index, moveTab, children, ...props }: Draggable
 
                 moveTab(sourceData.id, section.id);
             },
+
+            onDrop: () => {
+                onDragEnd();
+            }
         });
 
         return () => {

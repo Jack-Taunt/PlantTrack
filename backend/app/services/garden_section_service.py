@@ -21,8 +21,8 @@ def create_garden_section_service(garden_id: int, garden_section: GardenSectionC
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="You do not own this garden!",
         )
-    
-    new_garden_section = create_garden_section_db(garden_section.name, garden_id, db)
+    order = len(garden.sections) + 1
+    new_garden_section = create_garden_section_db(garden_section.name, order, garden_id, db)
     db.commit()
     return new_garden_section
 
@@ -48,7 +48,7 @@ def edit_garden_section_service(garden_id: int, section_id: int, garden_section:
             detail="You do not own this garden!",
         )
     
-    new_garden_section = edit_garden_section_db(section_id, garden_section.name, garden_section.description, db)
+    new_garden_section = edit_garden_section_db(section_id, garden_section.name, garden_section.description, garden_section.order, db)
     db.commit()
     db.refresh(new_garden_section)
     return new_garden_section
