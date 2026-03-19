@@ -6,11 +6,13 @@ import pytest
 from fastapi.testclient import TestClient
 from app.auth.utils import hash_password
 from app.models import User, Garden, Section, GardenPlant, Tag, Plant, Toxicity, Edibility, Environment, CareRequirements, Growth, Planting
+import os
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+os.environ["SQLALCHEMY_DATABASE_URL"] = "sqlite:///:memory:"
+
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    os.getenv("SQLALCHEMY_DATABASE_URL"), connect_args={"check_same_thread": False}
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
