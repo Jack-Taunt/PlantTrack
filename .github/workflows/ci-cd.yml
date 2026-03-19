@@ -29,5 +29,6 @@ jobs:
         env:
           SQLALCHEMY_DATABASE_URL: "sqlite:///:memory:"
           SECRET_KEY: ${{secrets.SECRET_KEY}}
+          ALGORITHM: ${{secrets.ALGORITHM}}
         run: |
           pytest
