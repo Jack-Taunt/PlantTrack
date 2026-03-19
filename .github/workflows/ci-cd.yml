@@ -30,4 +30,4 @@ jobs:
           SQLALCHEMY_DATABASE_URL: "sqlite:///:memory:"
           SECRET_KEY: ${{secrets.SECRET_KEY}}
         run: |
-          pytest backend
+          pytest
