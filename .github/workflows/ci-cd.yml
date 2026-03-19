@@ -27,7 +27,7 @@ jobs:
       - name: Run tests
         working-directory: backend
         env:
-          SQLALCHEMY_DATABASE_URL: ${{secrets.SQLALCHEMY_DATABASE_URL}}
+          SQLALCHEMY_DATABASE_URL: "sqlite:///:memory:"
           SECRET_KEY: ${{secrets.SECRET_KEY}}
         run: |
           pytest backend
