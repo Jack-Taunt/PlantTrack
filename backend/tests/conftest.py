@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from app.auth.utils import hash_password
 from app.models import User, Garden, Section, GardenPlant, Tag, Plant, Toxicity, Edibility, Environment, CareRequirements, Growth, Planting
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -89,11 +89,11 @@ def default_data(db_session):
     db_session.add(default_garden_4)
     db_session.add(default_garden_5)
 
-    default_section_1 = Section(name="default_section_1", garden_id=1)
-    default_section_2 = Section(name="default_section_2", garden_id=2)
-    default_section_3 = Section(name="default_section_3", garden_id=3)
-    default_section_4 = Section(name="default_section_4", garden_id=4)
-    default_section_5 = Section(name="default_section_5", garden_id=5)
+    default_section_1 = Section(name="default_section_1", garden_id=1, order=1)
+    default_section_2 = Section(name="default_section_2", garden_id=2, order=1)
+    default_section_3 = Section(name="default_section_3", garden_id=3, order=1)
+    default_section_4 = Section(name="default_section_4", garden_id=4, order=1)
+    default_section_5 = Section(name="default_section_5", garden_id=5, order=1)
     db_session.add(default_section_1)
     db_session.add(default_section_2)
     db_session.add(default_section_3)
@@ -164,13 +164,13 @@ def default_data(db_session):
     db_session.add(default_plant_2)
     db_session.add(default_plant_3)
 
-    default_garden_plant_1 = GardenPlant(garden_id=1, plant_id=1)
-    default_garden_plant_2 = GardenPlant(garden_id=1, plant_id=2)
+    default_garden_plant_1 = GardenPlant(garden_id=1, plant_id=1, section_id=1)
+    default_garden_plant_2 = GardenPlant(garden_id=1, plant_id=2, section_id=1)
     db_session.add(default_garden_plant_1)
     db_session.add(default_garden_plant_2)
 
-    default_garden_plant_3 = GardenPlant(garden_id=2, plant_id=1)
-    default_garden_plant_4 = GardenPlant(garden_id=2, plant_id=2)
+    default_garden_plant_3 = GardenPlant(garden_id=2, plant_id=1, section_id=2)
+    default_garden_plant_4 = GardenPlant(garden_id=2, plant_id=2, section_id=2)
     db_session.add(default_garden_plant_3)
     db_session.add(default_garden_plant_4)
 
