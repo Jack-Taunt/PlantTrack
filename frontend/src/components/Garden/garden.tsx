@@ -13,11 +13,11 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, {Dayjs} from 'dayjs';
 import {type GardenPlantAmount} from "../../types/garden";
-import placeholderImage from "../../assets/image_placeholder.svg"
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import ConfirmDeleteModal from "../common/confirmDeleteModal";
 import DraggableTab from "./garden_section_draggable_tab";
 import { type Section } from "../../types/garden";
+import ImageScroll from "../common/ImageScroll";
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
@@ -246,25 +246,14 @@ const GardenPage = () => {
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid size={5} sx={{ minHeight: 0, height: "100%" }}>
+                        <Grid size={5} sx={{ minHeight: 0, height: "100%", display: 'flex', position: 'relative' }}>
                             <Box sx={{
                                 width: '100%',
                                 height: '100%',
                                 border: '1px solid #000',
                                 borderRadius: 2,
                             }}>
-                            <Box
-                                component="img"
-                                src={placeholderImage}
-                                alt={garden.name}
-                                sx={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                    display: 'block',
-                                    p: 4
-                                }}
-                            />
+                                <ImageScroll handleImageUpload={() => console.log("TEST")}/>
                             </Box>
                         </Grid>
                     </Grid>
