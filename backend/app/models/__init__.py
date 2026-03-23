@@ -5,3 +5,4 @@ from .Plant import *
 from .Garden import Tag
 from .Garden import Section
 from .Garden import GardenPlant
+from .Image import GardenImage
