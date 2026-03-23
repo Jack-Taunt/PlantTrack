@@ -15,3 +15,8 @@ def create_garden_image_db(file_dir: Path, garden_id: int, db: Session):
 
     db.add(new_image)
     return new_image
+
+
+def get_garden_image_from_db(image_id: int, db: Session):
+    image = db.query(GardenImage).filter(GardenImage.id == image_id).first()
+    return image

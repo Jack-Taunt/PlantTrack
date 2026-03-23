@@ -3,6 +3,7 @@ from typing import Annotated, List
 from app.schemas.User import UserPublic
 from app.schemas.GardenPlant import GardenPlant
 from app.schemas.GardenSection import SectionOut
+from app.schemas.Image import ImageOut
 
 class GardenCreate(BaseModel):
     name: Annotated[str, Field(max_length=30)]
@@ -20,6 +21,7 @@ class GardenOut(BaseModel):
     user: UserPublic
     sections: List[SectionOut]
     garden_plants: List[GardenPlant]
+    garden_images: List[ImageOut]
 
 
 class Tag(BaseModel):

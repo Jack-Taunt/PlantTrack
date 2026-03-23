@@ -9,6 +9,7 @@ export interface Garden {
     user_id: number;
     user: UserPublic;
     sections: Section[];
+    garden_images: Image[];
 }
 
 export interface Tag {
@@ -26,4 +27,8 @@ export interface Section {
 export type GardenPlantAmount = {
     plant_id: number,
     amount: number
+}
+
+export type Image = {
+    id: number;
 }

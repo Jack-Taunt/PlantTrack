@@ -8,6 +8,7 @@ def get_garden_db(garden_id: int, db: Session):
         .filter(Garden.id == garden_id)
         .options(joinedload(Garden.tags))
         .options(joinedload(Garden.sections))
+        .options(joinedload(Garden.garden_images))
         .first()
 
     )

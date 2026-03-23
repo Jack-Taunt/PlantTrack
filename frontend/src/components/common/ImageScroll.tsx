@@ -4,16 +4,17 @@ import placeholderImage from "../../assets/image_placeholder.svg"
 
 
 type imageScrollProps = {
+    imageSrc: string | null;
     handleImageUpload: (event: any) => void;
 }
 
-const ImageScroll = ({handleImageUpload}: imageScrollProps) => {
+const ImageScroll = ({imageSrc, handleImageUpload}: imageScrollProps) => {
 
     return (
         <>
             <Box
                 component="img"
-                src={placeholderImage}
+                src={imageSrc || placeholderImage}
                 sx={{
                     width: '100%',
                     height: '100%',
