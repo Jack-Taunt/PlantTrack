@@ -4,7 +4,7 @@ import placeholderImage from "../../assets/image_placeholder.svg"
 
 
 type imageScrollProps = {
-    handleImageUpload: () => void;
+    handleImageUpload: (event: any) => void;
 }
 
 const ImageScroll = ({handleImageUpload}: imageScrollProps) => {
@@ -28,7 +28,7 @@ const ImageScroll = ({handleImageUpload}: imageScrollProps) => {
                 <input
                     accept="image/jpeg,image/png,image/webp"
                     type="file"
-                    onChange={handleImageUpload}
+                    onChange={(event) => {handleImageUpload(event)}}
                     id="contained-button-file"
                     style={{display: 'none'}}
                 />

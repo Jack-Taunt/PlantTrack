@@ -221,6 +221,24 @@ const GardenPage = () => {
         
     }
 
+    const handleImageUpload = async (event: any) => {
+        console.log(event.target.files[0])
+
+        const formData = new FormData()
+        formData.append('file', event.target.files[0])
+
+        try {
+            await api.post(`/gardens/${gardenId}/uploadfile`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            
+        } catch (err: any) {
+            console.log(err.response)
+        }
+    }
+
 
     return (
         <>
@@ -253,7 +271,7 @@ const GardenPage = () => {
                                 border: '1px solid #000',
                                 borderRadius: 2,
                             }}>
-                                <ImageScroll handleImageUpload={() => console.log("TEST")}/>
+                                <ImageScroll handleImageUpload={handleImageUpload}/>
                             </Box>
                         </Grid>
                     </Grid>

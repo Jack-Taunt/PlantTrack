@@ -1,16 +1,17 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile
 from app.schemas.Garden import GardenCreate, GardenOut, SectionOut
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.auth.dependencies import get_current_user
 from app.database import get_db
-from app.schemas.User import User
+from app.schemas.User import User, UserOut
 from app.crud.garden import (get_user_gardens_db, 
                              get_public_gardens_db, 
                              get_garden_tags_db)
 from app.services.garden_service import (delete_garden_service, 
                                          create_garden_service,
                                          get_garden_service)
+from app.services.image_service import upload_garden_file
 
 router = APIRouter(
     prefix="/gardens",
@@ -66,3 +67,14 @@ async def get_garden(
     db: Annotated[Session, Depends(get_db)]
 ):
     return get_garden_service(garden_id, user, db)
+
+
+@router.post("/{garden_id}/uploadfile")
+async def create_garden_image(
+    garden_id: int,
+    file: UploadFile,
+    user: Annotated[UserOut, Depends(get_current_user())],
+    db: Annotated[Session, Depends(get_db)]
+):
+    filepath = await upload_garden_file(garden_id, file, user, db)
+    return {"filepath": filepath}
