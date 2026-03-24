@@ -1,5 +1,5 @@
 import { Box, Grid, List, ListItem, ListItemButton, Typography, Stack, Button } from "@mui/material"
-import type { Garden } from "../../types/garden"
+import type { Garden, gardenImage } from "../../types/garden"
 import placeholderImage from "../../assets/image_placeholder.svg"
 import TagList from "./tag-list";
 import { ArrowForwardIos, ArrowBackIos, LocationOn, PersonRounded } from "@mui/icons-material";
@@ -9,10 +9,11 @@ import { Link } from "react-router-dom";
 
 type GardenListProps = {
   gardens: Garden[];
+  gardenImages: gardenImage[];
   onGardenDeleted?: () => void;
 };
 
-const GardenList = ({gardens, onGardenDeleted}: GardenListProps) => {
+const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) => {
     const [selectedGarden, setExpandedGarden] = useState<Garden | null>(null);
 
     const handleClick = (gardenId: number) => {
@@ -57,7 +58,7 @@ const GardenList = ({gardens, onGardenDeleted}: GardenListProps) => {
                                         <Grid size={3}>
                                             <Box
                                                 component="img"
-                                                src={placeholderImage}
+                                                src={gardenImages.find(gardenImage => gardenImage.gardenId === garden.id)?.image || placeholderImage}
                                                 sx={{
                                                     height: 160, 
                                                     width: "100%", 
@@ -120,7 +121,7 @@ const GardenList = ({gardens, onGardenDeleted}: GardenListProps) => {
                             <Stack>
                                 <Box
                                     component="img"
-                                    src={placeholderImage}
+                                    src={gardenImages.find(gardenImage => gardenImage.gardenId === selectedGarden.id)?.image || placeholderImage}
                                     sx={{
                                         height: 320, 
                                         width: "100%", 

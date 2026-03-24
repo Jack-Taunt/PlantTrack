@@ -5,12 +5,13 @@ import { useForm } from "react-hook-form";
 import { type SubmitHandler, Controller } from "react-hook-form";
 import api from "../../client/client"
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { Garden, Tag } from '../../types/garden';
+import type { Garden, Tag, gardenImage } from '../../types/garden';
 import GardenList from './garden-list';
 
 function MyGardensPage() {
     const [createGardenModalOpen, setCreateGardenModalOpen] = useState(false);
     const [gardens, setGardens] = useState<Garden[]>([]);
+    const [gardenImages, setGardenImages] = useState<gardenImage[]>([]);
     const [tags, setTags] = useState<Tag[]>([]);
 
     const handleCreateGardenModalOpen = () => setCreateGardenModalOpen(true);
@@ -101,6 +102,12 @@ function MyGardensPage() {
         try {
             const gardens = await api.get("/gardens/me")
             setGardens(gardens.data)
+
+            gardens.data.forEach((garden: Garden) => {
+                if (garden.garden_images.length > 0) {
+                    fetchGardenImage(garden.id, garden.garden_images[0].id)
+                }
+            })
             
         } catch (err: any) {
             console.log(err)
@@ -113,6 +120,24 @@ function MyGardensPage() {
             setTags(tags.data)
         } catch (err: any) {
             console.log(err)
+        }
+    }
+
+    const fetchGardenImage = async (gardenId: number, imageId: number) => {
+        try {
+            const image = await api.get(`/gardens/${gardenId}/image/${imageId}`,
+                { responseType: "blob" }
+            );
+            const url = URL.createObjectURL(image.data);
+            
+
+            setGardenImages(prev => {
+                if (prev.find(img => img.gardenId === gardenId)) return prev;
+                return [...prev, {gardenId, image: url}]
+            });
+            
+        } catch (err: any) {
+            console.log(err.response)
         }
     }
 
@@ -137,7 +162,7 @@ function MyGardensPage() {
             </Button>
 
 
-            <GardenList gardens={gardens} onGardenDeleted={fetchGardens}/>
+            <GardenList gardens={gardens} gardenImages={gardenImages} onGardenDeleted={fetchGardens}/>
 
 
             <Modal

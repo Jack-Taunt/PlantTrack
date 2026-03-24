@@ -30,7 +30,7 @@ async def create_garden(
     return create_garden_service(garden, user, db)
 
 
-@router.get("/me")
+@router.get("/me", response_model=list[GardenOut])
 async def get_user_gardens(
     user: Annotated[User, Depends(get_current_user())],
     db: Annotated[Session, Depends(get_db)],

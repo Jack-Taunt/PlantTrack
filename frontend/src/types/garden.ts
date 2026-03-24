@@ -32,3 +32,8 @@ export type GardenPlantAmount = {
 export type Image = {
     id: number;
 }
+
+export type gardenImage = {
+    gardenId: number;
+    image: string | null;
+}

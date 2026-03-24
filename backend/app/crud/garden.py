@@ -22,6 +22,7 @@ def get_user_gardens_db(user_id: int, db: Session):
         .filter(Garden.user_id == user_id)
         .options(joinedload(Garden.tags))
         .options(joinedload(Garden.sections))
+        .options(joinedload(Garden.garden_images))
         .all()
     )
     return garden_dict
@@ -34,6 +35,7 @@ def get_public_gardens_db(db: Session):
         .filter(Garden.is_public == True)
         .options(joinedload(Garden.tags))
         .options(joinedload(Garden.sections))
+        .options(joinedload(Garden.garden_images))
         .all()
     )
     return garden_dict
