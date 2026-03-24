@@ -86,7 +86,7 @@ async def create_garden_image(
 async def get_garden_image(
     garden_id: int,
     image_id: int,
-    user: Annotated[UserOut, Depends(get_current_user())],
+    user: Annotated[UserOut, Depends(get_current_user(False))],
     db: Annotated[Session, Depends(get_db)]
 ):
     image = get_garden_image_service(garden_id, image_id, user, db)
