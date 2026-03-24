@@ -53,6 +53,9 @@ const GardenPage = () => {
                 const firstSection = garden.data.sections.reduce((a: Section, b: Section) => b.order < a.order ? b : a, garden.data.sections[0])
                 setSelectedTab(firstSection.id)
             }
+            if (garden.data.garden_images.length > 0) {
+                fetchImage(garden.data.garden_images[0].id)
+            }
             
         } catch (err: any) {
             console.log(err)
@@ -107,6 +110,21 @@ const GardenPage = () => {
             fetchGardenPlants()
         } catch (err: any) {
             console.log(err)
+        }
+    }
+
+    const [imageSrc, setImageSrc] = useState<string|null>(null);
+
+    const fetchImage = async (imageId: number) => {
+        try {
+            const image = await api.get(`/gardens/${gardenId}/image/${imageId}`,
+                { responseType: "blob" }
+            );
+            const url = URL.createObjectURL(image.data);
+            setImageSrc(url);
+            
+        } catch (err: any) {
+            console.log(err.response)
         }
     }
 
@@ -238,28 +256,6 @@ const GardenPage = () => {
             console.log(err.response)
         }
     }
-
-    const [imageSrc, setImageSrc] = useState<string|null>(null);
-
-    const fetchImage = async (imageId: number) => {
-        try {
-            const image = await api.get(`/gardens/${gardenId}/image/${imageId}`,
-                { responseType: "blob" }
-            );
-            const url = URL.createObjectURL(image.data);
-            setImageSrc(url);
-            
-        } catch (err: any) {
-            console.log(err.response)
-        }
-    }
-
-
-    useEffect(() => {
-        if (garden && garden.garden_images?.length > 0) {
-            fetchImage(garden.garden_images[0].id)
-        }
-    }, [garden])
 
 
     return (
