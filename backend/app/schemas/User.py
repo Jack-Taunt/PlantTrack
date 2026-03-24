@@ -31,4 +31,5 @@ class UserOut(BaseModel):
 
 
 class UserPublic(BaseModel):
+    id: int
     username: str

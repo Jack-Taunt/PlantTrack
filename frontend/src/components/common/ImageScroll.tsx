@@ -6,10 +6,10 @@ import placeholderImage from "../../assets/image_placeholder.svg"
 type imageScrollProps = {
     imageSrc: string | null;
     handleImageUpload: (event: any) => void;
+    canEdit: boolean;
 }
 
-const ImageScroll = ({imageSrc, handleImageUpload}: imageScrollProps) => {
-
+const ImageScroll = ({imageSrc, handleImageUpload, canEdit}: imageScrollProps) => {
     return (
         <>
             <Box
@@ -23,22 +23,24 @@ const ImageScroll = ({imageSrc, handleImageUpload}: imageScrollProps) => {
                     p: 4
                 }}
             />
-            <Box
-                sx={{position: 'absolute', top: '10%', right: '8%'}}
-            >
-                <input
-                    accept="image/jpeg,image/png,image/webp"
-                    type="file"
-                    onChange={(event) => {handleImageUpload(event)}}
-                    id="contained-button-file"
-                    style={{display: 'none'}}
-                />
-                <label htmlFor="contained-button-file">
-                    <Fab component="span">
-                        <AddPhotoAlternateIcon style={{ fontSize: "45px" }} />
-                    </Fab>
-                </label>
-            </Box>
+            {canEdit &&
+                <Box
+                    sx={{position: 'absolute', top: '10%', right: '8%'}}
+                >
+                    <input
+                        accept="image/jpeg,image/png,image/webp"
+                        type="file"
+                        onChange={(event) => {handleImageUpload(event)}}
+                        id="contained-button-file"
+                        style={{display: 'none'}}
+                    />
+                    <label htmlFor="contained-button-file">
+                        <Fab component="span">
+                            <AddPhotoAlternateIcon style={{ fontSize: "45px" }} />
+                        </Fab>
+                    </label>
+                </Box>
+            }   
         </>
     )
 }

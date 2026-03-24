@@ -289,7 +289,7 @@ const GardenPage = () => {
                                 border: '1px solid #000',
                                 borderRadius: 2,
                             }}>
-                                <ImageScroll imageSrc={imageSrc} handleImageUpload={handleImageUpload}/>
+                                <ImageScroll imageSrc={imageSrc} handleImageUpload={handleImageUpload} canEdit={garden.user.id === user?.id}/>
                             </Box>
                         </Grid>
                     </Grid>
