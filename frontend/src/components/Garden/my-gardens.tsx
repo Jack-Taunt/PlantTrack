@@ -132,8 +132,8 @@ function MyGardensPage() {
             
 
             setGardenImages(prev => {
-                if (prev.find(img => img.gardenId === gardenId)) return prev;
-                return [...prev, {gardenId, image: url}]
+                if (prev.find(img => img.id === gardenId)) return prev;
+                return [...prev, {id: gardenId, image: url}]
             });
             
         } catch (err: any) {

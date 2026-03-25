@@ -58,7 +58,7 @@ const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) =
                                         <Grid size={3}>
                                             <Box
                                                 component="img"
-                                                src={gardenImages.find(gardenImage => gardenImage.gardenId === garden.id)?.image || placeholderImage}
+                                                src={gardenImages.find(gardenImage => gardenImage.id === garden.id)?.image || placeholderImage}
                                                 sx={{
                                                     height: 160, 
                                                     width: "100%", 
@@ -121,7 +121,7 @@ const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) =
                             <Stack>
                                 <Box
                                     component="img"
-                                    src={gardenImages.find(gardenImage => gardenImage.gardenId === selectedGarden.id)?.image || placeholderImage}
+                                    src={gardenImages.find(gardenImage => gardenImage.id === selectedGarden.id)?.image || placeholderImage}
                                     sx={{
                                         height: 320, 
                                         width: "100%", 

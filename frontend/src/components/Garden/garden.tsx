@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../common/Navbar";
 import { useState, useEffect, type SyntheticEvent } from "react";
-import { type Garden } from "../../types/garden";
+import type { Garden, gardenImage } from "../../types/garden";
 import api from "../../client/client"
 import { Box, Button, Typography, Modal, Stack, Grid, Tab, tabsClasses, TextField } from "@mui/material";
 import TagList from "./tag-list";
@@ -53,9 +53,9 @@ const GardenPage = () => {
                 const firstSection = garden.data.sections.reduce((a: Section, b: Section) => b.order < a.order ? b : a, garden.data.sections[0])
                 setSelectedTab(firstSection.id)
             }
-            if (garden.data.garden_images.length > 0) {
-                fetchImage(garden.data.garden_images[0].id)
-            }
+            garden.data.garden_images.forEach((image: any) => {
+                fetchImage(image.id)
+            })
             
         } catch (err: any) {
             console.log(err)
@@ -113,7 +113,7 @@ const GardenPage = () => {
         }
     }
 
-    const [imageSrc, setImageSrc] = useState<string|null>(null);
+    const [gardenImages, setGardenImages] = useState<gardenImage[]>([]);
 
     const fetchImage = async (imageId: number) => {
         try {
@@ -121,7 +121,11 @@ const GardenPage = () => {
                 { responseType: "blob" }
             );
             const url = URL.createObjectURL(image.data);
-            setImageSrc(url);
+
+            setGardenImages(prev => {
+                if (prev.find(img => img.id === imageId)) return prev;
+                return [...prev, {id: imageId, image: url}]
+            });
             
         } catch (err: any) {
             console.log(err.response)
@@ -257,6 +261,10 @@ const GardenPage = () => {
         }
     }
 
+    useEffect(() => {
+        console.log(gardenImages)
+    }, [gardenImages])
+
 
     return (
         <>
@@ -289,7 +297,7 @@ const GardenPage = () => {
                                 border: '1px solid #000',
                                 borderRadius: 2,
                             }}>
-                                <ImageScroll imageSrc={imageSrc} handleImageUpload={handleImageUpload} canEdit={garden.user.id === user?.id}/>
+                                <ImageScroll imageSrc={gardenImages[0]?.image} handleImageUpload={handleImageUpload} canEdit={garden.user.id === user?.id}/>
                             </Box>
                         </Grid>
                     </Grid>

@@ -34,6 +34,6 @@ export type Image = {
 }
 
 export type gardenImage = {
-    gardenId: number;
+    id: number;
     image: string | null;
 }
