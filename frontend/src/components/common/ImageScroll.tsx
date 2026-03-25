@@ -1,20 +1,43 @@
 import { Box, Fab } from "@mui/material";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import placeholderImage from "../../assets/image_placeholder.svg"
-
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useEffect, useState } from "react";
+import type { GardenImage } from "../../types/garden";
 
 type imageScrollProps = {
-    imageSrc: string | null;
+    images: GardenImage[];
     handleImageUpload: (event: any) => void;
     canEdit: boolean;
 }
 
-const ImageScroll = ({imageSrc, handleImageUpload, canEdit}: imageScrollProps) => {
+const ImageScroll = ({images, handleImageUpload, canEdit}: imageScrollProps) => {
+    const [imageIndex, setImageIndex] = useState<number>(0);
+    
+    useEffect(() => {
+        if (images.length > 0) {
+            setImageIndex(0)
+        }
+    }, [images])
+
+    const handleImageScrollIncrease = () => {
+        if (imageIndex < images.length-1) { 
+            setImageIndex(imageIndex + 1)
+        }
+    };
+
+    const handleImageScrollDecrease = () => {
+        if (imageIndex > 0) { 
+            setImageIndex(imageIndex -1)
+        }
+    };
+
     return (
         <>
             <Box
                 component="img"
-                src={imageSrc || placeholderImage}
+                src={images[imageIndex]?.image ?? placeholderImage}
                 sx={{
                     width: '100%',
                     height: '100%',
@@ -40,7 +63,35 @@ const ImageScroll = ({imageSrc, handleImageUpload, canEdit}: imageScrollProps) =
                         </Fab>
                     </label>
                 </Box>
-            }   
+            }
+            {images.length > 0 &&
+                <>
+                    <Box
+                        sx={{position: 'absolute', top: '47%', left: '5%'}}
+                    >
+                        <Fab
+                            component="span" 
+                            size="small"
+                            onClick={handleImageScrollDecrease}
+                            disabled={imageIndex <= 0}
+                        >
+                            <ArrowBackIosNewIcon style={{ fontSize: "35px" }} />
+                        </Fab>
+                    </Box>
+                    <Box
+                        sx={{position: 'absolute', top: '47%', right: '5%'}}
+                    >
+                        <Fab 
+                            component="span" 
+                            size="small"
+                            onClick={handleImageScrollIncrease}
+                            disabled={imageIndex >= images.length-1}
+                        >
+                            <ArrowForwardIosIcon style={{ fontSize: "35px" }} />
+                        </Fab>
+                    </Box>
+                </>
+            }  
         </>
     )
 }
