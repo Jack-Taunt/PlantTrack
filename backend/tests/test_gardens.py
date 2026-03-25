@@ -29,7 +29,7 @@ def test_get_my_gardens_returns_garden_list(auth_client, default_data, db_sessio
     testuser = db_session.query(User).filter(User.username == "testusername").first()
 
     for garden in response.json():
-        assert garden["user_id"] == testuser.id
+        assert garden["user"]["id"] == testuser.id
         assert garden["is_public"] != None
         assert garden["name"] != None
         assert garden["description"] != None
