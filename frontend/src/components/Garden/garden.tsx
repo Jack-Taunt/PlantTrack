@@ -261,10 +261,6 @@ const GardenPage = () => {
         }
     }
 
-    useEffect(() => {
-        console.log(gardenImages)
-    }, [gardenImages])
-
 
     return (
         <>
