@@ -15,7 +15,7 @@ class Garden(Base):
     sections = relationship('Section', back_populates='garden', passive_deletes=True)
     tags = relationship("Tag", secondary='garden_tags', back_populates='gardens')
     garden_plants = relationship('GardenPlant', back_populates='garden', passive_deletes=True)
-    garden_images = relationship('GardenImage', back_populates='garden', passive_deletes=True)
+    garden_images = relationship('GardenImage', back_populates='garden', order_by="GardenImage.id", passive_deletes=True)
 
 class Section(Base):
     __tablename__ = "sections"
