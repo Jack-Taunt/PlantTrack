@@ -3,12 +3,12 @@ import { Typography } from "@mui/material";
 import GardenList from "./garden-list";
 import { useEffect, useState } from "react";
 import api from "../../client/client"
-import type { Garden, gardenImage } from '../../types/garden';
+import type { Garden, GardenImage } from '../../types/garden';
 
 
 const PublicGardensPage = () => {
     const [gardens, setGardens] = useState<Garden[]>([]);
-    const [gardenImages, setGardenImages] = useState<gardenImage[]>([]);
+    const [gardenImages, setGardenImages] = useState<GardenImage[]>([]);
 
     useEffect(() => {
         const fetchPublicGardens = async () => {

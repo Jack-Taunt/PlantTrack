@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../common/Navbar";
 import { useState, useEffect, type SyntheticEvent } from "react";
-import type { Garden, gardenImage } from "../../types/garden";
+import type { Garden, GardenImage } from "../../types/garden";
 import api from "../../client/client"
 import { Box, Button, Typography, Modal, Stack, Grid, Tab, tabsClasses, TextField } from "@mui/material";
 import TagList from "./tag-list";
@@ -113,7 +113,7 @@ const GardenPage = () => {
         }
     }
 
-    const [gardenImages, setGardenImages] = useState<gardenImage[]>([]);
+    const [gardenImages, setGardenImages] = useState<GardenImage[]>([]);
 
     const fetchImage = async (imageId: number) => {
         try {

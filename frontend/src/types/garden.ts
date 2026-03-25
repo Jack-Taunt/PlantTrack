@@ -33,7 +33,7 @@ export type Image = {
     id: number;
 }
 
-export type gardenImage = {
+export type GardenImage = {
     id: number;
     image: string | null;
 }

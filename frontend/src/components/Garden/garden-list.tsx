@@ -1,5 +1,5 @@
 import { Box, Grid, List, ListItem, ListItemButton, Typography, Stack, Button } from "@mui/material"
-import type { Garden, gardenImage } from "../../types/garden"
+import type { Garden, GardenImage } from "../../types/garden"
 import placeholderImage from "../../assets/image_placeholder.svg"
 import TagList from "./tag-list";
 import { ArrowForwardIos, ArrowBackIos, LocationOn, PersonRounded } from "@mui/icons-material";
@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 type GardenListProps = {
   gardens: Garden[];
-  gardenImages: gardenImage[];
+  gardenImages: GardenImage[];
   onGardenDeleted?: () => void;
 };
 

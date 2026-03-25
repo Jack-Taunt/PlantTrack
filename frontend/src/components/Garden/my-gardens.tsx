@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import { type SubmitHandler, Controller } from "react-hook-form";
 import api from "../../client/client"
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { Garden, Tag, gardenImage } from '../../types/garden';
+import type { Garden, Tag, GardenImage } from '../../types/garden';
 import GardenList from './garden-list';
 
 function MyGardensPage() {
     const [createGardenModalOpen, setCreateGardenModalOpen] = useState(false);
     const [gardens, setGardens] = useState<Garden[]>([]);
-    const [gardenImages, setGardenImages] = useState<gardenImage[]>([]);
+    const [gardenImages, setGardenImages] = useState<GardenImage[]>([]);
     const [tags, setTags] = useState<Tag[]>([]);
 
     const handleCreateGardenModalOpen = () => setCreateGardenModalOpen(true);
