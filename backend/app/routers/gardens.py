@@ -13,6 +13,7 @@ from app.services.garden_service import (delete_garden_service,
                                          get_garden_service)
 from app.services.image_service import upload_garden_image_service, get_garden_image_service
 from fastapi.responses import FileResponse
+from app.schemas.Image import ImageOut
 
 
 router = APIRouter(
@@ -71,15 +72,15 @@ async def get_garden(
     return get_garden_service(garden_id, user, db)
 
 
-@router.post("/{garden_id}/uploadimage")
+@router.post("/{garden_id}/uploadimage", response_model=ImageOut)
 async def create_garden_image(
     garden_id: int,
     file: UploadFile,
     user: Annotated[UserOut, Depends(get_current_user())],
     db: Annotated[Session, Depends(get_db)]
 ):
-    filepath = await upload_garden_image_service(garden_id, file, user, db)
-    return {"filepath": filepath}
+    image = await upload_garden_image_service(garden_id, file, user, db)
+    return image
 
 
 @router.get("/{garden_id}/image/{image_id}")

@@ -244,17 +244,19 @@ const GardenPage = () => {
     }
 
     const handleImageUpload = async (event: any) => {
-        console.log(event.target.files[0])
 
         const formData = new FormData()
         formData.append('file', event.target.files[0])
 
         try {
-            await api.post(`/gardens/${gardenId}/uploadimage`, formData, {
+            const response = await api.post(`/gardens/${gardenId}/uploadimage`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+            if (response.status === 200) {
+                fetchImage(response.data.id)
+            }
             
         } catch (err: any) {
             console.log(err.response)

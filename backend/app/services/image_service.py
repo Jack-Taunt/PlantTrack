@@ -35,10 +35,10 @@ async def upload_garden_image_service(garden_id: int, file: UploadFile, user: Us
     file_path = UPLOAD_DIR / user_path / file.filename
 
     await upload_file_service(file_path, file)
-    create_garden_image_db(file_path, garden_id, db)
+    image = create_garden_image_db(file_path, garden_id, db)
     db.commit()
 
-    return file_path
+    return image
 
         
 async def upload_file_service(file_path: Path, file: UploadFile):
