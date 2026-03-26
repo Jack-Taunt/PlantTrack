@@ -330,10 +330,10 @@ const GardenPage = () => {
                                                 moveTab={moveTab}
                                                 onDragEnd={moveTabEnd}
                                                 value={section.id}
-                                                draggingDisabled={editingSectionName !== null}
+                                                draggingDisabled={!(user?.id === garden.user.id) || editingSectionName !== null}
                                                 label=
                                                 {   
-                                                    (editingSectionName === section.id) ? 
+                                                    ((user?.id === garden.user.id) && editingSectionName === section.id) ? 
                                                     (
                                                         <div>
                                                             <TextField
@@ -408,29 +408,31 @@ const GardenPage = () => {
                                                 }} 
                                             />
                                         ))}
-                                        <Tab 
-                                            value={-1}
-                                            onMouseDown={handleCreateNewSection}
-                                            sx={{
-                                                backgroundColor: "secondary.main", 
-                                                color: 'white',
-                                                '&.Mui-disabled': {
-                                                    opacity: 1,
+                                        {user?.id === garden.user.id && (
+                                            <Tab 
+                                                value={-1}
+                                                onMouseDown={handleCreateNewSection}
+                                                sx={{
+                                                    backgroundColor: "secondary.main", 
                                                     color: 'white',
-                                                },
-                                                '&.Mui-selected': {
-                                                    backgroundColor: "secondary.main",
-                                                    color: 'white',
-                                                }
-                                            }}
-                                            label={"+ Add New Section"} 
-                                        />
+                                                    '&.Mui-disabled': {
+                                                        opacity: 1,
+                                                        color: 'white',
+                                                    },
+                                                    '&.Mui-selected': {
+                                                        backgroundColor: "secondary.main",
+                                                        color: 'white',
+                                                    }
+                                                }}
+                                                label={"+ Add New Section"} 
+                                            />
+                                        )}
                                     </TabList>
                                     
                                     
                                     {sections.map((section) => (
                                         <TabPanel key={section.id} value={section.id} sx={{py: 1}}>
-                                            {editingSectionDescription ? (
+                                            {(user?.id === garden.user.id) && editingSectionDescription ? (
                                                 <TextField
                                                     value={sectionDescription}
                                                     variant="standard"
@@ -467,6 +469,7 @@ const GardenPage = () => {
                                                     }}
                                                 />
                                             ) : (
+                                                
                                                 <Typography
                                                     onClick={() => {
                                                         setEditingSectionDescription(section.id)
@@ -483,12 +486,12 @@ const GardenPage = () => {
                                                         px: 0.5,
                                                         my: 2,
                                                         cursor: 'text',
-                                                        '&:hover': { borderColor: 'divider' },
+                                                        '&:hover': (user?.id === garden.user.id) ? { borderColor: 'divider' } : {},
                                                         fontStyle: section.description ? 'normal' : 'italic',
                                                         color: section.description ? 'inherit' : 'text.secondary',
                                                     }}
                                                 >
-                                                    {section.description || "+ Add a description..."}
+                                                    {(user?.id === garden.user.id) ? section.description || "+ Add a description..." :  section.description || ""}
                                                 </Typography>
                                             )}
                                             {user && user?.id === garden.user.id && (
