@@ -12,7 +12,7 @@ class Garden(Base):
     
     user = relationship('User', back_populates='gardens')
     user_id = Column(ForeignKey("users.id"))
-    sections = relationship('Section', back_populates='garden', passive_deletes=True)
+    sections = relationship('Section', back_populates='garden', order_by="Section.order", passive_deletes=True)
     tags = relationship("Tag", secondary='garden_tags', back_populates='gardens')
     garden_plants = relationship('GardenPlant', back_populates='garden', passive_deletes=True)
     garden_images = relationship('GardenImage', back_populates='garden', order_by="GardenImage.id", passive_deletes=True)
