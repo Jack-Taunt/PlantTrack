@@ -5,6 +5,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useEffect, useState } from "react";
 import type { GardenImage } from "../../types/garden";
+import useEmblaCarousel from 'embla-carousel-react'
 
 type imageScrollProps = {
     images: GardenImage[];
@@ -13,42 +14,96 @@ type imageScrollProps = {
 }
 
 const ImageScroll = ({images, handleImageUpload, canEdit}: imageScrollProps) => {
+    const [emblaRef, emblaApi] = useEmblaCarousel({loop: false});
     const [imageIndex, setImageIndex] = useState<number>(0);
-    
-    useEffect(() => {
-        if (images.length > 0) {
-            setImageIndex(0)
-        }
-    }, [images])
 
     const handleImageScrollIncrease = () => {
-        if (imageIndex < images.length-1) { 
-            setImageIndex(imageIndex + 1)
+        if (emblaApi?.canScrollNext()) { 
+            setImageIndex(imageIndex + 1);
+            emblaApi?.scrollNext();
+            
         }
     };
 
     const handleImageScrollDecrease = () => {
-        if (imageIndex > 0) { 
-            setImageIndex(imageIndex -1)
+        if (emblaApi?.canScrollPrev()) { 
+            setImageIndex(imageIndex -1);
+            emblaApi?.scrollPrev();
         }
     };
 
+    const onDotButtonClick = (index: number) => {
+        if (emblaApi) {
+            setImageIndex(index);
+            emblaApi.scrollTo(index);
+        }
+    }
+
+    useEffect(() => {
+        const onSelect = () => {
+            if (emblaApi?.selectedScrollSnap() !== undefined) {
+                setImageIndex(emblaApi?.selectedScrollSnap())
+            }
+        }
+        emblaApi?.on('select', onSelect)
+    }, [emblaApi])
+
     return (
-        <>
-            <Box
-                component="img"
-                src={images[imageIndex]?.image ?? placeholderImage}
-                sx={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block',
-                    p: 4
-                }}
-            />
+        <div style={{height: "100%"}} className="outsideDiv">
+            {images.length > 0 ? (
+                <div style={{height: "100%"}}>
+                    <div ref={emblaRef} style={{overflow: 'hidden', height: '100%'}}>
+                        <div style={{display: 'flex', height: "100%"}}>
+                            {images.map(image => (
+                                <div 
+                                    key={image.id} 
+                                    style={{
+                                        flex: '0 0 100%', 
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Box
+                                        component="img"
+                                        src={image.image ?? placeholderImage}
+                                        sx={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'contain',
+                                            display: 'block',
+                                            p: 4
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <Box
+                    component="img"
+                    src={placeholderImage}
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        display: 'block',
+                        p: 4
+                    }}
+                />
+            )}
+
             {canEdit &&
                 <Box
-                    sx={{position: 'absolute', top: '10%', right: '8%'}}
+                    sx={{
+                        position: 'absolute', 
+                        top: '10%', 
+                        right: '8%', 
+                        opacity: 0, 
+                        '.outsideDiv:hover &': {opacity: 1},
+                        transition: 'opacity 0.5s ease'
+                    }}
                 >
                     <input
                         accept="image/jpeg,image/png,image/webp"
@@ -64,35 +119,76 @@ const ImageScroll = ({images, handleImageUpload, canEdit}: imageScrollProps) => 
                     </label>
                 </Box>
             }
-            {images.length > 0 &&
+            {images.length > 1 && (
                 <>
-                    <Box
-                        sx={{position: 'absolute', top: '47%', left: '5%'}}
+                    <Box 
+                        className="embla__dots" 
+                        sx={{
+                            position: 'absolute',
+                            bottom: '3px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            display: 'flex',
+                            gap: '8px',
+                            padding: '6px 10px',
+                            background: 'rgba(0,0,0,0.3)',
+                            borderRadius: '20px',
+                            backdropFilter: 'blur(4px)'
+                        }}
                     >
-                        <Fab
-                            component="span" 
-                            size="small"
-                            onClick={handleImageScrollDecrease}
-                            disabled={imageIndex <= 0}
-                        >
-                            <ArrowBackIosNewIcon style={{ fontSize: "35px" }} />
-                        </Fab>
+                        {images.map((_, index) => (
+                            <button 
+                                type="button"
+                                key={index}
+                                onClick={() => onDotButtonClick(index)}
+                                style={{
+                                    width: '15px',
+                                    height: '15px',
+                                    borderRadius: '50%',
+                                    border: 'none',
+                                    backgroundColor: index === imageIndex ? '#fff' : 'rgba(255,255,255,0.5)',
+                                    transition: 'all 0.2s ease',
+                                    cursor: 'pointer',
+                                    transform: index === imageIndex ? 'scale(1.2)' : 'scale(1)'
+                                }}
+                            />
+                        ))}
                     </Box>
                     <Box
-                        sx={{position: 'absolute', top: '47%', right: '5%'}}
+                        sx={{
+                            opacity: 0, 
+                            '.outsideDiv:hover &': {opacity: 1},
+                            transition: 'opacity 0.5s ease'
+                        }}
                     >
-                        <Fab 
-                            component="span" 
-                            size="small"
-                            onClick={handleImageScrollIncrease}
-                            disabled={imageIndex >= images.length-1}
+                        <Box
+                            sx={{position: 'absolute', top: '45.5%', left: '5%'}}
                         >
-                            <ArrowForwardIosIcon style={{ fontSize: "35px" }} />
-                        </Fab>
+                            <Fab
+                                component="span" 
+                                size="small"
+                                onClick={handleImageScrollDecrease}
+                                disabled={imageIndex <= 0}
+                            >
+                                <ArrowBackIosNewIcon style={{ fontSize: "35px" }} />
+                            </Fab>
+                        </Box>
+                        <Box
+                            sx={{position: 'absolute', top: '45.5%', right: '5%'}}
+                        >
+                            <Fab 
+                                component="span" 
+                                size="small"
+                                onClick={handleImageScrollIncrease}
+                                disabled={images.length-1 <= imageIndex}
+                            >
+                                <ArrowForwardIosIcon style={{ fontSize: "35px" }} />
+                            </Fab>
+                        </Box>
                     </Box>
                 </>
-            }  
-        </>
+            )}
+        </div>
     )
 }
 
