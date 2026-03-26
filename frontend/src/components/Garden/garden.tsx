@@ -240,7 +240,7 @@ const GardenPage = () => {
         sections.forEach((section) => {
             editSection(section.id, undefined, undefined, section.order)
         })
-        
+
     }
 
     const handleImageUpload = async (event: any) => {
@@ -491,7 +491,7 @@ const GardenPage = () => {
                                                     {section.description || "+ Add a description..."}
                                                 </Typography>
                                             )}
-                                            {user?.id === garden.user_id && (
+                                            {user && user?.id === garden.user.id && (
                                                 <Button 
                                                     variant="contained"
                                                     color="secondary"
