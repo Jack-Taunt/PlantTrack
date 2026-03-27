@@ -385,7 +385,12 @@ const GardenPage = () => {
                                                                 onMouseDown={(e) => {
                                                                     e.stopPropagation();
                                                                     e.preventDefault();
-                                                                    handleDeleteSectionModalOpen();
+                                                                    if (gardenPlants.filter(gardenPlant => gardenPlant.section_id === section.id).length > 0) {
+                                                                        handleDeleteSectionModalOpen();
+                                                                    } else {
+                                                                        deleteSection();
+                                                                    }
+                                                                    
                                                                 }}
                                                                 style={{
                                                                     position: 'absolute',
