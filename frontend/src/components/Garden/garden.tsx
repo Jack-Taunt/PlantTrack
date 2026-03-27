@@ -263,6 +263,16 @@ const GardenPage = () => {
         }
     }
 
+    const handleImageDelete = async (imageId: number) => {
+        try {
+            await api.delete(`/gardens/${gardenId}/image/${imageId}`);
+            setGardenImages(prev => prev.filter(img => img.id !== imageId));
+            
+        } catch (err: any) {
+            console.log(err.response)
+        }
+    }
+
 
     return (
         <>
@@ -295,7 +305,12 @@ const GardenPage = () => {
                                 border: '1px solid #000',
                                 borderRadius: 2,
                             }}>
-                                <ImageScroll images={gardenImages} handleImageUpload={handleImageUpload} canEdit={garden.user.id === user?.id}/>
+                                <ImageScroll 
+                                    images={gardenImages} 
+                                    handleImageUpload={handleImageUpload} 
+                                    canEdit={garden.user.id === user?.id} 
+                                    handleImageDelete={handleImageDelete}
+                                />
                             </Box>
                         </Grid>
                     </Grid>

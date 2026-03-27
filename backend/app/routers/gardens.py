@@ -11,7 +11,7 @@ from app.crud.garden import (get_user_gardens_db,
 from app.services.garden_service import (delete_garden_service, 
                                          create_garden_service,
                                          get_garden_service)
-from app.services.image_service import upload_garden_image_service, get_garden_image_service
+from app.services.image_service import upload_garden_image_service, get_garden_image_service, delete_garden_image_service
 from fastapi.responses import FileResponse
 from app.schemas.Image import ImageOut
 
@@ -92,3 +92,13 @@ async def get_garden_image(
 ):
     image = get_garden_image_service(garden_id, image_id, user, db)
     return FileResponse(image.path_name)
+
+
+@router.delete("/{garden_id}/image/{image_id}")
+async def delete_garden_image(
+    garden_id: int,
+    image_id: int,
+    user: Annotated[User, Depends(get_current_user())],
+    db: Annotated[Session, Depends(get_db)]
+):
+    return delete_garden_image_service(garden_id, image_id, user, db)

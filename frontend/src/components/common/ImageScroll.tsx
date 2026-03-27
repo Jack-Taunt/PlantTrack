@@ -3,19 +3,27 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import placeholderImage from "../../assets/image_placeholder.svg"
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useState } from "react";
 import type { GardenImage } from "../../types/garden";
 import useEmblaCarousel from 'embla-carousel-react'
+import ConfirmDeleteModal from "../common/confirmDeleteModal";
 
 type imageScrollProps = {
     images: GardenImage[];
     handleImageUpload: (event: any) => void;
     canEdit: boolean;
+    handleImageDelete: (imageId: number) => void;
 }
 
-const ImageScroll = ({images, handleImageUpload, canEdit}: imageScrollProps) => {
+const ImageScroll = ({images, handleImageUpload, canEdit, handleImageDelete}: imageScrollProps) => {
     const [emblaRef, emblaApi] = useEmblaCarousel({loop: false});
     const [imageIndex, setImageIndex] = useState<number>(0);
+
+    const [deleteImageModalOpen, setDeleteImageModalOpen] = useState(false);
+
+    const handleDeleteImageModalOpen = () => setDeleteImageModalOpen(true);
+    const handleDeleteImageModalClose = () => setDeleteImageModalOpen(false);
 
     const handleImageScrollIncrease = () => {
         if (emblaApi?.canScrollNext()) { 
@@ -119,6 +127,27 @@ const ImageScroll = ({images, handleImageUpload, canEdit}: imageScrollProps) => 
                     </label>
                 </Box>
             }
+
+            {canEdit &&
+                <Box
+                    sx={{
+                        position: 'absolute', 
+                        top: '10%', 
+                        left: '8%', 
+                        opacity: 0, 
+                        '.outsideDiv:hover &': {opacity: 1},
+                        transition: 'opacity 0.5s ease'
+                    }}
+                >
+                    <Fab 
+                        component="span" 
+                        onClick={handleDeleteImageModalOpen}
+                    >
+                        <DeleteIcon style={{ fontSize: "45px" }} />
+                    </Fab>
+                </Box>
+            }
+
             {images.length > 1 && (
                 <>
                     <Box 
@@ -185,9 +214,22 @@ const ImageScroll = ({images, handleImageUpload, canEdit}: imageScrollProps) => 
                                 <ArrowForwardIosIcon style={{ fontSize: "35px" }} />
                             </Fab>
                         </Box>
-                    </Box>
+                    </Box> 
                 </>
             )}
+            <ConfirmDeleteModal 
+                modalOpen={deleteImageModalOpen} 
+                handleModalClose={handleDeleteImageModalClose} 
+                deleteFunction={() => {
+                    handleImageDelete(images[imageIndex].id)
+                    handleDeleteImageModalClose();
+                }} 
+                title={"Are you sure you want to Delete this Image?"} 
+                body={
+                    <></>
+                } 
+                snackMessage="Image Successfully Deleted!"
+            />
         </div>
     )
 }
