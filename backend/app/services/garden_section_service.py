@@ -21,7 +21,7 @@ def create_garden_section_service(garden_id: int, garden_section: GardenSectionC
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="You do not own this garden!",
         )
-    order = len(garden.sections) + 1
+    order = max(section.order for section in garden.sections) + 1
     new_garden_section = create_garden_section_db(garden_section.name, order, garden_id, db)
     db.commit()
     return new_garden_section
