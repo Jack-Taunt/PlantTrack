@@ -162,6 +162,8 @@ const GardenPage = () => {
             )
             await fetchGarden();
             setSelectedTab(section.data.id);
+            setSectionName(section.data.name)
+            setEditingSectionName(section.data.id);
         } catch (err: any) {
             console.log(err)
         }
