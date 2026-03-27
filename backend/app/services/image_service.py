@@ -7,6 +7,7 @@ from app.crud.image import create_garden_image_db, get_garden_image_from_db, del
 from app.crud.garden import get_garden_db
 from fastapi import HTTPException, status
 from fastapi.responses import JSONResponse
+from datetime import datetime
 
 UPLOAD_DIR = Path("uploads")
 
@@ -31,7 +32,9 @@ async def upload_garden_image_service(garden_id: int, file: UploadFile, user: Us
     if not os.path.isdir(base_dir):
         os.mkdir(base_dir)
 
-    file_path = UPLOAD_DIR / user_path / file.filename
+    time_stamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+
+    file_path = UPLOAD_DIR / user_path / (time_stamp + "_" + file.filename)
 
     await upload_file_service(file_path, file)
     image = create_garden_image_db(file_path, garden_id, db)
