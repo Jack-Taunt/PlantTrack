@@ -53,9 +53,15 @@ const GardenPage = () => {
                 const firstSection = garden.data.sections.reduce((a: Section, b: Section) => b.order < a.order ? b : a, garden.data.sections[0])
                 setSelectedTab(firstSection.id)
             }
-            garden.data.garden_images.forEach((image: any) => {
-                fetchImage(image.id)
-            })
+
+            const imageUrls = await Promise.all(
+                garden.data.garden_images.map(async (image: any) => {
+                    const res = await api.get(`/gardens/${gardenId}/image/${image.id}`, { responseType: 'blob' });
+                    const url = URL.createObjectURL(res.data);
+                    return {id: image.id, image: url}
+                }) 
+            )
+            setGardenImages(imageUrls)
             
         } catch (err: any) {
             console.log(err)
