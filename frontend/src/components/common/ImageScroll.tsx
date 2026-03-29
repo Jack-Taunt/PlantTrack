@@ -128,7 +128,7 @@ const ImageScroll = ({images, handleImageUpload, canEdit, handleImageDelete}: im
                 </Box>
             }
 
-            {canEdit &&
+            {canEdit && images.length > 0 &&
                 <Box
                     sx={{
                         position: 'absolute', 
