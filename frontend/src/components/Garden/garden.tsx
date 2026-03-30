@@ -18,6 +18,7 @@ import ConfirmDeleteModal from "../common/confirmDeleteModal";
 import DraggableTab from "./garden_section_draggable_tab";
 import { type Section } from "../../types/garden";
 import ImageScroll from "../common/ImageScroll";
+import GardenPlantInfo from "../Plant/GardenPlant"
 
 const GardenPage = () => {
     const gardenId = useParams().gardenId;
@@ -281,6 +282,8 @@ const GardenPage = () => {
         }
     }
 
+    const [gardenPlantSelected, setGardenPlantSelected] = useState<number|undefined>(undefined);
+
 
     return (
         <>
@@ -531,13 +534,18 @@ const GardenPage = () => {
                                                     Add New Plant
                                                 </Button>
                                             )}
-                                            <GardenPlantList gardenPlants={gardenPlants.filter(gardenPlant => gardenPlant.section_id === section.id)}/>
+                                            <GardenPlantList 
+                                                gardenPlants={gardenPlants.filter(gardenPlant => gardenPlant.section_id === section.id)}
+                                                setGardenPlantSelected={setGardenPlantSelected}    
+                                            />
                                         </TabPanel>
                                     ))}
                                 </TabContext>
                             </Box> 
                         </Box>
                     </Box>
+
+                    <GardenPlantInfo plantId={gardenPlantSelected} gardenId={Number(gardenId)}/>
 
                     <ConfirmDeleteModal 
                         modalOpen={deleteSectionModalOpen} 

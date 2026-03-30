@@ -1,14 +1,21 @@
 import type { GardenPlant } from "../../types/plant";
-import { Grid, Typography } from "@mui/material";
-
+import { Grid, ListItemButton, Stack, Typography } from "@mui/material";
+import { useState } from "react";
 
 type PlantListProps = {
   gardenPlants: GardenPlant[];
+  setGardenPlantSelected: (plantId: number) => void;
 };
 
 
-const GardenPlantList = ({gardenPlants}: PlantListProps) => {
+const GardenPlantList = ({gardenPlants, setGardenPlantSelected}: PlantListProps) => {
 
+    const [selectedPlant, setSelectedPlant] = useState<number|null>(null);
+
+    const handleSetSelectedPlant = (plantId: number) => {
+        setSelectedPlant(plantId);
+        setGardenPlantSelected(plantId);
+    }
 
     return (
         <Grid container spacing={1} sx={{height: '100%'}}>
@@ -20,7 +27,7 @@ const GardenPlantList = ({gardenPlants}: PlantListProps) => {
                     borderRadius: 2, 
                     border: '1px solid', 
                     borderColor: 'black', 
-                    height: "100%",
+                    height: 355,
                     width: "100%", 
                     overflowY: "auto", 
                     margin: '0 auto', 
@@ -28,16 +35,31 @@ const GardenPlantList = ({gardenPlants}: PlantListProps) => {
                 }}
             >
                 {gardenPlants.map((plant) => (
-                    <Grid size={{md: 12, lg: 6, xl: 4}} key={plant.id}>
-                        <Typography variant="h5" fontWeight={600}>
-                            {plant.plant.common_name}
-                        </Typography>
-                        <Typography>
-                            {plant.planted_date ? plant.planted_date : "No Planted Date Set"}
-                        </Typography>
-                        <Typography>
-                            {plant.notes ? plant.notes : "No Plant notes Set"}
-                        </Typography>
+                    <Grid size={{xs: 12, md: 6, xl: 4}} key={plant.id}>
+                        <ListItemButton
+                            sx={{
+                                width: "100%",
+                                height: "100%",
+                                border: '1px solid',
+                                borderColor: plant.id === selectedPlant ? "black" : "divider",
+                                borderRadius: 2,
+                                p: 1,
+                                backgroundColor: plant.id === selectedPlant ? '#f5f5f5' : 'white'
+                            }}
+                            onClick={() => handleSetSelectedPlant(plant.id)}
+                        >
+                            <Stack>
+                                <Typography variant="h5" fontWeight={600}>
+                                    {plant.plant.common_name}
+                                </Typography>
+                                <Typography>
+                                    {plant.planted_date ? plant.planted_date : "No Planted Date Set"}
+                                </Typography>
+                                <Typography>
+                                    {plant.notes ? plant.notes : "No Plant notes Set"}
+                                </Typography>
+                            </Stack>
+                        </ListItemButton>
                     </Grid>
 
                 ))}
