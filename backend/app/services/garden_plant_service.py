@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from app.schemas.User import User
 from app.crud.garden import get_garden_db
 from app.crud.garden_section import get_section_db
-from app.crud.garden_plant import (create_garden_plant_db, get_garden_plants_db)
+from app.crud.garden_plant import (create_garden_plant_db, get_garden_plants_db, get_garden_plant_db)
 from fastapi import HTTPException, status
 from app.crud.plant import get_plant_db
 from app.schemas.GardenPlant import GardenPlantsCreate
@@ -51,7 +51,7 @@ def create_garden_plant_service(garden_id: int, garden_plants: GardenPlantsCreat
     db.commit()
     
 
-def get_garden_plant_service(garden_id: int, user: User, db: Session):
+def get_garden_plants_service(garden_id: int, user: User, db: Session):
     garden = get_garden_db(garden_id, db)
 
     if garden == None:
@@ -67,3 +67,27 @@ def get_garden_plant_service(garden_id: int, user: User, db: Session):
         )
         
     return get_garden_plants_db(garden_id, db)
+
+
+def get_garden_plant_service(garden_id: int, plant_id: int, user: User, db: Session):
+    garden = get_garden_db(garden_id, db)
+
+    if garden == None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This garden doesn't exist!",
+        )
+    
+    if (garden.is_public == False) and (user == None or garden.user_id != user.id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="You do not own this garden!",
+        )
+
+    if not any([garden_plant.id == plant_id for garden_plant in garden.garden_plants]):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This garden plant doesn't exist!",
+        )
+        
+    return get_garden_plant_db(plant_id, db)

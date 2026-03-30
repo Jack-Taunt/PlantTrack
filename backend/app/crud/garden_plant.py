@@ -15,3 +15,13 @@ def get_garden_plants_db(garden_id: int, db: Session):
         .all()
     )
     return garden_plants_dict
+
+
+def get_garden_plant_db(plant_id: int, db: Session):
+    garden_plant_dict = (
+        db.query(GardenPlant)
+        .filter(GardenPlant.id == plant_id)
+        .options(joinedload(GardenPlant.plant))
+        .first()
+    )
+    return garden_plant_dict

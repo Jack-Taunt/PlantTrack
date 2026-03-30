@@ -5,8 +5,8 @@ from app.auth.dependencies import get_current_user
 from app.database import get_db
 from app.schemas.User import User
 from app.schemas.GardenPlant import GardenPlantsCreate
-from app.services.garden_plant_service import create_garden_plant_service, get_garden_plant_service
-
+from app.services.garden_plant_service import create_garden_plant_service, get_garden_plants_service, get_garden_plant_service
+from app.schemas.GardenPlant import GardenPlant
 
 router = APIRouter(
     prefix="/gardens",
@@ -25,9 +25,19 @@ async def create_garden_plant(
     
 
 @router.get("/{garden_id}/plants")
-async def get_garden_plant(
+async def get_garden_plants(
     garden_id: int,
     user: Annotated[User, Depends(get_current_user(False))],
     db: Annotated[Session, Depends(get_db)]
 ):
-    return get_garden_plant_service(garden_id, user, db)
+    return get_garden_plants_service(garden_id, user, db)
+
+
+@router.get("/{garden_id}/plant/{plant_id}", response_model=GardenPlant)
+async def get_garden_plant(
+    garden_id: int,
+    plant_id: int,
+    user: Annotated[User, Depends(get_current_user(False))],
+    db: Annotated[Session, Depends(get_db)]
+):
+    return get_garden_plant_service(garden_id, plant_id, user, db)
