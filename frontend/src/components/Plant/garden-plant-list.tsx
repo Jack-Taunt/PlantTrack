@@ -18,15 +18,13 @@ const GardenPlantList = ({gardenPlants, setGardenPlantSelected}: PlantListProps)
     }
 
     return (
-        <Grid container spacing={1} sx={{height: '100%'}}>
+        <Grid container spacing={1} sx={{height: '100%', py:2}}>
             <Grid 
                 container 
                 spacing={2} 
                 sx={{
                     p: 2, 
                     borderRadius: 2, 
-                    border: '1px solid', 
-                    borderColor: 'black', 
                     height: 355,
                     width: "100%", 
                     overflowY: "auto", 
@@ -40,11 +38,11 @@ const GardenPlantList = ({gardenPlants, setGardenPlantSelected}: PlantListProps)
                             sx={{
                                 width: "100%",
                                 height: "100%",
-                                border: '1px solid',
-                                borderColor: plant.id === selectedPlant ? "black" : "divider",
+                                border: plant.id === selectedPlant ? '1px solid black' : '1px solid lightgray',
                                 borderRadius: 2,
                                 p: 1,
                                 backgroundColor: plant.id === selectedPlant ? '#f5f5f5' : 'white'
+                                
                             }}
                             onClick={() => handleSetSelectedPlant(plant.id)}
                         >
@@ -61,12 +59,8 @@ const GardenPlantList = ({gardenPlants, setGardenPlantSelected}: PlantListProps)
                             </Stack>
                         </ListItemButton>
                     </Grid>
-
                 ))}
-
-
             </Grid>
-
         </Grid>
     )
 }

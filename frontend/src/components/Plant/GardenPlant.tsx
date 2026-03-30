@@ -1,6 +1,6 @@
-import { Typography, Box } from "@mui/material"
+import { Typography, Box, Paper } from "@mui/material"
 import { useEffect, useState } from "react";
-import type { GardenPlant, Plant } from "../../types/plant";
+import type { GardenPlant } from "../../types/plant";
 import api from "../../client/client"
 
 type GardenPlantProps = {
@@ -32,12 +32,12 @@ const GardenPlantInfo = ({gardenId, plantId}: GardenPlantProps) => {
     return (
         <>
             {gardenPlant && (
-                <Box sx={{p:5}}>
-                    <Box sx={{border: '1px solid', borderRadius: 2, height: 320}}>
+                <Box sx={{px:5, pt: 3 }}>
+                    <Paper elevation={2} sx={{borderRadius: 2, height: 320}}>
                         <Typography>
                             {gardenPlant.plant.common_name}
                         </Typography>
-                    </Box>
+                    </Paper>
                 </Box>
             )}
         </>

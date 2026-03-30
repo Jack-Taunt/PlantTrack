@@ -8,9 +8,9 @@ interface TagProps {
 const TagBubble = ({tag}: TagProps) => {
 
     return (
-        <Box sx={{padding: 0.5, border: "1px solid", borderColor: '#000', borderRadius: 2, backgroundColor: "secondary.main"}}>
+        <Box sx={{py: 0.5, px: 1.5, borderRadius: 2, backgroundColor: "#b6e6ac"}}>
 
-            <Typography fontWeight={500}>
+            <Typography fontWeight={500} color="#0f5c00">
                 {tag.name}
             </Typography>
         </Box>

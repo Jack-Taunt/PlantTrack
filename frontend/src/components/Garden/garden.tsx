@@ -3,7 +3,7 @@ import Navbar from "../common/Navbar";
 import { useState, useEffect, type SyntheticEvent } from "react";
 import type { Garden, GardenImage } from "../../types/garden";
 import api from "../../client/client"
-import { Box, Button, Typography, Modal, Stack, Grid, Tab, tabsClasses, TextField } from "@mui/material";
+import { Box, Button, Typography, Modal, Stack, Grid, Tab, tabsClasses, TextField, Paper } from "@mui/material";
 import TagList from "./tag-list";
 import { useAuth } from "../common/AuthProvider";
 import PlantList from "../Plant/plant-list";
@@ -289,15 +289,15 @@ const GardenPage = () => {
         <>
             <Navbar/>
             {garden && (
-                <div>
-                    <Typography variant="h3" sx={{fontWeight: 'bold', textAlign: 'center', pt: 4}}>
+                <Box sx={{backgroundColor: '#f9fafb'}}>
+                    <Typography variant="h3" sx={{fontWeight: 'bold', textAlign: 'center', py: 3}}>
                         {garden.name}
                     </Typography>
-                    <Grid container sx={{height: 600, p: 5}}>
+                    <Grid container sx={{height: 600, px: 5}}>
                         <Grid size={7} >
-                            <Box sx={{border: '1px solid #000', borderRadius: 2, mr: 2, height: "100%"}}>
-                                <Typography variant="h4" sx={{fontWeight: 'bold', pt: 2, mx: 3, borderBottom: '2px solid'}}>
-                                    Garden Information:
+                            <Paper elevation={2} sx={{borderRadius: 2, mr: 2, height: "100%"}}>
+                                <Typography variant="h4" sx={{fontWeight: 'bold', pt: 2, mx: 3, borderBottom: '2px solid lightgray'}}>
+                                    Garden Information
                                 </Typography>
                                 <Typography variant="h5" sx={{pt: 4, mx: 3}}>
                                     {garden.description}
@@ -307,13 +307,12 @@ const GardenPage = () => {
                                         <TagList tags={garden.tags}/>
                                     }
                                 </Box>
-                            </Box>
+                            </Paper>
                         </Grid>
                         <Grid size={5} sx={{ minHeight: 0, height: "100%", display: 'flex', position: 'relative' }}>
-                            <Box sx={{
+                            <Paper elevation={2} sx={{
                                 width: '100%',
                                 height: '100%',
-                                border: '1px solid #000',
                                 borderRadius: 2,
                             }}>
                                 <ImageScroll 
@@ -322,227 +321,240 @@ const GardenPage = () => {
                                     canEdit={garden.user.id === user?.id} 
                                     handleImageDelete={handleImageDelete}
                                 />
-                            </Box>
+                            </Paper>
                         </Grid>
                     </Grid>
                     
 
-                    <Box sx={{px:5}}>
-                        <Box sx={{border: '1px solid', borderRadius: 2, overflow: 'hidden'}}>
-                            <Box>
-                                <TabContext value={selectedTab} >
+                    <Box sx={{px:5, pt: 3}}>
+                        <Paper elevation={2} sx={{borderRadius: 2, overflow: 'hidden'}}>
+                            <TabContext value={selectedTab} >
 
-                                    <TabList 
-                                        onChange={handleGardenSelectionTabChange} 
-                                        variant="scrollable" 
-                                        allowScrollButtonsMobile
-                                        sx={{
-                                            [`& .${tabsClasses.scrollButtons}`]: {
-                                                '&.Mui-disabled': { opacity: 0.3 },
-                                                border: 1,
-                                                backgroundColor: "secondary.main",
-                                                color: 'black'
-                                            },
-                                            borderBottom: 1
-                                        }}
-                                        >
-                                        {sections
-                                            .sort((a, b) => a.order - b.order)
-                                            .map((section, index) => (
-                                            <DraggableTab 
-                                                key={section.id}
-                                                section={section}
-                                                index={index}
-                                                moveTab={moveTab}
-                                                onDragEnd={moveTabEnd}
-                                                value={section.id}
-                                                draggingDisabled={!(user?.id === garden.user.id) || editingSectionName !== null}
-                                                label=
-                                                {   
-                                                    ((user?.id === garden.user.id) && editingSectionName === section.id) ? 
-                                                    (
-                                                        <div>
-                                                            <TextField
-                                                                value={sectionName}
-                                                                variant="standard"
-                                                                autoFocus
-                                                                onBlur={() => saveSectionName()}
-                                                                onChange={(e) => setSectionName(e.target.value)}
-                                                                onKeyDown={(e) => {
-                                                                    if (e.key === "Enter") {
-                                                                        saveSectionName()
-                                                                    }
-                                                                }}
-                                                                sx={{
-                                                                    '& .MuiInputBase-input': {
-                                                                        fontWeight: 'bold',
-                                                                        fontSize: '1rem',
-                                                                        textTransform: 'none',
-                                                                        color: selectedTab === section.id ? 'primary.main' : 'black',
-                                                                        p: 0,
-                                                                        textAlign: 'center'
-                                                                    }
-                                                                }}
-                                                            />
-                                                            <span
-                                                                onMouseDown={(e) => {
-                                                                    e.stopPropagation();
-                                                                    e.preventDefault();
-                                                                    if (gardenPlants.filter(gardenPlant => gardenPlant.section_id === section.id).length > 0) {
-                                                                        handleDeleteSectionModalOpen();
-                                                                    } else {
-                                                                        deleteSection();
-                                                                    }
-                                                                    
-                                                                }}
-                                                                style={{
-                                                                    position: 'absolute',
-                                                                    top: 1,
-                                                                    right: 2,
-                                                                    cursor: 'pointer',
-                                                                    fontSize: '1.5rem',
-                                                                    fontWeight: 'bold',
-                                                                    lineHeight: 1,
-                                                                    padding: '1px 2px',
-                                                                    backgroundColor: '#ff0000',
-                                                                    color: 'white',
-                                                                }}
-                                                            >
-                                                                ✕
-                                                            </span>
-                                                        </div>
+                                <TabList 
+                                    onChange={handleGardenSelectionTabChange} 
+                                    variant="scrollable" 
+                                    allowScrollButtonsMobile
+                                    sx={{
+                                        [`& .${tabsClasses.scrollButtons}`]: {
+                                            '&.Mui-disabled': { opacity: 0.3 },
+                                            border: 1,
+                                            backgroundColor: "secondary.main",
+                                            color: 'black',
+                                        },
+                                        [`& .MuiTabScrollButton-root:first-of-type`]: {
+                                            borderRadius: '8px 0 0 8px',
+                                        },
 
-                                                    ) : (
-                                                        <Typography 
-                                                            variant="body1" 
-                                                            onDoubleClick={() => {
-                                                                setEditingSectionName(section.id)
-                                                                setSectionName(section.name)
-                                                            }} 
+                                        [`& .MuiTabScrollButton-root:last-of-type`]: {
+                                            borderRadius: '0 8px 8px 0',
+                                        },
+
+                                        borderBottom: 1,
+                                        borderColor: "#d5d5d5",
+                                        p: 1
+                                    }}
+                                    >
+                                    {sections
+                                        .sort((a, b) => a.order - b.order)
+                                        .map((section, index) => (
+                                        <DraggableTab 
+                                            key={section.id}
+                                            section={section}
+                                            index={index}
+                                            moveTab={moveTab}
+                                            onDragEnd={moveTabEnd}
+                                            value={section.id}
+                                            draggingDisabled={!(user?.id === garden.user.id) || editingSectionName !== null}
+                                            label=
+                                            {   
+                                                ((user?.id === garden.user.id) && editingSectionName === section.id) ? 
+                                                (
+                                                    <div>
+                                                        <TextField
+                                                            value={sectionName}
+                                                            variant="standard"
+                                                            autoFocus
+                                                            onBlur={() => saveSectionName()}
+                                                            onChange={(e) => setSectionName(e.target.value)}
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === "Enter") {
+                                                                    saveSectionName()
+                                                                }
+                                                            }}
                                                             sx={{
-                                                                textTransform: 'none', 
-                                                                fontWeight: 'bold', 
-                                                                color: selectedTab === section.id? 'primary.main' : "black"
+                                                                '& .MuiInputBase-input': {
+                                                                    fontWeight: 'bold',
+                                                                    fontSize: '1rem',
+                                                                    textTransform: 'none',
+                                                                    color: selectedTab === section.id ? 'primary.main' : 'black',
+                                                                    p: 0,
+                                                                    textAlign: 'center'
+                                                                }
+                                                            }}
+                                                        />
+                                                        <span
+                                                            onMouseDown={(e) => {
+                                                                e.stopPropagation();
+                                                                e.preventDefault();
+                                                                if (gardenPlants.filter(gardenPlant => gardenPlant.section_id === section.id).length > 0) {
+                                                                    handleDeleteSectionModalOpen();
+                                                                } else {
+                                                                    deleteSection();
+                                                                }
+                                                                
+                                                            }}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: 1,
+                                                                right: 2,
+                                                                cursor: 'pointer',
+                                                                fontSize: '1.5rem',
+                                                                fontWeight: 'bold',
+                                                                lineHeight: 1,
+                                                                padding: '1px 2px',
+                                                                backgroundColor: '#ff0000',
+                                                                color: 'white',
                                                             }}
                                                         >
-                                                            {section.name}
-                                                        </Typography>
-                                                    )
-                                                } 
-                                                sx={{
-                                                    width: { xs: 50, sm: 150, md: 250, xl: 400 },
-                                                    flexShrink: 0,
-                                                    backgroundColor: selectedTab === section.id? '#dedede' : "#ffffff",
-                                                    '&:hover': {
-                                                        backgroundColor: '#dedede',
-                                                    },
-                                                }} 
-                                            />
-                                        ))}
-                                        {user?.id === garden.user.id && (
-                                            <Tab 
-                                                value={-1}
-                                                onMouseDown={handleCreateNewSection}
-                                                sx={{
-                                                    backgroundColor: "secondary.main", 
+                                                            ✕
+                                                        </span>
+                                                    </div>
+
+                                                ) : (
+                                                    <Typography 
+                                                        variant="body1" 
+                                                        onDoubleClick={() => {
+                                                            setEditingSectionName(section.id)
+                                                            setSectionName(section.name)
+                                                        }} 
+                                                        sx={{
+                                                            textTransform: 'none', 
+                                                            fontWeight: 'bold', 
+                                                            color: selectedTab === section.id? 'primary.main' : "black"
+                                                        }}
+                                                    >
+                                                        {section.name}
+                                                    </Typography>
+                                                )
+                                            } 
+                                            sx={{
+                                                width: { xs: 50, sm: 150, md: 250, xl: 400 },
+                                                flexShrink: 0,
+                                                backgroundColor: selectedTab === section.id? '#dedede' : "#f6f6f6",
+                                                '&:hover': {
+                                                    backgroundColor: '#dedede',
+                                                },
+                                                textTransform: 'none',
+                                                borderRight: '2px solid #dedede'
+                                            }} 
+                                        />
+                                    ))}
+                                    {user?.id === garden.user.id && (
+                                        <Tab 
+                                            value={-1}
+                                            onMouseDown={handleCreateNewSection}
+                                            sx={{
+                                                backgroundColor: "primary.main", 
+                                                color: 'white',
+                                                '&.Mui-disabled': {
+                                                    opacity: 1,
                                                     color: 'white',
-                                                    '&.Mui-disabled': {
-                                                        opacity: 1,
-                                                        color: 'white',
-                                                    },
-                                                    '&.Mui-selected': {
-                                                        backgroundColor: "secondary.main",
-                                                        color: 'white',
+                                                },
+                                                '&.Mui-selected': {
+                                                    backgroundColor: "secondary.main",
+                                                    color: 'white',
+                                                }
+                                            }}
+                                            label={"+ Add New Section"} 
+                                        />
+                                    )}
+                                </TabList>
+                                
+                                
+                                {sections.map((section) => (
+                                    <TabPanel key={section.id} value={section.id} sx={{py: 1}}>
+                                        <Stack direction={"row"} sx={{alignItems: 'center'}}>
+                                        {(user?.id === garden.user.id) && editingSectionDescription ? (
+                                            <TextField
+                                                value={sectionDescription}
+                                                variant="standard"
+                                                autoFocus
+                                                onBlur={() => saveSectionDescription()}
+                                                onChange={(e) => setSectionDescription(e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter") {
+                                                        saveSectionDescription()
                                                     }
                                                 }}
-                                                label={"+ Add New Section"} 
-                                            />
-                                        )}
-                                    </TabList>
-                                    
-                                    
-                                    {sections.map((section) => (
-                                        <TabPanel key={section.id} value={section.id} sx={{py: 1}}>
-                                            {(user?.id === garden.user.id) && editingSectionDescription ? (
-                                                <TextField
-                                                    value={sectionDescription}
-                                                    variant="standard"
-                                                    autoFocus
-                                                    onBlur={() => saveSectionDescription()}
-                                                    onChange={(e) => setSectionDescription(e.target.value)}
-                                                    onKeyDown={(e) => {
-                                                        if (e.key === "Enter") {
-                                                            saveSectionDescription()
-                                                        }
-                                                    }}
-                                                    sx={{
-                                                        width: '100%',
-                                                        border: '1px solid transparent',
-                                                        borderRadius: 1,
-                                                        px: 0.5,
-                                                        my: 2,
-                                                        borderColor: 'primary.main',
-                                                        '& .MuiInputBase-root': {
-                                                            p: 0,
-                                                            alignItems: 'center',
-                                                        },
-                                                        '& .MuiInputBase-input': {
-                                                            fontSize: '1.25rem',
-                                                            fontWeight: 500,
-                                                            lineHeight: '1.6',
-                                                            letterSpacing: '0.0075em',
-                                                            p: 0,
-                                                            height: 'auto',
-                                                        },
-                                                        '& .MuiInput-underline:before': { borderBottom: 'none' },
-                                                        '& .MuiInput-underline:after': { borderBottom: 'none' },
-                                                        '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: 'none' },
-                                                    }}
-                                                />
-                                            ) : (
-                                                
-                                                <Typography
-                                                    onClick={() => {
-                                                        setEditingSectionDescription(section.id)
-                                                        setSectionDescription(section.description)
-                                                    }}
-                                                    sx={{
+                                                sx={{
+                                                    width: '100%',
+                                                    border: '1px solid transparent',
+                                                    borderRadius: 1,
+                                                    px: 0.5,
+                                                    my: 2,
+                                                    borderColor: 'primary.main',
+                                                    '& .MuiInputBase-root': {
+                                                        p: 0,
+                                                        alignItems: 'center',
+                                                    },
+                                                    '& .MuiInputBase-input': {
                                                         fontSize: '1.25rem',
                                                         fontWeight: 500,
                                                         lineHeight: '1.6',
                                                         letterSpacing: '0.0075em',
-                                                        width: '100%',
-                                                        border: '1px solid transparent',
-                                                        borderRadius: 1,
-                                                        px: 0.5,
-                                                        my: 2,
-                                                        cursor: 'text',
-                                                        '&:hover': (user?.id === garden.user.id) ? { borderColor: 'divider' } : {},
-                                                        fontStyle: section.description ? 'normal' : 'italic',
-                                                        color: section.description ? 'inherit' : 'text.secondary',
-                                                    }}
-                                                >
-                                                    {(user?.id === garden.user.id) ? section.description || "+ Add a description..." :  section.description || ""}
-                                                </Typography>
-                                            )}
-                                            {user && user?.id === garden.user.id && (
-                                                <Button 
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    onClick={handleAddPlantModalOpen}
-                                                >
-                                                    Add New Plant
-                                                </Button>
-                                            )}
-                                            <GardenPlantList 
-                                                gardenPlants={gardenPlants.filter(gardenPlant => gardenPlant.section_id === section.id)}
-                                                setGardenPlantSelected={setGardenPlantSelected}    
+                                                        p: 0,
+                                                        height: 'auto',
+                                                    },
+                                                    '& .MuiInput-underline:before': { borderBottom: 'none' },
+                                                    '& .MuiInput-underline:after': { borderBottom: 'none' },
+                                                    '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: 'none' },
+                                                }}
                                             />
-                                        </TabPanel>
-                                    ))}
-                                </TabContext>
-                            </Box> 
-                        </Box>
+                                        ) : (
+                                            
+                                            <Typography
+                                                onClick={() => {
+                                                    setEditingSectionDescription(section.id)
+                                                    setSectionDescription(section.description)
+                                                }}
+                                                sx={{
+                                                    fontSize: '1.25rem',
+                                                    fontWeight: 500,
+                                                    lineHeight: '1.6',
+                                                    letterSpacing: '0.0075em',
+                                                    width: '100%',
+                                                    border: '1px solid transparent',
+                                                    borderRadius: 1,
+                                                    px: 0.5,
+                                                    my: 2,
+                                                    cursor: 'text',
+                                                    '&:hover': (user?.id === garden.user.id) ? { borderColor: 'divider' } : {},
+                                                    fontStyle: section.description ? 'normal' : 'italic',
+                                                    color: section.description ? 'inherit' : 'text.secondary',
+                                                }}
+                                            >
+                                                {(user?.id === garden.user.id) ? section.description || "+ Add a description..." :  section.description || ""}
+                                            </Typography>
+                                        )}
+                                        {user && user?.id === garden.user.id && (
+                                            <Button 
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={handleAddPlantModalOpen}
+                                                sx={{width: 200, height: 40}}
+                                            >
+                                                + Add New Plant
+                                            </Button>
+                                        )}
+                                        </Stack>
+                                        <GardenPlantList 
+                                            gardenPlants={gardenPlants.filter(gardenPlant => gardenPlant.section_id === section.id)}
+                                            setGardenPlantSelected={setGardenPlantSelected}    
+                                        />
+                                    </TabPanel>
+                                ))}
+                            </TabContext>
+                        </Paper>
                     </Box>
 
                     <GardenPlantInfo plantId={gardenPlantSelected} gardenId={Number(gardenId)}/>
@@ -678,7 +690,7 @@ const GardenPage = () => {
                             </Stack>
                         </Box>
                     </Modal>
-                </div>
+                </Box>
             )}
         </>
     )
