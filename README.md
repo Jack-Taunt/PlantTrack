@@ -12,6 +12,22 @@ PlantTrack Task Board
 https://trello.com/b/WCK9AmoY/my-trello-board
 
 
+## Project tech stack
+
+### Backend
+* Python with Fastapi
+* PostgreSQL, SQLAlchemy, alembic
+* JWT
+* Pytest
+
+### Frontend
+* React with Typescript
+* React Material UI
+* Axios
+* Vite
+
+### CI/CD
+* Github Actions
 
 ## Run Applciation in dev
 
