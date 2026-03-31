@@ -1,5 +1,13 @@
 # PlantTrack
 
+PlantTrack is a web application designed to track and manage your plants.
+
+* Track watering, planting and harvesting schedules
+* browse different plants and their details
+* compare plant growth and harvests between multiple growing seasons
+* create and share your gardens and plants with other users
+
+<br />
 PlantTrack Task Board
 https://trello.com/b/WCK9AmoY/my-trello-board
 
