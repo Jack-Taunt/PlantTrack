@@ -29,6 +29,7 @@ const PublicPlantsPage = () => {
                 display: "flex",
                 flexDirection: "column",
                 overflow: 'hidden',
+                backgroundColor: '#f9fafb'
             }}
         >
             <Navbar />

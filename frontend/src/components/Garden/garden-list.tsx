@@ -1,4 +1,4 @@
-import { Box, Grid, List, ListItem, ListItemButton, Typography, Stack, Button } from "@mui/material"
+import { Box, Grid, List, ListItem, ListItemButton, Typography, Stack, Button, Paper } from "@mui/material"
 import type { Garden, GardenImage } from "../../types/garden"
 import placeholderImage from "../../assets/image_placeholder.svg"
 import TagList from "./tag-list";
@@ -42,16 +42,19 @@ const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) =
                 <List sx={{width: "100%", mx: "auto", padding: 0}}>
                     {gardens.map((garden) => {
                         return (
+
                             <ListItem key={garden.id} disablePadding sx={{mb: 1}} >
-                                <ListItemButton
+                                <Paper 
                                     sx={{
                                         width: "100%",
                                         border: '1px solid',
                                         borderColor: garden.id === selectedGarden?.id ? "black" : "divider",
                                         borderRadius: 2,
-                                        p: 2,
                                         backgroundColor: garden.id === selectedGarden?.id ? '#f5f5f5' : 'white'
                                     }}
+                                >
+                                <ListItemButton
+                                    sx={{p: 2}}
                                     onClick={() => handleClick(garden.id)}
                                 >
                                     <Grid container spacing={2} sx={{width: "100%"}}>
@@ -92,6 +95,7 @@ const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) =
                                     
                                     {selectedGarden?.id === garden.id ? <ArrowBackIos /> : <ArrowForwardIos />}
                                 </ListItemButton>
+                                </Paper>
                             </ListItem>
                         )
                     })}
@@ -99,13 +103,13 @@ const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) =
             </Grid>
             <Grid size={3}>
                 {selectedGarden && (
-                    <Box
+                    <Paper
                         sx={{
                             border: "1px solid",
                             borderColor: "black",
                             borderRadius: 2,
                             position: "sticky",
-                            top: 180,
+                            top: 174,
                             height: "80vh",
                             display: 'flex',
                             flexDirection: 'column'
@@ -166,7 +170,7 @@ const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) =
                             }   
                         </Stack>
                         
-                    </Box>
+                    </Paper>
                 )}
             </Grid>
             <Grid size={2}/>

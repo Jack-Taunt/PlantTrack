@@ -150,169 +150,170 @@ function MyGardensPage() {
     return (
         <>
             <Navbar/>
-            <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', pt: 4}}>
-                My Gardens
-            </Typography>
-            
-            <Button 
-                variant='contained'
-                onClick={handleCreateGardenModalOpen}
-            >
-                Create a New Garden
-            </Button>
-
-
-            <GardenList gardens={gardens} gardenImages={gardenImages} onGardenDeleted={fetchGardens}/>
-
-
-            <Modal
-                open={createGardenModalOpen}
-                onClose={handleCreateGardenModalClose}
-            >
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: 500,
-                        minHeight: 500,
-                        maxHeight: 620,
-                        bgcolor: 'background.paper',
-                        border: '2px solid #000',
-                        boxShadow: 24,
-                        p: 4
-                    }}
+            <Box sx={{backgroundColor: '#f9fafb'}}>
+                <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', pt: 4}}>
+                    My Gardens
+                </Typography>
+                
+                <Button 
+                    variant='contained'
+                    onClick={handleCreateGardenModalOpen}
                 >
-                    <Stack spacing={5} alignItems="stretch" width="100%">
-                            <Box sx={{paddingTop:3}}>
-                                <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center'}}>
-                                    Create a New Garden
-                                </Typography>
-                            </Box>
-                            
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <Stack sx={{ gap: 2 }} alignItems="center">
-                                    <TextField 
-                                        label="Garden Name" 
-                                        variant="filled" 
-                                        required={true} 
-                                        {...register("name")} 
-                                        sx={{width: '80%'}} 
-                                        helperText="e.g Veggie Garden or Indoor Plants"
-                                    />
-                                    {errors.name && (
-                                        <Alert severity="error" sx={{width: "73%"}}>
-                                            {errors.name.message}
-                                        </Alert>
-                                    )}
-                                    <TextField 
-                                        label="Garden Description" 
-                                        variant="filled" 
-                                        multiline
-                                        rows={4} 
-                                        required={true} 
-                                        {...register("description")} 
-                                        sx={{width: '80%'}} 
-                                    />
-                                    {errors.description && (
-                                        <Alert severity="error" sx={{width: "73%"}}>
-                                            {errors.description.message}
-                                        </Alert>
-                                    )}
+                    Create a New Garden
+                </Button>
 
-                                    <FormGroup>
-                                        <FormControlLabel control={<Checkbox {...register("isPublic")} />} label="Make Garden Public?" />
-                                    </FormGroup>
-                                    
-                                    <Controller
-                                        name="tags"
-                                        control={control}
-                                        defaultValue={[]}
-                                        render={({field}) => (
-                                            <FormControl sx={{width: "80%"}}>
-                                                <InputLabel id="garden-tags">Tags</InputLabel>
-                                                <Select
-                                                    labelId='garden-tags'
-                                                    multiple
-                                                    value={field.value}
-                                                    onChange={(e) => {
-                                                        const value = e.target.value;
-                                                        if (value.length <= 5) field.onChange(value);
-                                                    }}
-                                                    input={<OutlinedInput label="Chip" />}
-                                                    renderValue={(selected) => (
-                                                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
-                                                            {selected.map((id) => {
-                                                                const tag = tags.find(t => t.id === id);
-                                                                return <Chip key={id} label={tag?.name} />
-                                                            })}
-                                                        </Box>
-                                                    )}
-                                                >
-                                                    {tags.map((tag) => (
-                                                    <MenuItem
-                                                        key={tag.id}
-                                                        value={tag.id}
-                                                    >
-                                                        {tag.name}
-                                                    </MenuItem>
-                                                    ))}  
-                                                </Select>
-                                            </FormControl>
-                                        )}
-                                    />
-                                    <Typography variant='caption' sx={{pt: 0}}>
-                                        Maxiumum 5 tags per Garden
+
+                <GardenList gardens={gardens} gardenImages={gardenImages} onGardenDeleted={fetchGardens}/>
+
+
+                <Modal
+                    open={createGardenModalOpen}
+                    onClose={handleCreateGardenModalClose}
+                >
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 500,
+                            minHeight: 500,
+                            maxHeight: 620,
+                            bgcolor: 'background.paper',
+                            border: '2px solid #000',
+                            boxShadow: 24,
+                            p: 4
+                        }}
+                    >
+                        <Stack spacing={5} alignItems="stretch" width="100%">
+                                <Box sx={{paddingTop:3}}>
+                                    <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center'}}>
+                                        Create a New Garden
                                     </Typography>
+                                </Box>
+                                
+                                <form onSubmit={handleSubmit(onSubmit)}>
+                                    <Stack sx={{ gap: 2 }} alignItems="center">
+                                        <TextField 
+                                            label="Garden Name" 
+                                            variant="filled" 
+                                            required={true} 
+                                            {...register("name")} 
+                                            sx={{width: '80%'}} 
+                                            helperText="e.g Veggie Garden or Indoor Plants"
+                                        />
+                                        {errors.name && (
+                                            <Alert severity="error" sx={{width: "73%"}}>
+                                                {errors.name.message}
+                                            </Alert>
+                                        )}
+                                        <TextField 
+                                            label="Garden Description" 
+                                            variant="filled" 
+                                            multiline
+                                            rows={4} 
+                                            required={true} 
+                                            {...register("description")} 
+                                            sx={{width: '80%'}} 
+                                        />
+                                        {errors.description && (
+                                            <Alert severity="error" sx={{width: "73%"}}>
+                                                {errors.description.message}
+                                            </Alert>
+                                        )}
 
-                                    {errors.root && (
-                                        <Alert severity="error" sx={{width: "73%"}}>
-                                            {errors.root.message}
-                                        </Alert>
-                                    )}
-                                    <Stack
-                                        direction="row"
-                                        sx={{width: "80%", gap: 1}}
-                                        justifyContent='center'
-                                    > 
-                                        <Button 
-                                            type="submit" 
-                                            variant="contained" 
-                                            sx={{ marginTop: 3, width: '100%'}}
-                                        >
-                                            Create Garden
-                                        </Button>
-                                        <Button 
-                                            onClick={handleCreateGardenModalClose} 
-                                            variant="contained" 
-                                            sx={{ marginTop: 3, width: '100%'}}
-                                        >
-                                            Cancel
-                                        </Button>
+                                        <FormGroup>
+                                            <FormControlLabel control={<Checkbox {...register("isPublic")} />} label="Make Garden Public?" />
+                                        </FormGroup>
+                                        
+                                        <Controller
+                                            name="tags"
+                                            control={control}
+                                            defaultValue={[]}
+                                            render={({field}) => (
+                                                <FormControl sx={{width: "80%"}}>
+                                                    <InputLabel id="garden-tags">Tags</InputLabel>
+                                                    <Select
+                                                        labelId='garden-tags'
+                                                        multiple
+                                                        value={field.value}
+                                                        onChange={(e) => {
+                                                            const value = e.target.value;
+                                                            if (value.length <= 5) field.onChange(value);
+                                                        }}
+                                                        input={<OutlinedInput label="Chip" />}
+                                                        renderValue={(selected) => (
+                                                            <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                                                                {selected.map((id) => {
+                                                                    const tag = tags.find(t => t.id === id);
+                                                                    return <Chip key={id} label={tag?.name} />
+                                                                })}
+                                                            </Box>
+                                                        )}
+                                                    >
+                                                        {tags.map((tag) => (
+                                                        <MenuItem
+                                                            key={tag.id}
+                                                            value={tag.id}
+                                                        >
+                                                            {tag.name}
+                                                        </MenuItem>
+                                                        ))}  
+                                                    </Select>
+                                                </FormControl>
+                                            )}
+                                        />
+                                        <Typography variant='caption' sx={{pt: 0}}>
+                                            Maxiumum 5 tags per Garden
+                                        </Typography>
+
+                                        {errors.root && (
+                                            <Alert severity="error" sx={{width: "73%"}}>
+                                                {errors.root.message}
+                                            </Alert>
+                                        )}
+                                        <Stack
+                                            direction="row"
+                                            sx={{width: "80%", gap: 1}}
+                                            justifyContent='center'
+                                        > 
+                                            <Button 
+                                                type="submit" 
+                                                variant="contained" 
+                                                sx={{ marginTop: 3, width: '100%'}}
+                                            >
+                                                Create Garden
+                                            </Button>
+                                            <Button 
+                                                onClick={handleCreateGardenModalClose} 
+                                                variant="contained" 
+                                                sx={{ marginTop: 3, width: '100%'}}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </Stack>
                                     </Stack>
-                                </Stack>
-                            </form>
-                        </Stack>
+                                </form>
+                            </Stack>
 
-                </Box>
-            </Modal>
+                    </Box>
+                </Modal>
 
-            <Snackbar
-                open={snackVisability}
-                autoHideDuration={5000}
-                onClose={handleSnackClose}
-            >
-                <Alert
+                <Snackbar
+                    open={snackVisability}
+                    autoHideDuration={5000}
                     onClose={handleSnackClose}
-                    severity="success"
-                    variant="filled"
-                    sx={{ width: '100%' }}
                 >
-                    Garden Successfully Created
-                </Alert>
-            </Snackbar>
-
+                    <Alert
+                        onClose={handleSnackClose}
+                        severity="success"
+                        variant="filled"
+                        sx={{ width: '100%' }}
+                    >
+                        Garden Successfully Created
+                    </Alert>
+                </Snackbar>
+            </Box>
         </>
     )
 };

@@ -1,5 +1,5 @@
 import Navbar from "../common/Navbar";
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import GardenList from "./garden-list";
 import { useEffect, useState } from "react";
 import api from "../../client/client"
@@ -52,10 +52,12 @@ const PublicGardensPage = () => {
     return (
         <>
             <Navbar />
-            <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', paddingY: 4}}>
-                Community Gardens
-            </Typography>
-            <GardenList gardens={gardens} gardenImages={gardenImages}/>
+            <Box sx={{backgroundColor: '#f9fafb'}}>
+                <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', paddingY: 4}}>
+                    Community Gardens
+                </Typography>
+                <GardenList gardens={gardens} gardenImages={gardenImages}/>
+            </Box>
         </>
     )
 }
