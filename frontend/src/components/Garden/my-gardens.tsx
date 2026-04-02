@@ -7,7 +7,6 @@ import api from "../../client/client"
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { Garden, Tag, GardenImage } from '../../types/garden';
 import GardenList from './garden-list';
-import SpaIcon from '@mui/icons-material/Spa';
 import YardIcon from '@mui/icons-material/Yard';
 import AddIcon from '@mui/icons-material/Add';
 
