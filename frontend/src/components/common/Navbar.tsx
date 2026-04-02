@@ -26,7 +26,7 @@ const Navbar = () => {
     const location = useLocation();
 
     return (
-        <AppBar position="static">
+        <AppBar position="sticky">
             <Container maxWidth={false}>
                 <Toolbar disableGutters>
                     <IconButton 

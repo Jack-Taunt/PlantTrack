@@ -1,4 +1,4 @@
-import { Grid, Box, ListItemButton, Typography } from "@mui/material";
+import { Grid, Box, ListItemButton, Typography, Paper } from "@mui/material";
 import { type Plant } from "../../types/plant";
 import { useState } from "react";
 import placeholderImage from "../../assets/image_placeholder.svg"
@@ -61,77 +61,82 @@ const PlantList = ({plants, plantsSelected, multipleSelect}: PlantListProps) => 
     
 
     return (
-        <Grid container spacing={1} sx={{height: '100%'}}>
-            <Grid 
-                container 
-                spacing={2} 
-                sx={{
-                    p: 2, 
-                    borderRadius: 2, 
-                    border: '1px solid', 
-                    borderColor: 'black', 
-                    height: "100%",
-                    width: "100%", 
-                    overflowY: "auto", 
-                    margin: '0 auto', 
-                    scrollbarGutter: 'auto'
-                }}>
-                {plants.map((plant) => (
-                    <Grid size={{md: 12, lg: 6, xl: 4}} key={plant.id}>
-                        <ListItemButton 
-                            sx={{
-                                width: "100%",
-                                height: "100%",
-                                border: '1px solid',
-                                borderColor: selectedPlants.map((plant) => plant.plant_id).indexOf(plant.id) > -1 ? "black" : "divider",
-                                borderRadius: 2,
-                                p: 1,
-                                backgroundColor: selectedPlants.map((plant) => plant.plant_id).indexOf(plant.id) > -1 ? '#f5f5f5' : 'white'
-                            }}
-                            onClick={() => handleClick(plant.id)}
-                        >
-                            <Grid size={4}>
-                                <Box
-                                    component="img"
-                                    src={placeholderImage}
-                                    sx={{
-                                        maxHeight: "100%",
-                                        maxWidth: "100%", 
-                                        display: "block",
-                                        objectFit: "cover",
-                                        borderRadius: 2
-                                    }}
-                                />
-                            </Grid>
-                            <Grid size={8}>
-                                <Box>
-                                    {plant.common_name && plant.common_name.toLowerCase() !== plant.scientific_name.toLowerCase() ? (
-                                        <>
+        <Paper
+            sx={{
+                borderRadius: 2, 
+                height: '95%'
+            }}
+            elevation={2}
+        >
+            <Grid container spacing={1} sx={{height: '100%'}}>
+                <Grid 
+                    container 
+                    spacing={2} 
+                    sx={{
+                        p: 2, 
+                        height: "100%",
+                        width: "100%", 
+                        overflowY: "auto", 
+                        margin: '0 auto', 
+                        scrollbarGutter: 'auto'
+                    }}>
+                    {plants.map((plant) => (
+                        <Grid size={{md: 12, lg: 6, xl: 4}} key={plant.id}>
+                            <ListItemButton 
+                                sx={{
+                                    width: "100%",
+                                    height: "100%",
+                                    border: '1px solid',
+                                    borderColor: selectedPlants.map((plant) => plant.plant_id).indexOf(plant.id) > -1 ? "black" : "divider",
+                                    borderRadius: 2,
+                                    p: 1,
+                                    backgroundColor: selectedPlants.map((plant) => plant.plant_id).indexOf(plant.id) > -1 ? '#f5f5f5' : 'white'
+                                }}
+                                onClick={() => handleClick(plant.id)}
+                            >
+                                <Grid size={4}>
+                                    <Box
+                                        component="img"
+                                        src={placeholderImage}
+                                        sx={{
+                                            maxHeight: "100%",
+                                            maxWidth: "100%", 
+                                            display: "block",
+                                            objectFit: "cover",
+                                            borderRadius: 2
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={8}>
+                                    <Box>
+                                        {plant.common_name && plant.common_name.toLowerCase() !== plant.scientific_name.toLowerCase() ? (
+                                            <>
+                                                <Typography variant="h5" fontWeight={600} sx={{pl: 0}} align="center">
+                                                    {plant.common_name}
+                                                </Typography>
+                                                <Typography variant="h6" sx={{pl: 0}} align="center">
+                                                    ({plant.scientific_name})
+                                                </Typography>
+                                            </>
+                                        ) : (
                                             <Typography variant="h5" fontWeight={600} sx={{pl: 0}} align="center">
-                                                {plant.common_name}
+                                                    {plant.scientific_name}
                                             </Typography>
-                                            <Typography variant="h6" sx={{pl: 0}} align="center">
-                                                ({plant.scientific_name})
-                                            </Typography>
-                                        </>
-                                    ) : (
-                                        <Typography variant="h5" fontWeight={600} sx={{pl: 0}} align="center">
-                                                {plant.scientific_name}
-                                        </Typography>
-                                    )}
-                                </Box>
-                            </Grid>
-                            {selectedPlants.map((plant) => plant.plant_id).indexOf(plant.id) > -1 &&
-                                <Box sx={{position: 'absolute', right: '2%', top: '2%', width: 120, height: 35}}>
-                                    <IncrementDecrementButtons setValueCallback={(value) => setPlantAmountCallback(plant.id, value)}/>
-                                </Box>
-                            }
-                            
-                        </ListItemButton>
-                    </Grid>
-                ))}
+                                        )}
+                                    </Box>
+                                </Grid>
+                                {selectedPlants.map((plant) => plant.plant_id).indexOf(plant.id) > -1 &&
+                                    <Box sx={{position: 'absolute', right: '2%', top: '2%', width: 120, height: 35}}>
+                                        <IncrementDecrementButtons setValueCallback={(value) => setPlantAmountCallback(plant.id, value)}/>
+                                    </Box>
+                                }
+                                
+                            </ListItemButton>
+                        </Grid>
+                    ))}
+                </Grid>
             </Grid>
-        </Grid>
+        </Paper>
     )
 }
 

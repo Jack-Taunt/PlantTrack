@@ -1,5 +1,5 @@
 import Navbar from "../common/Navbar";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Stack } from "@mui/material";
 import GardenList from "./garden-list";
 import { useEffect, useState } from "react";
 import api from "../../client/client"
@@ -50,15 +50,48 @@ const PublicGardensPage = () => {
 
 
     return (
-        <>
+        <Box
+            sx={{
+                height: '100dvh',
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: '#f9fafb',
+            }}
+        >
             <Navbar />
-            <Box sx={{backgroundColor: '#f9fafb'}}>
-                <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', paddingY: 4}}>
-                    Community Gardens
-                </Typography>
-                <GardenList gardens={gardens} gardenImages={gardenImages}/>
+            <Typography 
+                variant="h4" 
+                sx={{
+                    fontWeight: 'bold', 
+                    textAlign: 'center', 
+                    paddingY: 4
+                }}
+            >
+                Community Gardens
+            </Typography>
+            <Box
+                sx={{
+                    flex: 1,
+                    overflowY: 'auto',
+                }}
+            >
+                <Stack 
+                    sx={{
+                        flex: 1, 
+                        height: "100%", 
+                        minHeight: 0, 
+                        display: 'flex', 
+                        width: '100%', 
+                        mx: 'auto'
+                    }}
+                >
+                    <GardenList 
+                        gardens={gardens} 
+                        gardenImages={gardenImages}
+                    />
+                </Stack>
             </Box>
-        </>
+        </Box>
     )
 }
 

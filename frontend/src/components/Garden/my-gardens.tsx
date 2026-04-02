@@ -1,4 +1,4 @@
-import { Button, Modal, Typography, Box, Stack, TextField, Checkbox, FormControlLabel, Alert, FormGroup, Snackbar, type SnackbarCloseReason, FormControl, InputLabel, Select, OutlinedInput, Chip, MenuItem } from '@mui/material';
+import { Button, Modal, Typography, Box, Stack, TextField, Checkbox, FormControlLabel, Fab, Alert, FormGroup, Snackbar, type SnackbarCloseReason, FormControl, InputLabel, Select, OutlinedInput, Chip, MenuItem } from '@mui/material';
 import Navbar from '../common/Navbar';
 import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
@@ -7,6 +7,9 @@ import api from "../../client/client"
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { Garden, Tag, GardenImage } from '../../types/garden';
 import GardenList from './garden-list';
+import SpaIcon from '@mui/icons-material/Spa';
+import YardIcon from '@mui/icons-material/Yard';
+import AddIcon from '@mui/icons-material/Add';
 
 function MyGardensPage() {
     const [createGardenModalOpen, setCreateGardenModalOpen] = useState(false);
@@ -148,23 +151,73 @@ function MyGardensPage() {
 
 
     return (
-        <>
+        <Box
+            sx={{
+                height: '100dvh',
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: '#f9fafb',
+            }}
+        >
             <Navbar/>
-            <Box sx={{backgroundColor: '#f9fafb'}}>
-                <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', pt: 4}}>
-                    My Gardens
-                </Typography>
-                
-                <Button 
-                    variant='contained'
+            <Typography 
+                variant="h4" 
+                sx={{
+                    fontWeight: 'bold', 
+                    textAlign: 'center', 
+                    paddingY: 4
+                }}
+            >
+                My Gardens
+            </Typography>
+            <Box
+                sx={{
+                    position: 'absolute', 
+                    bottom: '5%', 
+                    right: '5%', 
+                }}
+            >
+                <Fab 
+                    component="span" 
                     onClick={handleCreateGardenModalOpen}
+                    sx={{width: '80px', height: '80px'}}
                 >
-                    Create a New Garden
-                </Button>
-
-
-                <GardenList gardens={gardens} gardenImages={gardenImages} onGardenDeleted={fetchGardens}/>
-
+                    <YardIcon sx={{ fontSize: "64px"}} />
+                    <AddIcon 
+                        sx={{ 
+                            fontSize: "24px", 
+                            position: 'absolute', 
+                            bottom: 5, 
+                            left: 5,
+                            backgroundColor: 'primary.main',
+                            borderRadius: '50%',
+                            color: 'white',
+                        }} 
+                    />
+                </Fab>
+            </Box>
+            <Box
+                sx={{
+                    flex: 1,
+                    overflowY: 'auto',
+                }}
+            >
+                <Stack 
+                    sx={{
+                        flex: 1, 
+                        height: "100%", 
+                        minHeight: 0, 
+                        display: 'flex', 
+                        width: '100%', 
+                        mx: 'auto'
+                    }}
+                >
+                    <GardenList 
+                        gardens={gardens} 
+                        gardenImages={gardenImages} 
+                        onGardenDeleted={fetchGardens}
+                    />
+                </Stack>
 
                 <Modal
                     open={createGardenModalOpen}
@@ -314,7 +367,7 @@ function MyGardensPage() {
                     </Alert>
                 </Snackbar>
             </Box>
-        </>
+        </Box>
     )
 };
 

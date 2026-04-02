@@ -25,19 +25,25 @@ const PublicPlantsPage = () => {
     return (
         <Box
             sx={{
-                height: "100dvh",
-                display: "flex",
-                flexDirection: "column",
-                overflow: 'hidden',
-                backgroundColor: '#f9fafb'
+                height: '100dvh',
+                display: 'flex',
+                flexDirection: 'column'
             }}
         >
             <Navbar />
-            <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', paddingY: 4}}>
-                Community Plants
-            </Typography>
-            <Box sx={{flex: 1, minHeight: 0, display: 'flex', pb: 5, width: '80%', mx: 'auto'}}>
-                <PlantList plants={plants} multipleSelect={false}/>
+            <Box
+                sx={{
+                    flex: 1,
+                    overflowY: 'auto',
+                    backgroundColor: '#f9fafb',
+                }}
+            >
+                <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', paddingY: 4}}>
+                    Community Plants
+                </Typography>
+                <Box sx={{flex: 1, height: "90%", minHeight: 0, display: 'flex', width: '80%', mx: 'auto'}}>
+                    <PlantList plants={plants} multipleSelect={false}/>
+                </Box>
             </Box>
         </Box>
     )

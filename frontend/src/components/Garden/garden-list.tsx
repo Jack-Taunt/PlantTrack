@@ -36,7 +36,7 @@ const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) =
 
 
     return (
-        <Grid container spacing={2} sx={{minHeight: "100vh"}}>
+        <Grid container spacing={2} sx={{height: "100%"}}>
             <Grid size={2}/>
             <Grid size={5}>
                 <List sx={{width: "100%", mx: "auto", padding: 0}}>
@@ -109,8 +109,8 @@ const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) =
                             borderColor: "black",
                             borderRadius: 2,
                             position: "sticky",
-                            top: 174,
-                            height: "80vh",
+                            top: 0,
+                            height: "calc(100dvh - 200px)",
                             display: 'flex',
                             flexDirection: 'column'
                         }}
@@ -147,9 +147,6 @@ const GardenList = ({gardens, gardenImages, onGardenDeleted}: GardenListProps) =
                                 {selectedGarden.tags[0] && (
                                     <TagList tags={selectedGarden.tags}/>
                                 )}
-                                <Box sx={{height: 800}}>
-                                </Box>
-                                
                             </Stack>
                         </Box>
                         <Stack

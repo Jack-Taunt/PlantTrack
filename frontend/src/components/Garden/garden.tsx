@@ -286,14 +286,26 @@ const GardenPage = () => {
 
 
     return (
-        <>
+        <Box
+            sx={{
+                height: '100dvh',
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: '#f9fafb',
+            }}
+        >
             <Navbar/>
             {garden && (
-                <Box sx={{backgroundColor: '#f9fafb'}}>
+                <Box 
+                    sx={{
+                        flex: 1,
+                        overflowY: 'auto',
+                    }}
+                >
                     <Typography variant="h3" sx={{fontWeight: 'bold', textAlign: 'center', py: 3}}>
                         {garden.name}
                     </Typography>
-                    <Grid container sx={{height: 600, px: 5}}>
+                    <Grid container sx={{height: 550, px: 5}}>
                         <Grid size={7} >
                             <Paper elevation={2} sx={{borderRadius: 2, mr: 2, height: "100%"}}>
                                 <Typography variant="h4" sx={{fontWeight: 'bold', pt: 2, mx: 3, borderBottom: '2px solid lightgray'}}>
@@ -692,7 +704,7 @@ const GardenPage = () => {
                     </Modal>
                 </Box>
             )}
-        </>
+        </Box>
     )
 };
 
