@@ -57,7 +57,7 @@ const Login = () => {
     };
 
     return (
-        <>
+        <Box sx={{backgroundColor: '#f9fafb'}}>
             <Grid 
                 container 
                 justifyContent="center"
@@ -103,7 +103,7 @@ const Login = () => {
                     </CardContent>
                 </Card>
             </Grid>
-        </>
+        </Box>
     )
 }
 

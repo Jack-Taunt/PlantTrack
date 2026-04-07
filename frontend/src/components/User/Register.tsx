@@ -63,7 +63,7 @@ const Register = () => {
 
 
     return (
-        <>
+        <Box sx={{backgroundColor: '#f9fafb'}}>
             <Grid 
                 container 
                 justifyContent="center"
@@ -125,7 +125,7 @@ const Register = () => {
                     </CardContent>
                 </Card>
             </Grid>
-        </>
+        </Box>
     )
 }
 
