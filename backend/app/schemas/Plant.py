@@ -1,5 +1,6 @@
-from pydantic import BaseModel, Field
-from typing import Annotated, List
+from pydantic import BaseModel, Field, field_validator
+from ..models.Plant import ToxicityEnum, LightEnum, MoistureEnum, SoilEnum, GrowthRateEnum
+
 
 class PlantOut(BaseModel):
     id: int
@@ -28,6 +29,12 @@ class Toxicity(BaseModel):
     toxic_to_humans: bool | None
     toxicity: str | None
 
+    @field_validator("toxicity", mode="before")
+    def convert_toxicity_enum(cls, v):
+        if isinstance(v, ToxicityEnum):
+            return v.name
+        return v
+
 
 class Edibility(BaseModel):
     edible_fruit: bool | None
@@ -45,6 +52,12 @@ class Environment(BaseModel):
     min_usda_zone: str | None
     max_usda_zone: str | None
 
+    @field_validator("light_type", mode="before")
+    def convert_light_type_enum(cls, v):
+        if isinstance(v, LightEnum):
+            return v.name
+        return v
+
 
 class CareRequirements(BaseModel):
     min_water_frequency: int | None
@@ -59,6 +72,18 @@ class CareRequirements(BaseModel):
     fertilizer_phosphorus: int | None
     fertilizer_potassium: int | None
 
+    @field_validator("soil_moisture", mode="before")
+    def convert_soil_moisture_enum(cls, v):
+        if isinstance(v, MoistureEnum):
+            return v.name
+        return v
+
+    @field_validator("soil_type", mode="before")
+    def convert_soil_type_enum(cls, v):
+        if isinstance(v, SoilEnum):
+            return v.name
+        return v
+
 
 class Growth(BaseModel):
     annual: bool | None
@@ -69,6 +94,12 @@ class Growth(BaseModel):
     growth_rate: str | None
     min_days_to_harvest: int | None
     max_days_to_harvest: int | None
+
+    @field_validator("growth_rate", mode="before")
+    def convert_growth_rate_enum(cls, v):
+        if isinstance(v, GrowthRateEnum):
+            return v.name
+        return v
 
 
 class Planting(BaseModel):
