@@ -569,7 +569,7 @@ const GardenPage = () => {
                         </Paper>
                     </Box>
 
-                    <GardenPlantInfo plantId={gardenPlantSelected} gardenId={Number(gardenId)}/>
+                    <GardenPlantInfo plantId={gardenPlantSelected} gardenId={Number(gardenId)} userOwns={user?.id === garden.user.id}/>
 
                     <ConfirmDeleteModal 
                         modalOpen={deleteSectionModalOpen} 
