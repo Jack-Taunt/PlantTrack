@@ -1,13 +1,13 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 from app.schemas.Plant import PlantOut
 from datetime import date
-from typing import List
+from typing import Annotated, List
 
 
 class GardenPlant(BaseModel):
     id: int
     planted_date: date | None
-    notes: str | None
+    notes: Annotated[str, Field(max_length=256)] | None
     garden_id: int
     plant: PlantOut
 
