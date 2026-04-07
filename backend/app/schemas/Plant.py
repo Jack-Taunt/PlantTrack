@@ -89,7 +89,9 @@ class Growth(BaseModel):
     annual: bool | None
     biennial: bool | None
     perennial: bool | None
+    min_height: float | None
     max_height: float | None
+    min_width: float | None
     max_width: float | None
     growth_rate: str | None
     min_days_to_harvest: int | None

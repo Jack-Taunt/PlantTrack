@@ -67,7 +67,9 @@ export interface Growth{
     annual: boolean;
     biennial: boolean;
     perennial: boolean;
+    min_height: number;
     max_height: number;
+    min_width: number;
     max_width: number;
     growth_rate: string;
     min_days_to_harvest: number;
