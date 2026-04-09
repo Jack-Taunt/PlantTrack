@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, field_validator
 from app.schemas.Plant import PlantOut
 from datetime import date
 from typing import Annotated, List
+from app.schemas.Image import ImageOut
 
 
 class GardenPlant(BaseModel):
@@ -10,6 +11,7 @@ class GardenPlant(BaseModel):
     notes: Annotated[str, Field(max_length=256)] | None
     garden_id: int
     plant: PlantOut
+    garden_plant_images: List[ImageOut]
 
 
 class GardenPlantAmount(BaseModel):

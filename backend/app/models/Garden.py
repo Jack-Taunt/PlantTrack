@@ -40,6 +40,8 @@ class GardenPlant(Base):
     section_id = Column(ForeignKey("sections.id", ondelete="CASCADE"), nullable=False)
     plant_id = Column(ForeignKey("plants.id", ondelete="CASCADE"), nullable=False)
     plant = relationship('Plant', back_populates='garden_plants')
+    garden_plant_images = relationship('GardenPlantImage', back_populates='garden_plant', order_by="GardenPlantImage.id", passive_deletes=True)
+
 
 
 
