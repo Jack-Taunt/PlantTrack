@@ -224,6 +224,7 @@ const ImageScroll = ({images, handleImageUpload, canEdit, handleImageDelete}: im
                 handleModalClose={handleDeleteImageModalClose} 
                 deleteFunction={() => {
                     handleImageDelete(images[imageIndex].id)
+                    setImageIndex(imageIndex - 1)
                     handleDeleteImageModalClose();
                 }} 
                 title={"Are you sure you want to Delete this Image?"} 
