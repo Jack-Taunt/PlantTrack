@@ -14,6 +14,7 @@ import GrassIcon from "@mui/icons-material/Grass";
 import OpacityIcon from "@mui/icons-material/Opacity";
 import ScienceOutlinedIcon from "@mui/icons-material/ScienceOutlined";
 import Masonry from '@mui/lab/Masonry';
+import type { GardenImage } from "../../types/garden";
 
 const sectionStyles = {
     "General Information": { borderLeft: "8px solid #42a5f5",  },
@@ -109,37 +110,91 @@ const PlantRangeField = ({label, min, max, unit = ""}: {label: string, min: any,
 
 type GardenPlantProps = {
     gardenId?: number;
-    plantId?: number;
+    gardenPlantId?: number;
     userOwns: boolean;
 }
 
-const GardenPlantInfo = ({gardenId, plantId, userOwns}: GardenPlantProps) => {
+const GardenPlantInfo = ({gardenId, gardenPlantId, userOwns}: GardenPlantProps) => {
 
     const [gardenPlant, setGardenPlant] = useState<GardenPlant>();
+    const [gardenPlantImages, setGardenPlantImages] = useState<GardenImage[]>([]);
 
 
-    const fetchPlant = async (plantId: number) => {
+    const fetchGardenPlant = async (plantId: number) => {
         try {
             const plant = await api.get(`/gardens/${gardenId}/plant/${plantId}`)
             setGardenPlant(plant.data)
+
+            const imageUrls = await Promise.all(
+                plant.data.garden_plant_images.map(async (image: any) => {
+                    const res = await api.get(`/gardens/${gardenId}/plant/${gardenPlantId}/image/${image.id}`, { responseType: 'blob' });
+                    const url = URL.createObjectURL(res.data);
+                    return {id: image.id, image: url}
+                }) 
+            )
+            setGardenPlantImages(imageUrls)
             
         } catch (err: any) {
             console.log(err)
         }
     }
 
+
+    const fetchImage = async (imageId: number) => {
+        try {
+            const image = await api.get(`/gardens/${gardenId}/plant/${gardenPlantId}/image/${imageId}`,
+                { responseType: "blob" }
+            );
+            const url = URL.createObjectURL(image.data);
+
+            setGardenPlantImages(prev => {
+                if (prev.find(img => img.id === imageId)) return prev;
+                return [...prev, {id: imageId, image: url}]
+            });
+            
+        } catch (err: any) {
+            console.log(err.response)
+        }
+    }
+
+
+    const handleImageUpload = async (event: any) => {
+        
+        const formData = new FormData()
+        formData.append('file', event.target.files[0])
+
+        try {
+            const response = await api.post(`/gardens/${gardenId}/plant/${gardenPlantId}/uploadimage`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            if (response.status === 200) {
+                fetchImage(response.data.id)
+            }
+            
+        } catch (err: any) {
+            console.log(err.response)
+        }
+    }
+
+
+    const handleImageDelete = async (imageId: number) => {
+        try {
+            await api.delete(`/gardens/${gardenId}/plant/${gardenPlantId}/image/${imageId}`);
+            setGardenPlantImages(prev => prev.filter(img => img.id !== imageId));
+            
+        } catch (err: any) {
+            console.log(err.response)
+        }
+    }
+
+
     useEffect(() => {
-        if (!plantId) return;
-        fetchPlant(plantId);
-    }, [plantId])
+        if (!gardenPlantId) return;
+        fetchGardenPlant(gardenPlantId);
+    }, [gardenPlantId])
 
-    const handleImageUpload = () => {
-
-    }
-
-    const handleImageDelete = () => {
-
-    }
 
     return (
         <>
@@ -173,13 +228,21 @@ const GardenPlantInfo = ({gardenId, plantId, userOwns}: GardenPlantProps) => {
                                         )}
                                     </Typography>
                                 )}
-
-                                <ImageScroll 
-                                    images={[]} 
-                                    handleImageUpload={(handleImageUpload)} 
-                                    canEdit={userOwns} 
-                                    handleImageDelete={handleImageDelete}
-                                />
+                                
+                                <Grid size={5} sx={{ minHeight: 0, p:5, height: "100%", width: '100%', display: 'flex', position: 'relative' }}>
+                                    <Paper elevation={2} sx={{
+                                        width: '100%',
+                                        height: '100%',
+                                        borderRadius: 2,
+                                    }}>
+                                        <ImageScroll 
+                                            images={gardenPlantImages} 
+                                            handleImageUpload={handleImageUpload} 
+                                            canEdit={userOwns} 
+                                            handleImageDelete={handleImageDelete}
+                                        />
+                                    </Paper>
+                                </Grid>
                             </Grid>
                             <Grid container size={7} spacing={2} alignItems="stretch" sx={{pb: 10}}>
                                 <Grid size={12}>
