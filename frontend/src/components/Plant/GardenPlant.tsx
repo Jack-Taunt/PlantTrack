@@ -202,7 +202,7 @@ const GardenPlantInfo = ({gardenId, gardenPlantId, userOwns}: GardenPlantProps) 
                 <Box sx={{px:5, pt: 3, pb: 3}}>
                     <Paper elevation={2} sx={{borderRadius: 2}}>
                         <Grid container sx={{ px: 5}}>
-                            <Grid size={5} sx={{height: "100%"}}>
+                            <Grid size={5} sx={{height: 900}}>
                                 {gardenPlant.plant.common_name && gardenPlant.plant.common_name.toLowerCase() !== gardenPlant.plant.scientific_name.toLowerCase() ? (
                                     <Typography variant="h5" sx={{fontSize: '1.75em', fontWeight: 'bold', pt: 2, mx: 3, borderBottom: '2px solid lightgray'}}>
                                         {gardenPlant.plant.common_name}{' '}
@@ -229,7 +229,7 @@ const GardenPlantInfo = ({gardenId, gardenPlantId, userOwns}: GardenPlantProps) 
                                     </Typography>
                                 )}
                                 
-                                <Grid size={5} sx={{ minHeight: 0, p:5, height: "100%", width: '100%', display: 'flex', position: 'relative' }}>
+                                <Grid size={5} sx={{ minHeight: 0, m:5, height: "95%", width: '90%', display: 'flex', position: 'relative' }}>
                                     <Paper elevation={2} sx={{
                                         width: '100%',
                                         height: '100%',
