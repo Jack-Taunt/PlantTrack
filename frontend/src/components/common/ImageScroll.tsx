@@ -4,7 +4,7 @@ import placeholderImage from "../../assets/image_placeholder.svg"
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { GardenImage } from "../../types/garden";
 import useEmblaCarousel from 'embla-carousel-react'
 import ConfirmDeleteModal from "../common/confirmDeleteModal";
@@ -24,6 +24,8 @@ const ImageScroll = ({images, handleImageUpload, canEdit, handleImageDelete}: im
 
     const handleDeleteImageModalOpen = () => setDeleteImageModalOpen(true);
     const handleDeleteImageModalClose = () => setDeleteImageModalOpen(false);
+
+    const inputId = useId();
 
     const handleImageScrollIncrease = () => {
         if (emblaApi?.canScrollNext()) { 
@@ -117,10 +119,10 @@ const ImageScroll = ({images, handleImageUpload, canEdit, handleImageDelete}: im
                         accept="image/jpeg,image/png,image/webp"
                         type="file"
                         onChange={(event) => {handleImageUpload(event)}}
-                        id="contained-button-file"
+                        id={inputId}
                         style={{display: 'none'}}
                     />
-                    <label htmlFor="contained-button-file">
+                    <label htmlFor={inputId}>
                         <Fab component="span">
                             <AddPhotoAlternateIcon style={{ fontSize: "45px" }} />
                         </Fab>
