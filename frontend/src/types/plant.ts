@@ -1,3 +1,5 @@
+import type { Image } from "./garden";
+
 export interface Plant {
     id: number;
     common_name: string;
@@ -23,6 +25,7 @@ export interface GardenPlant {
     notes: string;
     plant: Plant;
     section_id: number;
+    garden_plant_images: Image[];
 }
 
 export interface Toxicity{

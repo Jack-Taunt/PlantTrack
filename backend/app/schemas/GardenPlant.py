@@ -12,6 +12,7 @@ class GardenPlant(BaseModel):
     garden_id: int
     plant: PlantOut
     garden_plant_images: List[ImageOut]
+    section_id: int
 
 
 class GardenPlantAmount(BaseModel):

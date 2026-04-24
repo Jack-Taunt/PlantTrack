@@ -27,7 +27,7 @@ async def create_garden_plant(
     return create_garden_plant_service(garden_id, garden_plants, user, db)
     
 
-@router.get("/{garden_id}/plants")
+@router.get("/{garden_id}/plants", response_model=list[GardenPlant])
 async def get_garden_plants(
     garden_id: int,
     user: Annotated[User, Depends(get_current_user(False))],
@@ -59,7 +59,7 @@ async def create_garden_image(
 
 
 @router.get("/{garden_id}/plant/{plant_id}/image/{image_id}")
-async def get_garden_image(
+async def get_garden_plant_image(
     garden_id: int,
     plant_id: int,
     image_id: int,
@@ -71,7 +71,7 @@ async def get_garden_image(
 
 
 @router.delete("/{garden_id}/plant/{plant_id}/image/{image_id}")
-async def delete_garden_image(
+async def delete_garden_plant_image(
     garden_id: int,
     plant_id: int,
     image_id: int,

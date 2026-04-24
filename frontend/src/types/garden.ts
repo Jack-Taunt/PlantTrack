@@ -9,7 +9,7 @@ export interface Garden {
     user_id: number;
     user: UserPublic;
     sections: Section[];
-    garden_images: Image[];
+    garden_images: GardenImage[];
 }
 
 export interface Tag {

@@ -26,6 +26,7 @@ const GardenPage = () => {
 
     const [garden, setGarden] = useState<Garden | null>(null);
     const [gardenPlants, setGardenPlants] = useState<GardenPlant[]>([]);
+    const [gardenPlantImages, setGardenPlantImages] = useState<GardenImage[]>([]);
     const [sections, setSections] = useState<Section[]>([]);
 
     const [addPlantModalOpen, setAddPlantModalOpen] = useState(false);
@@ -70,10 +71,36 @@ const GardenPage = () => {
     }
 
 
+    const fetchGardenPlantImage = async (gardenPlantId: number, imageId: number) => {
+        try {
+            const image = await api.get(`/gardens/${gardenId}/plant/${gardenPlantId}/image/${imageId}`,
+                { responseType: "blob" }
+            );
+            const url = URL.createObjectURL(image.data);
+            
+
+            setGardenPlantImages(prev => {
+                if (prev.find(img => img.id === gardenPlantId)) return prev;
+                return [...prev, {id: gardenPlantId, image: url}]
+            });
+            
+        } catch (err: any) {
+            console.log(err.response)
+        }
+    }
+
+
     const fetchGardenPlants = async () => {
         try {
             const gardenPlants = await api.get(`/gardens/${gardenId}/plants`)
             setGardenPlants(gardenPlants.data)
+
+            gardenPlants.data.forEach((gardenPlant: GardenPlant) => {
+                if (gardenPlant.garden_plant_images.length > 0) {
+                    fetchGardenPlantImage(gardenPlant.id, gardenPlant.garden_plant_images[0].id)
+                }
+            })
+
         } catch (err: any) {
             console.log(err)
         }
@@ -302,7 +329,7 @@ const GardenPage = () => {
                         overflowY: 'auto',
                     }}
                 >
-                    <Typography variant="h3" sx={{fontWeight: 'bold', textAlign: 'center', py: 3}}>
+                    <Typography variant="h3" sx={{fontWeight: 'bold', textAlign: 'center', py: 1}}>
                         {garden.name}
                     </Typography>
                     <Grid container sx={{height: 550, px: 5}}>
@@ -503,7 +530,7 @@ const GardenPage = () => {
                                                     border: '1px solid transparent',
                                                     borderRadius: 1,
                                                     px: 0.5,
-                                                    my: 2,
+                                                    my: 1,
                                                     borderColor: 'primary.main',
                                                     '& .MuiInputBase-root': {
                                                         p: 0,
@@ -538,7 +565,7 @@ const GardenPage = () => {
                                                     border: '1px solid transparent',
                                                     borderRadius: 1,
                                                     px: 0.5,
-                                                    my: 2,
+                                                    my: 1,
                                                     cursor: 'text',
                                                     '&:hover': (user?.id === garden.user.id) ? { borderColor: 'divider' } : {},
                                                     fontStyle: section.description ? 'normal' : 'italic',
@@ -561,6 +588,7 @@ const GardenPage = () => {
                                         </Stack>
                                         <GardenPlantList 
                                             gardenPlants={gardenPlants.filter(gardenPlant => gardenPlant.section_id === section.id)}
+                                            gardenPlantImages={gardenPlantImages}
                                             setGardenPlantSelected={setGardenPlantSelected}    
                                         />
                                     </TabPanel>
