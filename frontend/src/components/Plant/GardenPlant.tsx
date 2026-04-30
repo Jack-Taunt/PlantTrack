@@ -15,6 +15,7 @@ import OpacityIcon from "@mui/icons-material/Opacity";
 import ScienceOutlinedIcon from "@mui/icons-material/ScienceOutlined";
 import Masonry from '@mui/lab/Masonry';
 import type { GardenImage } from "../../types/garden";
+import { PrettyPrint } from "../common/PrettyPrint";
 
 const sectionStyles = {
     "General Information": { borderLeft: "8px solid #42a5f5",  },
@@ -76,7 +77,7 @@ const Subsection = ({ title }: { title: keyof typeof subsectionIcons; }) => (
     </Box>
 );
 
-const PlantField = ({label, value}: {label: string; value?: string}) => {
+const PlantField = ({label, value}: {label: string; value: string}) => {
     if (!value) return null;    
 
     return (
@@ -269,17 +270,17 @@ const GardenPlantInfo = ({gardenId, gardenPlantId, userOwns}: GardenPlantProps) 
                                         <Grid size={6}>
                                             <PlantSection title="Plant Care">
                                                 <Subsection title="Soil"/>
-                                                <PlantField label={"Soil Type"} value={String(gardenPlant.plant.care_requirements.soil_type)}/>
-                                                <PlantField label={"Soil Moisture"} value={String(gardenPlant.plant.care_requirements.soil_moisture)}/>
+                                                <PlantField label={"Soil Type"} value={PrettyPrint({rawText: gardenPlant.plant.care_requirements.soil_type})}/>
+                                                <PlantField label={"Soil Moisture"} value={PrettyPrint({rawText: gardenPlant.plant.care_requirements.soil_moisture})}/>
                                                 <PlantRangeField label={"Soil Ph"} min={gardenPlant.plant.care_requirements.min_soil_ph} max={gardenPlant.plant.care_requirements.max_soil_ph}/>
                                                 
                                                 <Subsection title="Water"/>
                                                 <PlantBoolField label={"Drought Tolerant"} value={gardenPlant.plant.care_requirements.drought_tolerant}/>
-                                                <PlantRangeField label={"Water Frequency"} min={gardenPlant.plant.care_requirements.min_water_frequency} max={gardenPlant.plant.care_requirements.max_water_frequency}/>
+                                                <PlantRangeField label={"Water Frequency"} min={gardenPlant.plant.care_requirements.min_water_frequency} max={gardenPlant.plant.care_requirements.max_water_frequency} unit=" days"/>
 
                                                 
                                                 <Subsection title="Fertilizer"/>
-                                                <PlantField label={"Fertilizer Frequency"} value={String(gardenPlant.plant.care_requirements.fertilizer_frequency)}/>
+                                                <PlantField label={"Fertilizer Frequency"} value={PrettyPrint({rawText: gardenPlant.plant.care_requirements.fertilizer_frequency, unit: " days"})}/>
                                                 <PlantField label={"Nitrogen"} value={String(gardenPlant.plant.care_requirements.fertilizer_nitrogen)}/>
                                                 <PlantField label={"Phosphorus"} value={String(gardenPlant.plant.care_requirements.fertilizer_phosphorus)}/>
                                                 <PlantField label={"Potassium"} value={String(gardenPlant.plant.care_requirements.fertilizer_potassium)}/>
@@ -289,9 +290,9 @@ const GardenPlantInfo = ({gardenId, gardenPlantId, userOwns}: GardenPlantProps) 
                                     {gardenPlant.plant.environment && (
                                         <Grid size={6}>
                                             <PlantSection title="Plant Environment">
-                                                <PlantField label={"Light Type"} value={String(gardenPlant.plant.environment.light_type)}/>
-                                                <PlantRangeField label={"Temperature"} min={gardenPlant.plant.environment.min_temp} max={gardenPlant.plant.environment.max_temp}/>
-                                                <PlantRangeField label={"Humidity"} min={gardenPlant.plant.environment.min_humidity} max={gardenPlant.plant.environment.max_humidity}/>
+                                                <PlantField label={"Light Type"} value={PrettyPrint({rawText: gardenPlant.plant.environment.light_type})}/>
+                                                <PlantRangeField label={"Temperature"} min={gardenPlant.plant.environment.min_temp} max={gardenPlant.plant.environment.max_temp} unit="°C"/>
+                                                <PlantRangeField label={"Humidity"} min={gardenPlant.plant.environment.min_humidity} max={gardenPlant.plant.environment.max_humidity} unit="%"/>
                                                 <PlantRangeField label={"usda Zone"} min={gardenPlant.plant.environment.min_usda_zone} max={gardenPlant.plant.environment.max_usda_zone}/>
                                             </PlantSection>
                                         </Grid>
@@ -305,10 +306,10 @@ const GardenPlantInfo = ({gardenId, gardenPlantId, userOwns}: GardenPlantProps) 
                                                     <PlantBoolField label={"Biennial"} value={gardenPlant.plant.growth.biennial}/>
                                                     <PlantBoolField label={"Perennial"} value={gardenPlant.plant.growth.perennial}/>
                                                 </Stack>
-                                                <PlantField label={"Growth Rate"} value={String(gardenPlant.plant.growth.growth_rate)}/>
-                                                <PlantRangeField label={"Growth Width"} min={gardenPlant.plant.growth.min_width} max={gardenPlant.plant.growth.max_width}/>
-                                                <PlantRangeField label={"Growth Height"} min={gardenPlant.plant.growth.min_height} max={gardenPlant.plant.growth.max_height}/>
-                                                <PlantRangeField label={"Harvest Time"} min={gardenPlant.plant.growth.min_days_to_harvest} max={gardenPlant.plant.growth.max_days_to_harvest}/>
+                                                <PlantField label={"Growth Rate"} value={PrettyPrint({rawText: gardenPlant.plant.growth.growth_rate})}/>
+                                                <PlantRangeField label={"Growth Width"} min={gardenPlant.plant.growth.min_width} max={gardenPlant.plant.growth.max_width} unit="cm"/>
+                                                <PlantRangeField label={"Growth Height"} min={gardenPlant.plant.growth.min_height} max={gardenPlant.plant.growth.max_height} unit="cm"/>
+                                                <PlantRangeField label={"Harvest Time"} min={gardenPlant.plant.growth.min_days_to_harvest} max={gardenPlant.plant.growth.max_days_to_harvest} unit=" days"/>
                                             </PlantSection>
                                         </Grid>
                                     )}
@@ -320,15 +321,15 @@ const GardenPlantInfo = ({gardenId, gardenPlantId, userOwns}: GardenPlantProps) 
                                                     <PlantBoolField label={"Can Transplant"} value={gardenPlant.plant.planting.transplant}/>
                                                     <PlantBoolField label={"Can Propagate"} value={gardenPlant.plant.planting.propagation}/>
                                                 </Stack>
-                                                <PlantField label={"Seed Planting Depth (cm)"} value={String(gardenPlant.plant.planting.seed_depth)}/>
-                                                <PlantField label={"Plant Spacing (cm)"} value={String(gardenPlant.plant.planting.spacing)}/>
+                                                <PlantField label={"Seed Planting Depth"} value={PrettyPrint({rawText: gardenPlant.plant.planting.seed_depth, unit: "cm"})}/>
+                                                <PlantField label={"Plant Spacing"} value={PrettyPrint({rawText: gardenPlant.plant.planting.spacing, unit: "cm"})}/>
                                             </PlantSection>
                                         </Grid>
                                     )}
                                     {gardenPlant.plant.toxicity && (
                                         <Grid size={6}>
                                             <PlantSection title="Toxicity">
-                                                <PlantField label={"Toxicity"} value={String(gardenPlant.plant.toxicity.toxicity)}/>
+                                                <PlantField label={"Toxicity"} value={PrettyPrint({rawText: gardenPlant.plant.toxicity.toxicity})}/>
                                                 {gardenPlant.plant.toxicity.toxicity !== "non_toxic" && (
                                                     <Stack gap={1} direction={"row"}>
                                                         <PlantBoolField label={"Toxic to Humans"} value={gardenPlant.plant.toxicity.toxic_to_humans}/>

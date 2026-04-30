@@ -1,6 +1,6 @@
 import type { GardenPlant } from "../../types/plant";
 import { Grid, ListItemButton, Stack, Typography, Box } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import placeholderImage from "../../assets/image_placeholder.svg"
 import type { GardenImage } from "../../types/garden";
 
